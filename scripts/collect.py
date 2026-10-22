@@ -255,27 +255,30 @@ HUB_NOISE = re.compile(r"(CC$|CC/|GC$|골프|컨트리|리조트|호텔|콘도|�
 
 def resolve_hub_spot(api: TourAPI, city: dict, h: dict) -> dict:
     """순위에는 있는데 관광공사 목록에서 못 찾은 곳: 이름으로 검색해 사진·설명이 있는 항목을 찾고,
-    없으면 이름·좌표만으로 추가한다."""
-    kw = h["name"].split("/")[0].strip()
-    try:
-        items = api.get("searchKeyword2", keyword=kw, areaCode=city["areaCode"],
-                        sigunguCode=city["sigunguCode"], numOfRows=10, pageNo=1)
-    except RuntimeError:
-        items = []
-    nk, best = norm_name(kw), None
-    for it in items:
-        p = to_place(it)
-        if not p or p["type"] not in (CT_SPOT, CT_CULTURE, "28"):
-            continue
-        n = norm_name(p["name"])
-        if not (n == nk or (len(min(n, nk, key=len)) >= 3 and (n in nk or nk in n))):
-            continue
-        d = haversine_km(p["lat"], p["lng"], h["lat"], h["lng"])
-        if d <= 3 and (best is None or d < best[0]):
-            best = (d, p)
-    if best:
-        return best[1]
-    return {"id": f"h{h['code']}", "type": "hub", "name": kw, "addr": "", "lat": round(h["lat"], 6),
+    없으면 이름·좌표만으로 추가한다. '한국도로공사/전주수목원'처럼 '/'가 있으면 양쪽을 모두 시도."""
+    parts = [x.strip() for x in h["name"].split("/") if x.strip()]
+    names = parts[::-1] if len(parts) > 1 else parts           # 뒤쪽(구체적인 이름) 먼저
+    keywords = names + [n[:3] for n in names if len(n) > 4]   # 띄어쓰기 차이 대비: 앞 3글자로 한 번 더
+    best = None
+    for kw in keywords:
+        try:
+            items = api.get("searchKeyword2", keyword=kw, areaCode=city["areaCode"],
+                            sigunguCode=city["sigunguCode"], numOfRows=20, pageNo=1)
+        except RuntimeError:
+            items = []
+        for it in items:
+            p = to_place(it)
+            if not p or p["type"] not in (CT_SPOT, CT_CULTURE, "28"):
+                continue
+            n = norm_name(p["name"])
+            ok = any(n == norm_name(x) or (len(min(n, norm_name(x), key=len)) >= 3
+                     and (n in norm_name(x) or norm_name(x) in n)) for x in names)
+            d = haversine_km(p["lat"], p["lng"], h["lat"], h["lng"])
+            if ok and d <= 3 and (best is None or d < best[0]):
+                best = (d, p)
+        if best:
+            return best[1]
+    return {"id": f"h{h['code']}", "type": "hub", "name": " ".join(parts), "addr": "", "lat": round(h["lat"], 6),
             "lng": round(h["lng"], 6), "image": "", "thumb": "", "tel": "", "modified": "", "ld": ("", "")}
 
 
@@ -471,14 +474,16 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     kc = caches["hubspots"].setdefault(city["id"], {})
     have = {p["id"]: p for p in allp}
     for h in [h for h in hub_spot if not h.get("matched")][: args.hub_resolve]:
-        hit = kc.get(h["code"])
+        hit = kc.get("v2:" + h["code"])
         if not hit or hit.get("at", "") < (dt.date.today() - dt.timedelta(days=30)).isoformat():
             hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h)}
-            kc[h["code"]] = hit
+            kc["v2:" + h["code"]] = hit
         p = dict(hit["place"])
         np_ = norm_name(p["name"])
-        dup = have.get(p["id"]) or next((q for q in allp if haversine_km(p["lat"], p["lng"], q["lat"], q["lng"]) < 0.5
-                                         and (lambda a, b: a and b and (a in b or b in a))(np_, norm_name(q["name"]))), None)
+        def same_place(q):
+            nq, d = norm_name(q["name"]), haversine_km(p["lat"], p["lng"], q["lat"], q["lng"])
+            return (np_ and nq == np_ and d < 2) or (np_ and nq and (np_ in nq or nq in np_) and d < 0.7)
+        dup = have.get(p["id"]) or next((q for q in allp if same_place(q)), None)
         if dup:
             dup["rank"] = min(dup.get("rank", 999), h["rank"])
         else:
