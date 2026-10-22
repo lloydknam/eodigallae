@@ -468,13 +468,6 @@
    "sigunguCode": "8"
   },
   {
-   "id": "a33-s9",
-   "name": "청원군",
-   "province": "충청북도",
-   "areaCode": "33",
-   "sigunguCode": "9"
-  },
-  {
    "id": "a33-s10",
    "name": "청주시",
    "province": "충청북도",
@@ -790,13 +783,6 @@
    "sigunguCode": "5"
   },
   {
-   "id": "a36-s6",
-   "name": "마산시",
-   "province": "경상남도",
-   "areaCode": "36",
-   "sigunguCode": "6"
-  },
-  {
    "id": "a36-s7",
    "name": "밀양시",
    "province": "경상남도",
@@ -837,13 +823,6 @@
    "province": "경상남도",
    "areaCode": "36",
    "sigunguCode": "13"
-  },
-  {
-   "id": "a36-s14",
-   "name": "진해시",
-   "province": "경상남도",
-   "areaCode": "36",
-   "sigunguCode": "14"
   },
   {
    "id": "a36-s15",
@@ -1168,20 +1147,6 @@
    "province": "전라남도",
    "areaCode": "38",
    "sigunguCode": "24"
-  },
-  {
-   "id": "a39-s1",
-   "name": "남제주군",
-   "province": "제주특별자치도",
-   "areaCode": "39",
-   "sigunguCode": "1"
-  },
-  {
-   "id": "a39-s2",
-   "name": "북제주군",
-   "province": "제주특별자치도",
-   "areaCode": "39",
-   "sigunguCode": "2"
   },
   {
    "id": "a39-s3",
