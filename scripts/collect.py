@@ -253,6 +253,9 @@ HUB_NOISE = re.compile(r"(CC$|CC/|GC$|골프|컨트리|리조트|호텔|콘도|�
                        r"경기장|빙상|백화점|아울렛|마트|병원|주차장|휴게소|톨게이트|IC$|아파트|모텔|펜션)", re.I)
 
 
+DIAG: list[str] = []  # 이름 검색 진단 기록 → data/cache/diag.json
+
+
 def resolve_hub_spot(api: TourAPI, city: dict, h: dict) -> dict:
     """순위에는 있는데 관광공사 목록에서 못 찾은 곳: 이름으로 검색해 사진·설명이 있는 항목을 찾고,
     없으면 이름·좌표만으로 추가한다. '한국도로공사/전주수목원'처럼 '/'가 있으면 양쪽을 모두 시도."""
@@ -264,7 +267,10 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict) -> dict:
         try:
             items = api.get("searchKeyword2", keyword=kw, areaCode=city["areaCode"],
                             sigunguCode=city["sigunguCode"], numOfRows=20, pageNo=1)
-        except RuntimeError:
+            DIAG.append(f"{city['name']} | {kw} | {len(items)}건 | " + ", ".join(
+                f"{i.get('title')}({i.get('contenttypeid')})" for i in items[:5]))
+        except RuntimeError as e:
+            DIAG.append(f"{city['name']} | {kw} | 오류 {str(e)[:200]}")
             items = []
         for it in items:
             p = to_place(it)
@@ -474,10 +480,10 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     kc = caches["hubspots"].setdefault(city["id"], {})
     have = {p["id"]: p for p in allp}
     for h in [h for h in hub_spot if not h.get("matched")][: args.hub_resolve]:
-        hit = kc.get("v2:" + h["code"])
+        hit = kc.get("v3:" + h["code"])
         if not hit or hit.get("at", "") < (dt.date.today() - dt.timedelta(days=30)).isoformat():
             hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h)}
-            kc["v2:" + h["code"]] = hit
+            kc["v3:" + h["code"]] = hit
         p = dict(hit["place"])
         np_ = norm_name(p["name"])
         def same_place(q):
@@ -655,6 +661,7 @@ def main():
         index["updatedAt"] = now_iso()
         save_json(index_path, index)
 
+    save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "lines": DIAG[:300]})
     log(f"완료 · TourAPI 호출 {api.calls}회 · 남은 YouTube 예산 {max(budget['youtube'], 0)}")
 
 
