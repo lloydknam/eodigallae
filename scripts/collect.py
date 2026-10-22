@@ -395,10 +395,13 @@ def apply_curated(api: TourAPI, city: dict, allp: list[dict], ldong: set[str], c
         def fits(p):
             n = norm_name(p["name"])
             return n == nn or (nn in n and len(n) - len(nn) <= 6)
-        hit = min((p for p in allp if fits(p)), key=lambda p: (norm_name(p["name"]) != nn, not p["image"],
-                                                                  len(p["name"])), default=None)
+        def pref(p):  # 이름이 똑같은 곳 → 이름으로 시작하는 곳 → 관광지·문화시설 → 사진 → 먼저 등록된 곳(본 항목)
+            n = norm_name(p["name"])
+            return (n != nn, not n.startswith(nn), p["type"] not in (CT_SPOT, CT_CULTURE), not p["image"],
+                    int(p["id"]) if p["id"].isdigit() else 9e12)
+        hit = min((p for p in allp if fits(p)), key=pref, default=None)
         if not hit:
-            key = f"cur:{city['id']}:{name}"
+            key = f"cur2:{city['id']}:{name}"
             if key not in cache:
                 try:
                     params = {"lDongRegnCd": regn} if regn else {"areaCode": city["areaCode"]}
@@ -408,8 +411,9 @@ def apply_curated(api: TourAPI, city: dict, allp: list[dict], ldong: set[str], c
                 except RuntimeError:
                     items = []
                 cands = [q for q in (to_place(it) for it in items) if q and fits(q)
+                         and q["type"] in (CT_SPOT, CT_CULTURE, "28", "38")
                          and (not ldong or ("".join(q["ld"]) if len(q["ld"][1]) <= 3 else q["ld"][1]) in ldong)]
-                best = min(cands, key=lambda q: (norm_name(q["name"]) != nn, not q["image"], len(q["name"])), default=None)
+                best = min(cands, key=pref, default=None)
                 cache[key] = {"at": dt.date.today().isoformat(), "place": best}
             hit = dict(cache[key]["place"]) if cache[key]["place"] else None
             if hit:
@@ -663,7 +667,16 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
         p.pop("rank", None)
     allp.sort(key=lambda p: (p.get("score", 9e9), not p["image"], p["type"] != CT_SPOT))
     max_spots = args.max_spots + (20 if len(ldong) > 3 else 0)   # 구가 많은 광역시는 더 많이
-    places = allp[:max_spots]
+    kept: list[dict] = []
+    for p in allp:   # 같은 장소의 일부(광한루/광한루원, 창덕궁 향나무/창덕궁)는 하나만
+        n = norm_name(p["name"])
+        if any(haversine_km(p["lat"], p["lng"], q["lat"], q["lng"]) < 0.4 and n and norm_name(q["name"])
+               and (n in norm_name(q["name"]) or norm_name(q["name"]) in n) for q in kept):
+            continue
+        kept.append(p)
+        if len(kept) >= max_spots:
+            break
+    places = kept
     for i, p in enumerate([p for p in places if "score" in p], 1):
         p["rank"] = i   # 화면에 보이는 '인기 n위' = 도시 안 순서
     for p in places:
