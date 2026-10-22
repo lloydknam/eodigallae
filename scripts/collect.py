@@ -50,6 +50,7 @@ CT_SPOT, CT_CULTURE, CT_FOOD = "12", "14", "39"
 ABOLISHED = {"마산시", "진해시", "남제주군", "북제주군", "청원군", "연기군"}
 
 KST = dt.timezone(dt.timedelta(hours=9))
+DATA_VERSION = 3   # 수집 방식이 바뀌면 올림 → 예전 방식으로 수집된 도시를 우선 다시 수집
 SESSION = requests.Session()
 SESSION.headers["User-Agent"] = "korea-trip-collector/1.0"
 
@@ -815,7 +816,9 @@ def main():
         wanted = {w.strip() for w in args.cities.split(",") if w.strip()}
         targets = [c for c in index["cities"] if c["name"] in wanted or c["id"] in wanted]
     else:
-        targets = sorted(index["cities"], key=lambda c: c.get("updatedAt") or "")[: args.batch]
+        # 아직 안 한 곳 → 예전 방식으로 수집된 곳 → 오래된 곳 순
+        targets = sorted(index["cities"], key=lambda c: (c.get("updatedAt") is not None,
+                                                         c.get("v") == DATA_VERSION, c.get("updatedAt") or ""))[: args.batch]
 
     caches = {name: load_json(CACHE_DIR / f"{name}.json", {}) for name in ("overview", "videos", "courses", "hub", "hubspots")}
     budget = {"overview": args.overview_budget, "youtube": args.youtube_budget, "claude": args.claude_budget}
@@ -831,7 +834,7 @@ def main():
         city.update({
             "hasData": bool(out["spots"]), "spotCount": len(out["spots"]),
             "image": next((s["thumb"] for s in out["spots"] if s["thumb"]), ""),
-            "updatedAt": out["updatedAt"], "center": out["center"],
+            "updatedAt": out["updatedAt"], "center": out["center"], "v": DATA_VERSION,
         })
         # 중간 저장(실행이 끊겨도 진행분 보존)
         for name, obj in caches.items():
