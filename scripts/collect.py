@@ -282,7 +282,7 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dic
             items = []
         for it in items:
             p = to_place(it)
-            if not p or p["type"] not in (CT_SPOT, CT_CULTURE, "28"):
+            if not p or not (p["type"] in (CT_SPOT, CT_CULTURE, "28") or (p["type"] == "38" and "시장" in p["name"])):
                 continue
             n = norm_name(p["name"])
             ok = any(n == norm_name(x) or (len(min(n, norm_name(x), key=len)) >= 3
@@ -297,24 +297,30 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dic
 
 
 def match_hub(places: list[dict], hub: list[dict]) -> None:
-    """TourAPI 장소에 인기 순위(rank)를 붙인다: 이름이 같거나 한쪽이 다른 쪽을 포함하고 가까우면 같은 곳."""
-    index = [(norm_name(h["name"]), h) for h in hub]
-    for p in places:
-        n = norm_name(p["name"])
-        best = None
-        for hn, h in index:
-            if not hn or not n:
+    """인기 순위 항목 하나에 가장 잘 맞는 장소 '하나'만 연결한다(1:1).
+    우선순위: 이름이 똑같은 곳 → 이름 길이 차이가 작은 곳 → 가까운 곳."""
+    taken: set[str] = set()
+    for h in sorted(hub, key=lambda x: x["rank"]):
+        hn = norm_name(h["name"].split("/")[-1]) or norm_name(h["name"])
+        cands = []
+        for p in places:
+            if p["id"] in taken:
                 continue
-            same = hn == n
-            part = len(min(hn, n, key=len)) >= 3 and (hn in n or n in hn)
+            n = norm_name(p["name"])
+            if not n or not hn:
+                continue
+            same = n == hn
+            part = len(min(n, hn, key=len)) >= 3 and (hn in n or n in hn) and abs(len(n) - len(hn)) <= 4
             if not (same or part):
                 continue
             d = haversine_km(p["lat"], p["lng"], h["lat"], h["lng"]) if h["lat"] else 0
-            if d <= (3.0 if same else 1.5) and (best is None or h["rank"] < best["rank"]):
-                best = h
-        if best:
-            p["rank"] = best["rank"]
-            best["matched"] = True
+            if d <= (3.0 if same else 1.5):
+                cands.append(((not same, abs(len(n) - len(hn)), d), p))
+        if cands:
+            p = min(cands, key=lambda c: c[0])[1]
+            p["rank"] = min(p.get("rank", 999), h["rank"])
+            taken.add(p["id"])
+            h["matched"] = True
 
 
 # ───────────────────────── YouTube ─────────────────────────
@@ -495,11 +501,11 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     kc = caches["hubspots"].setdefault(city["id"], {})
     have = {p["id"]: p for p in allp}
     for h in [h for h in hub_spot if not h.get("matched")][: args.hub_resolve]:
-        hit = kc.get("v4:" + h["code"])
+        hit = kc.get("v5:" + h["code"])
         if not hit or hit.get("at", "") < (dt.date.today() - dt.timedelta(days=30)).isoformat():
             regn = next(iter(sorted(ldong)), "")[:2] or None
             hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h, regn)}
-            kc["v4:" + h["code"]] = hit
+            kc["v5:" + h["code"]] = hit
         p = dict(hit["place"])
         np_ = norm_name(p["name"])
         def same_place(q):
