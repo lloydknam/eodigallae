@@ -459,13 +459,13 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     hc = caches["hub"]
     hentry = hc.get(city["id"])
     if hentry and hentry.get("at", "") >= (dt.date.today() - dt.timedelta(days=30)).isoformat():
-        hub = hentry["items"]
+        hub = [{k: v for k, v in h.items() if k != "matched"} for h in hentry["items"]]  # 지난 실행의 연결 표시 제거
     else:
         codes = {a + b if len(b) <= 3 and len(a) == 2 else b for a, b in (p["ld"] for p in allp + foods) if a and b}
         codes = {c for c in codes if re.fullmatch(r"\d{5}", c)}
         hub = fetch_hub(api, codes) if codes else []
         if hub:
-            hc[city["id"]] = {"at": dt.date.today().isoformat(), "items": hub}
+            hc[city["id"]] = {"at": dt.date.today().isoformat(), "items": [dict(h) for h in hub]}
     hub_spot = [h for h in hub if h["cat"].startswith("관광지") and not HUB_NOISE.search(h["name"])
                 and not (h["cat"].endswith("쇼핑") and "시장" not in h["name"])]
     match_hub(allp, hub_spot)
