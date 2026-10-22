@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-23T00:49:37+09:00",
+ "updatedAt": "2026-10-23T00:50:39+09:00",
  "cities": [
   {
    "id": "a1",
@@ -985,7 +985,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/54/3442254_image3_1.jpg",
-   "updatedAt": "2026-10-23T00:49:37+09:00",
+   "updatedAt": "2026-10-23T00:50:39+09:00",
    "center": [
     35.82504,
     127.14251
