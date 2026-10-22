@@ -22,6 +22,7 @@ scripts/make_sample.py  API 없이 화면 확인용 샘플 생성
 ```
 GitHub Actions (매일)                         사용자 휴대폰
  ├ TourAPI   → 시·군 목록, 관광지, 음식점       어디갈래 앱(TWA)
+ ├ 중심관광지 → 시·군별 인기 순위(관광지·맛집)
  ├ YouTube   → 관광지별 최신 영상 3~4편     →    = GitHub Pages 웹앱
  └ Claude    → 도시별 1일·1박2일 코스              data/*.json 읽어서 표시
         ↓ data/*.json 커밋                          ↓ 링크
@@ -46,6 +47,7 @@ GitHub Actions (매일)                         사용자 휴대폰
 | 키 | 어디서 | 비용 | 필수 |
 |---|---|---|---|
 | `TOURAPI_KEY` | 공공데이터포털 → "한국관광공사_국문 관광정보 서비스_GW" 활용신청 → 마이페이지의 **일반 인증키(Decoding)** | 무료 (개발계정 하루 1,000건, 운영계정 신청 시 상향) | 필수 |
+| (같은 키) | 공공데이터포털 → "한국관광공사_지자체 중심 관광지 정보" **활용신청만** 추가 (키는 위와 동일) | 무료 | 권장 — 시·군별 인기 순위(T map 내비 검색 기반). 없으면 순위 없이 정렬 |
 | `YOUTUBE_API_KEY` | Google Cloud Console → 프로젝트 생성 → YouTube Data API v3 사용 설정 → 사용자 인증 정보 → API 키 | 무료 (하루 10,000 unit = 검색 약 100회) | 선택 |
 | `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys | 사용량 과금 (도시당 코스 생성 1회, 30일마다 갱신) | 선택 |
 
@@ -56,7 +58,7 @@ YouTube 키가 없으면 사진을 눌렀을 때 유튜브 검색 결과로 연�
 1. 저장소 Settings → Secrets and variables → Actions → New repository secret 으로 위 키 이름 그대로 등록
 2. Actions 탭 → "데이터 갱신" → Run workflow
    - 첫 실행은 `cities`에 `원주시,남원시,전주시` 를 넣어 결과를 먼저 확인
-   - 확인되면 비워두고 실행 → 매일 60곳씩 오래된 순으로 갱신, 약 3일이면 전국 한 바퀴
+   - 확인되면 비워두고 실행 → 매일 40곳씩 오래된 순으로 갱신, 약 5일이면 전국 한 바퀴
 3. 첫 실수집이 끝나면 샘플 파일 삭제: `data/sample/`, `data/cities/jeonju.json`, `namwon.json`, `wonju.json`
 
 하루 호출량(기본값): TourAPI 약 400~800건, YouTube 검색 최대 90회, Claude 최대 40회. `collect.py --help` 로 조정.

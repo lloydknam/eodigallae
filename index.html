@@ -116,6 +116,7 @@ img { max-width: 100%; }
 .art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .art .glyph { font-size: 44px; text-shadow: 0 1px 12px rgba(0,0,0,.18); }
 .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .02em; padding: 2px 7px; border-radius: 6px; background: var(--celadon-soft); color: var(--celadon); }
+.rank { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 1px 7px; border-radius: 6px; background: color-mix(in srgb, var(--vermilion) 12%, transparent); color: var(--vermilion); font-variant-numeric: tabular-nums; vertical-align: 2px; margin-left: 6px; }
 .badge.warn { background: color-mix(in srgb, var(--ochre) 16%, transparent); color: var(--ochre); }
 
 .province { margin-top: 22px; }
@@ -488,7 +489,7 @@ img { max-width: 100%; }
         html += `<li class="stop"><span class="rail"><span class="dot">${n}</span></span>
           <div class="content">
             ${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}
-            <h4>${esc(sp.name)}</h4>
+            <h4>${esc(sp.name)}${sp.rank ? `<span class="rank">인기 ${sp.rank}위</span>` : ""}</h4>
             ${sp.desc ? `<p class="desc">${esc(sp.desc)}</p>` : ""}
             <div class="links">
               <a href="${video ? ytWatch(video.id) : ytSearch(state.city.name, sp.name)}" target="_blank" rel="noopener">${video ? "영상 보기" : "영상 찾기"} ↗</a>
@@ -496,12 +497,14 @@ img { max-width: 100%; }
             </div>
           </div></li>`;
       } else {
-        const title = s.food ? s.food.name : `${s.near.name} 주변 식당`;
+        const titleHTML = s.food
+          ? esc(s.food.name) + (s.food.rank ? `<span class="rank">인기 ${s.food.rank}위</span>` : "")
+          : `${esc(s.near.name)} 주변 식당`;
         const link = s.food ? kakaoPin(s.food) : kakaoSearch(`${baseCity(state.city.name)} ${s.near.name} 맛집`);
         html += `<li class="stop meal"><span class="rail"><span class="dot"></span></span>
           <div class="content">
             ${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}
-            <h4>${esc(title)}</h4>
+            <h4>${titleHTML}</h4>
             <div class="links"><a href="${link}" target="_blank" rel="noopener">${s.food ? "지도" : "식당 찾아보기"} ↗</a></div>
           </div></li>`;
       }
@@ -558,7 +561,7 @@ img { max-width: 100%; }
           <span class="play">${playIcon}${v.length ? `영상 ${v.length}편` : "영상 찾기"}</span>
         </a>
         <div class="body">
-          <h4>${esc(s.name)}</h4>
+          <h4>${esc(s.name)}${s.rank ? `<span class="rank">인기 ${s.rank}위</span>` : ""}</h4>
           ${s.addr ? `<span class="addr">${esc(s.addr)}</span>` : ""}
           ${s.desc ? `<p class="desc">${esc(s.desc)}</p>` : ""}
           ${v.length > 1 ? `<ul class="vids">${v.slice(1, 4).map((x) => `<li><a href="${ytWatch(x.id)}" target="_blank" rel="noopener">
@@ -592,7 +595,7 @@ img { max-width: 100%; }
     for (const s of d.spots) for (const id of s.foods || []) { if (!nearOf.has(id)) nearOf.set(id, s.name); }
     return `${spec ? `<div style="margin-bottom:14px">${spec}</div>` : ""}<div class="foods">${d.restaurants.map((f) => `
       <article class="food">
-        <h4>${esc(f.name)}</h4>
+        <h4>${esc(f.name)}${f.rank ? `<span class="rank">인기 ${f.rank}위</span>` : ""}</h4>
         ${nearOf.has(f.id) ? `<span class="near">${esc(nearOf.get(f.id))} 근처</span>` : ""}
         ${f.addr ? `<span class="addr">${esc(f.addr)}</span>` : ""}
         <div class="links"><a href="${kakaoPin(f)}" target="_blank" rel="noopener">지도·리뷰 ↗</a>${f.tel ? `<span class="addr">${esc(f.tel)}</span>` : ""}</div>
