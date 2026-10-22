@@ -201,11 +201,14 @@ def to_place(it: dict) -> dict | None:
     }
 
 
-def fetch_places(api: TourAPI, city: dict, ctype: str, max_rows: int) -> list[dict]:
-    """도시의 해당 유형 항목을 최대 max_rows개까지 전부 가져온다.
-    유명 관광지가 빠지지 않도록 '일부'가 아니라 '전체'를 받아 인기 순위로 다시 줄 세운다."""
+def fetch_places(api: TourAPI, city: dict, ctype: str, max_rows: int, ldong: set[str] | None = None) -> list[dict]:
+    """도시의 해당 유형 항목을 전부 가져온다. 관광공사 4.3 개편 이후 옛 지역코드(areaCode/sigunguCode)가
+    비어 있는 항목이 많아, 새 법정동 코드(lDongRegnCd/lDongSignguCd)로도 조회해 합친다."""
     items = api.list_all("areaBasedList2", max_rows, areaCode=city["areaCode"],
                          sigunguCode=city["sigunguCode"], contentTypeId=ctype, arrange="C")
+    for code in sorted(ldong or []):
+        items += api.list_all("areaBasedList2", max_rows, lDongRegnCd=code[:2], lDongSignguCd=code[2:],
+                              contentTypeId=ctype, arrange="C")
     seen, out = set(), []
     for it in items:
         p = to_place(it)
@@ -213,6 +216,11 @@ def fetch_places(api: TourAPI, city: dict, ctype: str, max_rows: int) -> list[di
             seen.add(p["id"])
             out.append(p)
     return out
+
+
+def ldong_codes(places: list[dict]) -> set[str]:
+    codes = {a + b if len(a) == 2 and len(b) <= 3 else b for a, b in (p["ld"] for p in places) if a and b}
+    return {c for c in codes if re.fullmatch(r"\d{5}", c)}
 
 
 # ───────────────────────── 인기 순위 (지자체 중심 관광지) ─────────────────────────
@@ -256,7 +264,7 @@ HUB_NOISE = re.compile(r"(CC$|CC/|GC$|골프|컨트리|리조트|호텔|콘도|�
 DIAG: list[str] = []  # 이름 검색 진단 기록 → data/cache/diag.json
 
 
-def resolve_hub_spot(api: TourAPI, city: dict, h: dict) -> dict:
+def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dict:
     """순위에는 있는데 관광공사 목록에서 못 찾은 곳: 이름으로 검색해 사진·설명이 있는 항목을 찾고,
     없으면 이름·좌표만으로 추가한다. '한국도로공사/전주수목원'처럼 '/'가 있으면 양쪽을 모두 시도."""
     parts = [x.strip() for x in h["name"].split("/") if x.strip()]
@@ -265,8 +273,8 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict) -> dict:
     best = None
     for kw in keywords:
         try:
-            items = api.get("searchKeyword2", keyword=kw, areaCode=city["areaCode"],
-                            sigunguCode=city["sigunguCode"], numOfRows=20, pageNo=1)
+            params = {"lDongRegnCd": regn} if regn else {"areaCode": city["areaCode"]}
+            items = api.get("searchKeyword2", keyword=kw, numOfRows=30, pageNo=1, **params)
             DIAG.append(f"{city['name']} | {kw} | {len(items)}건 | " + ", ".join(
                 f"{i.get('title')}({i.get('contenttypeid')})" for i in items[:5]))
         except RuntimeError as e:
@@ -456,10 +464,18 @@ def claude_courses(key: str, model: str, city: dict, spots: list[dict], foods: l
 
 def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> dict:
     log(f"▶ {city['province']} {city['name']}")
-    spots = fetch_places(api, city, CT_SPOT, args.fetch_rows)
-    culture = fetch_places(api, city, CT_CULTURE, 100)
-    foods = fetch_places(api, city, CT_FOOD, args.fetch_rows)
+    # 법정동 코드: 도시 목록에 저장된 값이 없으면 음식점 목록(옛 코드로도 잘 잡힘)에서 추출
+    ldong = set(city.get("ldong") or [])
+    if not ldong:
+        probe = fetch_places(api, city, CT_FOOD, 100)
+        ldong = ldong_codes(probe)
+        city["ldong"] = sorted(ldong)
+    spots = fetch_places(api, city, CT_SPOT, args.fetch_rows, ldong)
+    culture = fetch_places(api, city, CT_CULTURE, 150, ldong)
+    foods = fetch_places(api, city, CT_FOOD, args.fetch_rows, ldong)
     allp = spots + culture
+    ldong |= ldong_codes(allp + foods)
+    city["ldong"] = sorted(ldong)
 
     # 인기 순위: TourAPI 항목의 법정 시군구 코드로 '지자체 중심 관광지'를 조회 (30일 캐시)
     hc = caches["hub"]
@@ -467,8 +483,7 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     if hentry and hentry.get("at", "") >= (dt.date.today() - dt.timedelta(days=30)).isoformat():
         hub = [{k: v for k, v in h.items() if k != "matched"} for h in hentry["items"]]  # 지난 실행의 연결 표시 제거
     else:
-        codes = {a + b if len(b) <= 3 and len(a) == 2 else b for a, b in (p["ld"] for p in allp + foods) if a and b}
-        codes = {c for c in codes if re.fullmatch(r"\d{5}", c)}
+        codes = set(ldong)
         hub = fetch_hub(api, codes) if codes else []
         if hub:
             hc[city["id"]] = {"at": dt.date.today().isoformat(), "items": [dict(h) for h in hub]}
@@ -480,10 +495,11 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     kc = caches["hubspots"].setdefault(city["id"], {})
     have = {p["id"]: p for p in allp}
     for h in [h for h in hub_spot if not h.get("matched")][: args.hub_resolve]:
-        hit = kc.get("v3:" + h["code"])
+        hit = kc.get("v4:" + h["code"])
         if not hit or hit.get("at", "") < (dt.date.today() - dt.timedelta(days=30)).isoformat():
-            hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h)}
-            kc["v3:" + h["code"]] = hit
+            regn = next(iter(sorted(ldong)), "")[:2] or None
+            hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h, regn)}
+            kc["v4:" + h["code"]] = hit
         p = dict(hit["place"])
         np_ = norm_name(p["name"])
         def same_place(q):
