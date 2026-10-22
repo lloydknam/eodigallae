@@ -323,19 +323,27 @@ def fetch_hub(api: TourAPI, codes: set[str], names: dict[str, str] | None = None
     return sorted(out.values(), key=lambda x: x["rank"])
 
 
+CAT_WEIGHT = {"역사관광": 0.6, "자연관광": 0.7, "문화관광": 1.0, "체험관광": 1.0, "레저스포츠": 1.3,
+              "기타관광": 1.3, "쇼핑": 1.6}   # 내비 목적지 순위라 생활 시설이 많음 → 명소 성격일수록 앞으로
+
+
 def hub_score(hub_spot: list[dict]) -> None:
-    """구가 여러 개인 도시: 구마다 1위가 하나씩 있으므로, 관광 명소가 많은 구의 순위를 더 높게 친다.
-    score = 구 안 순위 × (가장 관광지가 많은 구의 명소 수 / 이 구의 명소 수)"""
-    per_gu = collections.Counter(h.get("gu", "") for h in hub_spot)
-    top = max(per_gu.values()) if per_gu else 1
+    """순위 점수(낮을수록 좋음) = 구 안 순위 × 분야 가중치 × 구 보정.
+    구가 여러 개인 도시는 구마다 1위가 하나씩 있으므로, 역사·자연·문화 명소가 많은 구의 순위를 더 높게 친다."""
+    sights = collections.Counter(h.get("gu", "") for h in hub_spot
+                                 if re.search(r"역사관광|자연관광|문화관광", h["cat"]))
+    top = max(sights.values()) if sights else 1
     for h in hub_spot:
-        h["score"] = h["rank"] * top / max(per_gu.get(h.get("gu", ""), 1), 1)
+        w = CAT_WEIGHT.get(h["cat"].split("/")[-1], 1.0)
+        gu_w = (top / max(sights.get(h.get("gu", ""), 1), 1)) ** 0.7 if len(sights) > 1 else 1.0
+        h["score"] = h["rank"] * w * gu_w
 
 
 # 인기 순위에는 역·터미널·골프장·숙박·영화관도 섞여 있어 관광지 추천에서 뺀다
 HUB_NOISE = re.compile(r"(CC$|CC/|GC$|골프|컨트리|리조트|호텔|콘도|수영장|빌리지|빌라|역$|역/|터미널|CGV|시네마|메가박스|"
                        r"경기장|볼파크|야구장|체육관|빙상|백화점|아울렛|몰$|몰/|마트|도매시장|농수산물|병원|주차장|휴게소|"
-                       r"톨게이트|IC$|아파트|모텔|펜션|킨텍스|코엑스|벡스코|컨벤션|전시장|공항)", re.I)
+                       r"톨게이트|IC$|아파트|모텔|펜션|킨텍스|코엑스|벡스코|컨벤션|전시장|공항|아이스링크|노브랜드|이마트|홈플러스|"
+                       r"면세점|타워/|축산물시장|수산물도매|EXCO|SETEC|aT센터|대학교$|하우스$)", re.I)
 TOURISM_CAT = re.compile(r"문화관광|역사관광|자연관광|체험관광|레저스포츠|기타관광|쇼핑")
 
 
@@ -374,6 +382,42 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dic
             return best[1]
     return {"id": f"h{h['code']}", "type": "hub", "name": " ".join(parts), "addr": "", "lat": round(h["lat"], 6),
             "lng": round(h["lng"], 6), "image": "", "thumb": "", "tel": "", "modified": "", "ld": ("", "")}
+
+
+def apply_curated(api: TourAPI, city: dict, allp: list[dict], ldong: set[str], cache: dict) -> int:
+    """data/curated.json에 적어 둔 '대표 명소'를 맨 앞에 고정한다 (내비 순위가 실제 관광 인기와 다른 대도시용).
+    목록에 있으면 그대로 쓰고, 없으면 관광공사에서 이름으로 찾아 추가한다."""
+    names = load_json(DATA / "curated.json", {}).get(city["name"], [])
+    regn = next(iter(sorted(ldong)), "")[:2] or None
+    n_ok = 0
+    for i, name in enumerate(names):
+        nn = norm_name(name)
+        def fits(p):
+            n = norm_name(p["name"])
+            return n == nn or (nn in n and len(n) - len(nn) <= 6)
+        hit = min((p for p in allp if fits(p)), key=lambda p: (norm_name(p["name"]) != nn, not p["image"],
+                                                                  len(p["name"])), default=None)
+        if not hit:
+            key = f"cur:{city['id']}:{name}"
+            if key not in cache:
+                try:
+                    params = {"lDongRegnCd": regn} if regn else {"areaCode": city["areaCode"]}
+                    items = api.get("searchKeyword2", keyword=name, numOfRows=30, pageNo=1, **params)
+                except QuotaError:
+                    raise
+                except RuntimeError:
+                    items = []
+                cands = [q for q in (to_place(it) for it in items) if q and fits(q)
+                         and (not ldong or ("".join(q["ld"]) if len(q["ld"][1]) <= 3 else q["ld"][1]) in ldong)]
+                best = min(cands, key=lambda q: (norm_name(q["name"]) != nn, not q["image"], len(q["name"])), default=None)
+                cache[key] = {"at": dt.date.today().isoformat(), "place": best}
+            hit = dict(cache[key]["place"]) if cache[key]["place"] else None
+            if hit:
+                allp.append(hit)
+        if hit:
+            hit["score"] = 0.01 * (i + 1)
+            n_ok += 1
+    return n_ok
 
 
 def match_hub(places: list[dict], hub: list[dict]) -> None:
@@ -610,7 +654,8 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
             have[p["id"]] = p
             allp.append(p)
         h["matched"] = True
-    log(f"   후보 관광지 {len(spots)}·문화시설 {len(culture)}·식당 {len(foods)} · 인기 순위 {len(hub_spot)}곳 중 "
+    n_cur = apply_curated(api, city, allp, ldong, caches["hubspots"])
+    log(f"   대표 명소 고정 {n_cur}곳 · 후보 관광지 {len(spots)}·문화시설 {len(culture)}·식당 {len(foods)} · 인기 순위 {len(hub_spot)}곳 중 "
         f"{sum(1 for h in hub_spot if h.get('matched'))}곳 연결 · 호출 {api.calls}/{api.hub_calls}")
 
     # 순위 있는 곳(인기순) → 순위 없는 곳 중 사진 있는 관광지 → 나머지
