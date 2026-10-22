@@ -1,0 +1,59 @@
+name: 데이터 갱신
+
+on:
+  schedule:
+    - cron: "17 19 * * *"   # 매일 한국시간 04:17
+  workflow_dispatch:
+    inputs:
+      cities:
+        description: "특정 도시만 (쉼표 구분, 예: 원주시,남원시,전주시). 비우면 오래된 순으로 batch개"
+        required: false
+        default: ""
+      batch:
+        description: "처리할 도시 수"
+        required: false
+        default: "60"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r scripts/requirements.txt
+
+      - name: 관광지·영상·코스 수집
+        env:
+          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.cities }}" ]; then
+            python scripts/collect.py --cities "${{ github.event.inputs.cities }}"
+          else
+            python scripts/collect.py --batch "${{ github.event.inputs.batch || '60' }}"
+          fi
+
+      - name: 변경분 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "데이터 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M')"
+            git push
+          fi

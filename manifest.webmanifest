@@ -1,0 +1,18 @@
+{
+  "name": "어디갈래 - 전국 시·군 여행 코스",
+  "short_name": "어디갈래",
+  "description": "전국 시·군별 관광지, 추천 코스, 이동시간, 주변 맛집과 최신 여행 영상",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F6F3",
+  "theme_color": "#2F7D6D",
+  "categories": ["travel", "navigation"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
