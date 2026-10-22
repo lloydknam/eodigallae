@@ -189,7 +189,7 @@ def to_place(it: dict) -> dict | None:
     return {
         "id": str(it["contentid"]),
         "type": str(it.get("contenttypeid", "")),
-        "name": clean_text(it.get("title")),
+        "name": re.sub(r"\s*\[[^\]]*\]\s*$", "", clean_text(it.get("title"))),  # '[슬로시티]' 같은 꼬리표 제거
         "addr": clean_text(f"{it.get('addr1') or ''} {it.get('addr2') or ''}"),
         "lat": round(lat, 6),
         "lng": round(lng, 6),
@@ -365,6 +365,9 @@ def nearest_neighbor_order(points: list[dict]) -> list[dict]:
     return route
 
 
+CAFE = re.compile(r"카페|커피|베이커리|빵|디저트|cafe|coffee", re.I)  # 점심·저녁 자리에는 식당만
+
+
 def food_rank_key(p: dict, f: dict):
     return (f.get("rank", 999), haversine_km(p["lat"], p["lng"], f["lat"], f["lng"]))
 
@@ -384,7 +387,7 @@ def heuristic_courses(spots: list[dict], foods: list[dict]) -> list[dict]:
         return nearest_neighbor_order([start] + rest)
 
     def meal_near(p, used):
-        cands = [f for f in foods if f["id"] not in used and haversine_km(p["lat"], p["lng"], f["lat"], f["lng"]) <= 2.5]
+        cands = [f for f in foods if f["id"] not in used and not CAFE.search(f["name"]) and haversine_km(p["lat"], p["lng"], f["lat"], f["lng"]) <= 2.5]
         return min(cands, key=lambda f: food_rank_key(p, f)) if cands else None
 
     def make_day(label, seq, used):
