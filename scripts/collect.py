@@ -45,6 +45,8 @@ CLAUDE_URL = "https://api.anthropic.com/v1/messages"
 METRO_AREA_CODES = {"1", "2", "3", "4", "5", "6", "7", "8"}
 
 CT_SPOT, CT_CULTURE, CT_FOOD = "12", "14", "39"
+# TourAPI 지역코드에 남아 있는 옛 행정구역 (통합·폐지)
+ABOLISHED = {"마산시", "진해시", "남제주군", "북제주군", "청원군", "연기군"}
 
 KST = dt.timezone(dt.timedelta(hours=9))
 SESSION = requests.Session()
@@ -170,6 +172,8 @@ def build_city_list(api: TourAPI) -> list[dict]:
                            "areaCode": acode, "sigunguCode": None})
             continue
         for sg in api.get("areaCode2", areaCode=acode, numOfRows=100):
+            if sg["name"] in ABOLISHED:
+                continue
             cities.append({"id": f"a{acode}-s{sg['code']}", "name": sg["name"], "province": aname,
                            "areaCode": acode, "sigunguCode": str(sg["code"])})
     return cities
@@ -242,6 +246,37 @@ def fetch_hub(api: TourAPI, codes: set[str]) -> list[dict]:
             if key not in out or rank < out[key]["rank"]:
                 out[key] = item
     return sorted(out.values(), key=lambda x: x["rank"])
+
+
+# 인기 순위에는 역·터미널·골프장·숙박·영화관도 섞여 있어 관광지 추천에서 뺀다
+HUB_NOISE = re.compile(r"(CC$|CC/|GC$|골프|컨트리|리조트|호텔|콘도|수영장|빌리지|빌라|역$|역/|터미널|CGV|시네마|메가박스|"
+                       r"경기장|빙상|백화점|아울렛|마트|병원|주차장|휴게소|톨게이트|IC$|아파트|모텔|펜션)", re.I)
+
+
+def resolve_hub_spot(api: TourAPI, city: dict, h: dict) -> dict:
+    """순위에는 있는데 관광공사 목록에서 못 찾은 곳: 이름으로 검색해 사진·설명이 있는 항목을 찾고,
+    없으면 이름·좌표만으로 추가한다."""
+    kw = h["name"].split("/")[0].strip()
+    try:
+        items = api.get("searchKeyword2", keyword=kw, areaCode=city["areaCode"],
+                        sigunguCode=city["sigunguCode"], numOfRows=10, pageNo=1)
+    except RuntimeError:
+        items = []
+    nk, best = norm_name(kw), None
+    for it in items:
+        p = to_place(it)
+        if not p or p["type"] not in (CT_SPOT, CT_CULTURE, "28"):
+            continue
+        n = norm_name(p["name"])
+        if not (n == nk or (len(min(n, nk, key=len)) >= 3 and (n in nk or nk in n))):
+            continue
+        d = haversine_km(p["lat"], p["lng"], h["lat"], h["lng"])
+        if d <= 3 and (best is None or d < best[0]):
+            best = (d, p)
+    if best:
+        return best[1]
+    return {"id": f"h{h['code']}", "type": "hub", "name": kw, "addr": "", "lat": round(h["lat"], 6),
+            "lng": round(h["lng"], 6), "image": "", "thumb": "", "tel": "", "modified": "", "ld": ("", "")}
 
 
 def match_hub(places: list[dict], hub: list[dict]) -> None:
@@ -428,16 +463,31 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
         hub = fetch_hub(api, codes) if codes else []
         if hub:
             hc[city["id"]] = {"at": dt.date.today().isoformat(), "items": hub}
-    hub_food = [h for h in hub if "음식" in h["cat"]]
-    hub_spot = [h for h in hub if "음식" not in h["cat"] and not re.search(r"숙박|쇼핑", h["cat"])]
+    hub_spot = [h for h in hub if h["cat"].startswith("관광지") and not HUB_NOISE.search(h["name"])
+                and not (h["cat"].endswith("쇼핑") and "시장" not in h["name"])]
     match_hub(allp, hub_spot)
-    match_hub(foods, hub_food)
-    # 인기 맛집 중 관광공사 목록에 없는 곳도 이름·좌표로 추가 (상세는 카카오맵 링크)
-    for h in hub_food:
-        if not h.get("matched") and h["lat"]:
-            foods.append({"id": f"h{h['code']}", "type": "hub", "name": h["name"], "addr": "", "lat": h["lat"],
-                          "lng": h["lng"], "image": "", "thumb": "", "tel": "", "rank": h["rank"]})
-    log(f"   인기 순위 {len(hub)}곳 · 관광지 매칭 {sum(1 for p in allp if 'rank' in p)}")
+
+    # 인기 상위인데 연결 안 된 곳은 이름으로 찾아서 추가 (도시별 30일 캐시)
+    kc = caches["hubspots"].setdefault(city["id"], {})
+    have = {p["id"]: p for p in allp}
+    for h in [h for h in hub_spot if not h.get("matched")][: args.hub_resolve]:
+        hit = kc.get(h["code"])
+        if not hit or hit.get("at", "") < (dt.date.today() - dt.timedelta(days=30)).isoformat():
+            hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h)}
+            kc[h["code"]] = hit
+        p = dict(hit["place"])
+        np_ = norm_name(p["name"])
+        dup = have.get(p["id"]) or next((q for q in allp if haversine_km(p["lat"], p["lng"], q["lat"], q["lng"]) < 0.5
+                                         and (lambda a, b: a and b and (a in b or b in a))(np_, norm_name(q["name"]))), None)
+        if dup:
+            dup["rank"] = min(dup.get("rank", 999), h["rank"])
+        else:
+            p["rank"] = h["rank"]
+            have[p["id"]] = p
+            allp.append(p)
+        h["matched"] = True
+    log(f"   후보 관광지 {len(spots)}·문화시설 {len(culture)}·식당 {len(foods)} · 인기 순위 {len(hub_spot)}곳 중 "
+        f"{sum(1 for h in hub_spot if h.get('matched'))}곳 연결")
 
     # 순위 있는 곳(인기순) → 순위 없는 곳 중 사진 있는 관광지 → 나머지
     allp.sort(key=lambda p: (p.get("rank", 999), not p["image"], p["type"] != CT_SPOT))
@@ -449,6 +499,8 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     # 개요(설명): 캐시 우선, 없으면 상위 일부만 detailCommon2 호출
     ov = caches["overview"]
     for p in places[: args.overview_top]:
+        if p["id"].startswith("h"):
+            continue
         if p["id"] not in ov and budget["overview"] > 0:
             try:
                 d = api.get("detailCommon2", contentId=p["id"])
@@ -528,7 +580,8 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--batch", type=int, default=40, help="이번 실행에서 처리할 도시 수(오래된 순)")
+    ap.add_argument("--hub-resolve", type=int, default=12, help="연결 안 된 인기 관광지를 이름으로 찾을 최대 개수")
+    ap.add_argument("--batch", type=int, default=30, help="이번 실행에서 처리할 도시 수(오래된 순)")
     ap.add_argument("--cities", default="", help="쉼표로 구분한 도시 이름 또는 id (지정 시 batch 무시)")
     ap.add_argument("--only-city-list", action="store_true")
     ap.add_argument("--max-spots", type=int, default=30)
@@ -575,7 +628,7 @@ def main():
     else:
         targets = sorted(index["cities"], key=lambda c: c.get("updatedAt") or "")[: args.batch]
 
-    caches = {name: load_json(CACHE_DIR / f"{name}.json", {}) for name in ("overview", "videos", "courses", "hub")}
+    caches = {name: load_json(CACHE_DIR / f"{name}.json", {}) for name in ("overview", "videos", "courses", "hub", "hubspots")}
     budget = {"overview": args.overview_budget, "youtube": args.youtube_budget, "claude": args.claude_budget}
 
     for city in targets:

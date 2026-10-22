@@ -330,7 +330,7 @@ img { max-width: 100%; }
   // ── 홈 ──
   function showHome() {
     state.city = null;
-    const total = state.index.cities.length;
+    const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
     topbar.innerHTML = `<a class="brand" href="#" data-home>어디<span>갈래</span></a><span class="sub">전국 ${total}개 시·군</span>`;
     const provinces = ["전체", ...new Set(state.index.cities.map((c) => c.province))];
     app.innerHTML = `
@@ -354,7 +354,9 @@ img { max-width: 100%; }
   function renderResults() {
     const box = document.getElementById("results");
     const q = state.q.replace(/\s/g, "");
-    let list = state.index.cities.filter((c) => state.prov === "전체" || c.province === state.prov);
+    // 수집했는데 관광지가 없는 곳(옛 행정구역 등)은 숨긴다
+    let list = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData))
+      .filter((c) => state.prov === "전체" || c.province === state.prov);
     if (q) list = list.filter((c) => (c.name + c.province).replace(/\s/g, "").includes(q));
     const ready = list.filter((c) => c.hasData).sort((a, b) => (b.spotCount || 0) - (a.spotCount || 0));
     const groups = new Map();
