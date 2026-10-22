@@ -20,6 +20,7 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import datetime as dt
 import json
 import math
@@ -98,16 +99,22 @@ def clean_text(s: str | None, limit: int | None = None) -> str:
 
 # ───────────────────────── TourAPI ─────────────────────────
 
+class QuotaError(RuntimeError):
+    pass
+
+
 class TourAPI:
     def __init__(self, key: str, max_calls: int):
         self.key = key
-        self.calls = 0
+        self.calls = 0          # 관광정보 서비스(KorService2) 호출 수
+        self.hub_calls = 0      # 지자체 중심 관광지 서비스 호출 수 (공공데이터포털 한도는 서비스별로 따로)
         self.max_calls = max_calls
         self.hub_off = False
+        self.hub_ym: str | None = None   # 자료가 있는 기준월을 한 번 찾으면 계속 사용
 
     def get_hub(self, **params) -> list[dict]:
         """지자체 중심 관광지 API. 활용신청 전이면 빈 목록(순위 없이 진행)."""
-        if self.hub_off:
+        if self.hub_off or self.hub_calls >= self.max_calls:
             return []
         try:
             return self.get("areaBasedList1", _base=HUB_BASE, **params)
@@ -117,16 +124,22 @@ class TourAPI:
             return []
 
     def get(self, endpoint: str, _base: str = TOUR_BASE, **params) -> list[dict]:
-        if self.calls >= self.max_calls:
-            raise RuntimeError(f"TourAPI 호출 한도({self.max_calls}) 도달")
+        hub = _base == HUB_BASE
+        if not hub and self.calls >= self.max_calls:
+            raise QuotaError(f"TourAPI 호출 한도({self.max_calls}) 도달")
         q = {"serviceKey": self.key, "MobileOS": "ETC", "MobileApp": "KoreaTrip", "_type": "json"}
         q.update({k: v for k, v in params.items() if v is not None})
         last_err = None
         for attempt in range(3):
-            self.calls += 1
+            if hub:
+                self.hub_calls += 1
+            else:
+                self.calls += 1
             try:
                 r = SESSION.get(f"{_base}/{endpoint}", params=q, timeout=20)
                 text = r.text.strip()
+                if "LIMITED_NUMBER_OF_SERVICE_REQUESTS" in text or r.status_code == 429:
+                    raise QuotaError("공공데이터포털 하루 호출 한도 초과 (내일 자동으로 이어서 수집)")
                 if not text.startswith("{"):
                     # 인증키 오류 등은 XML로 온다
                     msg = re.search(r"<returnAuthMsg>(.*?)</returnAuthMsg>|<resultMsg>(.*?)</resultMsg>", text)
@@ -143,6 +156,11 @@ class TourAPI:
                     return []
                 item = items.get("item") or []
                 return item if isinstance(item, list) else [item]
+            except QuotaError:
+                if hub:
+                    self.hub_off = True
+                    return []
+                raise
             except (requests.RequestException, ValueError, RuntimeError) as e:
                 last_err = e
                 if "인증" in str(e) or "SERVICE_KEY" in str(e):
@@ -204,8 +222,10 @@ def to_place(it: dict) -> dict | None:
 def fetch_places(api: TourAPI, city: dict, ctype: str, max_rows: int, ldong: set[str] | None = None) -> list[dict]:
     """도시의 해당 유형 항목을 전부 가져온다. 관광공사 4.3 개편 이후 옛 지역코드(areaCode/sigunguCode)가
     비어 있는 항목이 많아, 새 법정동 코드(lDongRegnCd/lDongSignguCd)로도 조회해 합친다."""
-    items = api.list_all("areaBasedList2", max_rows, areaCode=city["areaCode"],
-                         sigunguCode=city["sigunguCode"], contentTypeId=ctype, arrange="C")
+    items = []
+    if city.get("areaCode"):   # 옛 지역코드 조회 (법정동 코드를 아직 모를 때만)
+        items = api.list_all("areaBasedList2", max_rows, areaCode=city["areaCode"],
+                             sigunguCode=city["sigunguCode"], contentTypeId=ctype, arrange="C")
     for code in sorted(ldong or []):
         items += api.list_all("areaBasedList2", max_rows, lDongRegnCd=code[:2], lDongSignguCd=code[2:],
                               contentTypeId=ctype, arrange="C")
@@ -219,8 +239,42 @@ def fetch_places(api: TourAPI, city: dict, ctype: str, max_rows: int, ldong: set
 
 
 def ldong_codes(places: list[dict]) -> set[str]:
-    codes = {a + b if len(a) == 2 and len(b) <= 3 else b for a, b in (p["ld"] for p in places) if a and b}
-    return {c for c in codes if re.fullmatch(r"\d{5}", c)}
+    codes = [a + b if len(a) == 2 and len(b) <= 3 else b for a, b in (p.get("ld") or ("", "") for p in places) if a and b]
+    return clean_ldong(c for c in codes if re.fullmatch(r"\d{5}", c))
+
+
+def clean_ldong(codes) -> set[str]:
+    """한 도시의 코드는 한 시·도에 속한다. 데이터 오류로 섞인 다른 시·도 코드(예: 인천에 강원 코드)는 버린다."""
+    codes = list(codes)
+    if not codes:
+        return set()
+    top = collections.Counter(c[:2] for c in codes).most_common(1)[0][0]
+    return {c for c in codes if c[:2] == top}
+
+
+# 2026-07 전남광주통합특별시 출범 이후 새 코드(12xxx). 인기 순위 자료가 옛 코드로만 있으면 이름으로 옛 코드를 찾는다.
+OLD_SIGUNGU = {
+    "동구": "29110", "서구": "29140", "남구": "29155", "북구": "29170", "광산구": "29200",
+    "목포시": "46110", "여수시": "46130", "순천시": "46150", "나주시": "46170", "광양시": "46230",
+    "담양군": "46710", "곡성군": "46720", "구례군": "46730", "고흥군": "46770", "보성군": "46780",
+    "화순군": "46790", "장흥군": "46800", "강진군": "46810", "해남군": "46820", "영암군": "46830",
+    "무안군": "46840", "함평군": "46860", "영광군": "46870", "장성군": "46880", "완도군": "46890",
+    "진도군": "46900", "신안군": "46910",
+}
+
+
+def code_names(places: list[dict]) -> dict[str, str]:
+    """법정 시군구 코드 → 주소 속 시·군·구 이름 (예: 12300 → 북구)"""
+    votes: dict[str, collections.Counter] = {}
+    for p in places:
+        a, b = p.get("ld") or ("", "")
+        if not (a and b):
+            continue
+        code = a + b if len(b) <= 3 else b
+        m = re.match(r"\S+\s+(\S+?[시군구])\b", p.get("addr") or "")
+        if m:
+            votes.setdefault(code, collections.Counter())[m.group(1)] += 1
+    return {c: v.most_common(1)[0][0] for c, v in votes.items()}
 
 
 # ───────────────────────── 인기 순위 (지자체 중심 관광지) ─────────────────────────
@@ -230,16 +284,29 @@ def norm_name(s: str) -> str:
     return re.sub(r"[^0-9A-Za-z가-힣]", "", s).lower()
 
 
-def fetch_hub(api: TourAPI, codes: set[str]) -> list[dict]:
-    """법정 시군구 코드(5자리)별 인기 상위 100곳. 공급 지연을 감안해 2~4개월 전 자료부터 시도."""
+def fetch_hub(api: TourAPI, codes: set[str], names: dict[str, str] | None = None) -> list[dict]:
+    """법정 시군구 코드(5자리)별 인기 상위 100곳. 공급 지연을 감안해 2~4개월 전 자료부터 시도.
+    광역시처럼 구가 여러 개면 순위가 구마다 따로 매겨지므로, 각 항목에 구 코드(gu)를 붙여 둔다."""
     today = dt.date.today().replace(day=1)
+    months = []
+    for back in (2, 3, 4, 5):
+        y, m = today.year, today.month - back
+        while m <= 0:
+            y, m = y - 1, m + 12
+        months.append(f"{y}{m:02d}")
     out: dict[str, dict] = {}
     for code in sorted(codes):
-        for back in (2, 3, 4):
-            y, m = today.year, today.month - back
-            while m <= 0:
-                y, m = y - 1, m + 12
-            rows = api.get_hub(baseYm=f"{y}{m:02d}", areaCd=code[:2], signguCd=code, numOfRows=100, pageNo=1)
+        tries = [code]
+        old = OLD_SIGUNGU.get((names or {}).get(code, "")) if code.startswith("12") else None
+        if old:
+            tries.append(old)
+        rows = []
+        for c in tries:
+            for ym in ([api.hub_ym] if api.hub_ym else []) + [m for m in months if m != api.hub_ym]:
+                rows = api.get_hub(baseYm=ym, areaCd=c[:2], signguCd=c, numOfRows=100, pageNo=1)
+                if rows:
+                    api.hub_ym = ym
+                    break
             if rows:
                 break
         for r in rows:
@@ -250,15 +317,26 @@ def fetch_hub(api: TourAPI, codes: set[str]) -> list[dict]:
                 continue
             key = str(r.get("hubTatsCd") or r.get("hubTatsNm"))
             item = {"code": key, "name": clean_text(r.get("hubTatsNm")), "rank": rank, "lat": lat, "lng": lng,
-                    "cat": f"{r.get('hubCtgryLclsNm') or ''}/{r.get('hubCtgryMclsNm') or ''}"}
+                    "cat": f"{r.get('hubCtgryLclsNm') or ''}/{r.get('hubCtgryMclsNm') or ''}", "gu": code}
             if key not in out or rank < out[key]["rank"]:
                 out[key] = item
     return sorted(out.values(), key=lambda x: x["rank"])
 
 
+def hub_score(hub_spot: list[dict]) -> None:
+    """구가 여러 개인 도시: 구마다 1위가 하나씩 있으므로, 관광 명소가 많은 구의 순위를 더 높게 친다.
+    score = 구 안 순위 × (가장 관광지가 많은 구의 명소 수 / 이 구의 명소 수)"""
+    per_gu = collections.Counter(h.get("gu", "") for h in hub_spot)
+    top = max(per_gu.values()) if per_gu else 1
+    for h in hub_spot:
+        h["score"] = h["rank"] * top / max(per_gu.get(h.get("gu", ""), 1), 1)
+
+
 # 인기 순위에는 역·터미널·골프장·숙박·영화관도 섞여 있어 관광지 추천에서 뺀다
 HUB_NOISE = re.compile(r"(CC$|CC/|GC$|골프|컨트리|리조트|호텔|콘도|수영장|빌리지|빌라|역$|역/|터미널|CGV|시네마|메가박스|"
-                       r"경기장|빙상|백화점|아울렛|마트|병원|주차장|휴게소|톨게이트|IC$|아파트|모텔|펜션)", re.I)
+                       r"경기장|볼파크|야구장|체육관|빙상|백화점|아울렛|몰$|몰/|마트|도매시장|농수산물|병원|주차장|휴게소|"
+                       r"톨게이트|IC$|아파트|모텔|펜션|킨텍스|코엑스|벡스코|컨벤션|전시장|공항)", re.I)
+TOURISM_CAT = re.compile(r"문화관광|역사관광|자연관광|체험관광|레저스포츠|기타관광|쇼핑")
 
 
 DIAG: list[str] = []  # 이름 검색 진단 기록 → data/cache/diag.json
@@ -269,7 +347,7 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dic
     없으면 이름·좌표만으로 추가한다. '한국도로공사/전주수목원'처럼 '/'가 있으면 양쪽을 모두 시도."""
     parts = [x.strip() for x in h["name"].split("/") if x.strip()]
     names = parts[::-1] if len(parts) > 1 else parts           # 뒤쪽(구체적인 이름) 먼저
-    keywords = names + [n[:3] for n in names if len(n) > 4]   # 띄어쓰기 차이 대비: 앞 3글자로 한 번 더
+    keywords = names[:2] + ([names[0][:3]] if len(names) == 1 and len(names[0]) > 4 else [])  # 띄어쓰기 차이 대비
     best = None
     for kw in keywords:
         try:
@@ -277,6 +355,8 @@ def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dic
             items = api.get("searchKeyword2", keyword=kw, numOfRows=30, pageNo=1, **params)
             DIAG.append(f"{city['name']} | {kw} | {len(items)}건 | " + ", ".join(
                 f"{i.get('title')}({i.get('contenttypeid')})" for i in items[:5]))
+        except QuotaError:
+            raise
         except RuntimeError as e:
             DIAG.append(f"{city['name']} | {kw} | 오류 {str(e)[:200]}")
             items = []
@@ -300,7 +380,7 @@ def match_hub(places: list[dict], hub: list[dict]) -> None:
     """인기 순위 항목 하나에 가장 잘 맞는 장소 '하나'만 연결한다(1:1).
     우선순위: 이름이 똑같은 곳 → 이름 길이 차이가 작은 곳 → 가까운 곳."""
     taken: set[str] = set()
-    for h in sorted(hub, key=lambda x: x["rank"]):
+    for h in sorted(hub, key=lambda x: x.get("score", x["rank"])):
         hn = norm_name(h["name"].split("/")[-1]) or norm_name(h["name"])
         cands = []
         for p in places:
@@ -318,7 +398,7 @@ def match_hub(places: list[dict], hub: list[dict]) -> None:
                 cands.append(((not same, abs(len(n) - len(hn)), d), p))
         if cands:
             p = min(cands, key=lambda c: c[0])[1]
-            p["rank"] = min(p.get("rank", 999), h["rank"])
+            p["score"] = min(p.get("score", 9e9), h.get("score", h["rank"]))
             taken.add(p["id"])
             h["matched"] = True
 
@@ -474,41 +554,49 @@ def claude_courses(key: str, model: str, city: dict, spots: list[dict], foods: l
 def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> dict:
     log(f"▶ {city['province']} {city['name']}")
     # 법정동 코드: 도시 목록에 저장된 값이 없으면 음식점 목록(옛 코드로도 잘 잡힘)에서 추출
-    ldong = set(city.get("ldong") or [])
+    ldong = clean_ldong(city.get("ldong") or [])
     if not ldong:
         probe = fetch_places(api, city, CT_FOOD, 100)
         ldong = ldong_codes(probe)
-        city["ldong"] = sorted(ldong)
-    spots = fetch_places(api, city, CT_SPOT, args.fetch_rows, ldong)
-    culture = fetch_places(api, city, CT_CULTURE, 150, ldong)
-    foods = fetch_places(api, city, CT_FOOD, args.fetch_rows, ldong)
+    # 법정동 코드를 알면 그것만으로 조회 (옛 지역코드 조회는 생략해 호출 절약)
+    if ldong:
+        city_q = {**city, "areaCode": None, "sigunguCode": None}
+        spots = fetch_places(api, city_q, CT_SPOT, args.fetch_rows, ldong)
+        culture = fetch_places(api, city_q, CT_CULTURE, 150, ldong)
+        foods = fetch_places(api, city_q, CT_FOOD, args.fetch_rows, ldong)
+    else:
+        spots = fetch_places(api, city, CT_SPOT, args.fetch_rows)
+        culture = fetch_places(api, city, CT_CULTURE, 150)
+        foods = fetch_places(api, city, CT_FOOD, args.fetch_rows)
     allp = spots + culture
-    ldong |= ldong_codes(allp + foods)
+    ldong = clean_ldong(ldong | ldong_codes(allp + foods))
     city["ldong"] = sorted(ldong)
 
     # 인기 순위: TourAPI 항목의 법정 시군구 코드로 '지자체 중심 관광지'를 조회 (30일 캐시)
     hc = caches["hub"]
     hentry = hc.get(city["id"])
-    if hentry and hentry.get("at", "") >= (dt.date.today() - dt.timedelta(days=30)).isoformat():
+    if (hentry and hentry.get("at", "") >= (dt.date.today() - dt.timedelta(days=30)).isoformat()
+            and all("gu" in h for h in hentry["items"])):
         hub = [{k: v for k, v in h.items() if k != "matched"} for h in hentry["items"]]  # 지난 실행의 연결 표시 제거
     else:
         codes = set(ldong)
-        hub = fetch_hub(api, codes) if codes else []
+        hub = fetch_hub(api, codes, code_names(allp + foods)) if codes else []
         if hub:
             hc[city["id"]] = {"at": dt.date.today().isoformat(), "items": [dict(h) for h in hub]}
     hub_spot = [h for h in hub if h["cat"].startswith("관광지") and not HUB_NOISE.search(h["name"])
                 and not (h["cat"].endswith("쇼핑") and "시장" not in h["name"])]
+    hub_score(hub_spot)
     match_hub(allp, hub_spot)
 
     # 인기 상위인데 연결 안 된 곳은 이름으로 찾아서 추가 (도시별 30일 캐시)
     kc = caches["hubspots"].setdefault(city["id"], {})
     have = {p["id"]: p for p in allp}
-    for h in [h for h in hub_spot if not h.get("matched")][: args.hub_resolve]:
-        hit = kc.get("v5:" + h["code"])
+    for h in sorted([h for h in hub_spot if not h.get("matched")], key=lambda h: h["score"])[: args.hub_resolve]:
+        hit = kc.get("v6:" + h["code"])
         if not hit or hit.get("at", "") < (dt.date.today() - dt.timedelta(days=30)).isoformat():
             regn = next(iter(sorted(ldong)), "")[:2] or None
             hit = {"at": dt.date.today().isoformat(), "place": resolve_hub_spot(api, city, h, regn)}
-            kc["v5:" + h["code"]] = hit
+            kc["v6:" + h["code"]] = hit
         p = dict(hit["place"])
         np_ = norm_name(p["name"])
         def same_place(q):
@@ -516,18 +604,23 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
             return (np_ and nq == np_ and d < 2) or (np_ and nq and (np_ in nq or nq in np_) and d < 0.7)
         dup = have.get(p["id"]) or next((q for q in allp if same_place(q)), None)
         if dup:
-            dup["rank"] = min(dup.get("rank", 999), h["rank"])
+            dup["score"] = min(dup.get("score", 9e9), h["score"])
         else:
-            p["rank"] = h["rank"]
+            p["score"] = h["score"]
             have[p["id"]] = p
             allp.append(p)
         h["matched"] = True
     log(f"   후보 관광지 {len(spots)}·문화시설 {len(culture)}·식당 {len(foods)} · 인기 순위 {len(hub_spot)}곳 중 "
-        f"{sum(1 for h in hub_spot if h.get('matched'))}곳 연결")
+        f"{sum(1 for h in hub_spot if h.get('matched'))}곳 연결 · 호출 {api.calls}/{api.hub_calls}")
 
     # 순위 있는 곳(인기순) → 순위 없는 곳 중 사진 있는 관광지 → 나머지
-    allp.sort(key=lambda p: (p.get("rank", 999), not p["image"], p["type"] != CT_SPOT))
-    places = allp[: args.max_spots]
+    for p in allp:
+        p.pop("rank", None)
+    allp.sort(key=lambda p: (p.get("score", 9e9), not p["image"], p["type"] != CT_SPOT))
+    max_spots = args.max_spots + (20 if len(ldong) > 3 else 0)   # 구가 많은 광역시는 더 많이
+    places = allp[:max_spots]
+    for i, p in enumerate([p for p in places if "score" in p], 1):
+        p["rank"] = i   # 화면에 보이는 '인기 n위' = 도시 안 순서
     for p in places:
         p.setdefault("desc", "")
         p.setdefault("videos", [])
@@ -541,6 +634,8 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
             try:
                 d = api.get("detailCommon2", contentId=p["id"])
                 ov[p["id"]] = clean_text((d[0] if d else {}).get("overview"), 160)
+            except QuotaError:
+                raise
             except RuntimeError as e:
                 log("   개요 실패:", e)
                 ov[p["id"]] = ""
@@ -672,7 +767,7 @@ def main():
             out = process_city(city, api, args, caches, budget)
         except RuntimeError as e:
             log("   건너뜀:", e)
-            if "한도" in str(e) or "인증" in str(e):
+            if isinstance(e, QuotaError) or "한도" in str(e) or "인증" in str(e):
                 break
             continue
         city.update({
@@ -687,7 +782,7 @@ def main():
         save_json(index_path, index)
 
     save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "lines": DIAG[:300]})
-    log(f"완료 · TourAPI 호출 {api.calls}회 · 남은 YouTube 예산 {max(budget['youtube'], 0)}")
+    log(f"완료 · 인기순위 호출 {api.hub_calls}회 · TourAPI 호출 {api.calls}회 · 남은 YouTube 예산 {max(budget['youtube'], 0)}")
 
 
 if __name__ == "__main__":
