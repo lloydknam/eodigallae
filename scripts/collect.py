@@ -352,6 +352,7 @@ TOURISM_CAT = re.compile(r"문화관광|역사관광|자연관광|체험관광|�
 
 
 DIAG: list[str] = []  # 이름 검색 진단 기록 → data/cache/diag.json
+RUNLOG: list[str] = []  # 실행 요약(오류·한도) → data/cache/diag.json
 
 
 def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dict:
@@ -614,6 +615,7 @@ def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -
             pool = budget["yt"].city_pool(city)
         except Exception as e:  # noqa: BLE001
             log("   유튜브 건너뜀:", str(e)[:120])
+            RUNLOG.append(f"{city['name']}: 유튜브 오류 {str(e)[:200]}")
             pool = []
         if pool:
             geo = [p for p in allp if p.get("lat") is not None]
@@ -625,6 +627,7 @@ def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -
                     found = buzz.discover_kakao(budget["kakao"], city, center, names)
                 except Exception as e:  # noqa: BLE001
                     log("   카카오 건너뜀:", str(e)[:120])
+                    RUNLOG.append(f"{city['name']}: 카카오 오류 {str(e)[:200]}")
             # 카카오 후보가 이미 있는 장소면 카카오 링크만 붙이고, 아니면 새 후보 (좌표는 여기서만 쓰고 버림)
             new = []
             for k in found:
@@ -645,7 +648,9 @@ def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -
                                 for p in allp if p.get("yt") or p.get("kakao")},
                      "new": new}
             bc[city["id"]] = entry
-            log(f"   유튜브 영상 {len(pool)}편 · 화제 장소 {len(entry['scores'])}곳 · 카카오 새 후보 {len(new)}곳")
+            msg = f"유튜브 영상 {len(pool)}편 · 화제 장소 {len(entry['scores'])}곳 · 카카오 새 후보 {len(new)}곳"
+            log("   " + msg)
+            RUNLOG.append(f"{city['name']}: {msg}")
     if not entry:
         return []
     for p in allp:
@@ -718,6 +723,31 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     log(f"   대표 명소 고정 {n_cur}곳 · 후보 관광지 {len(spots)}·문화시설 {len(culture)}·식당 {len(foods)} · 인기 순위 {len(hub_spot)}곳 중 "
         f"{sum(1 for h in hub_spot if h.get('matched'))}곳 연결 · 호출 {api.calls}/{api.hub_calls}")
 
+    return finish_city(city, allp, foods, ldong, api, args, caches, budget)
+
+
+def buzz_only_city(city: dict, args, caches: dict, budget: dict) -> dict | None:
+    """관광공사 호출 한도가 찼을 때: 지난번에 저장한 관광지로 '요즘 뜨는 곳'만 새로 계산한다."""
+    d = load_json(CITY_DIR / f"{city['id']}.json", None)
+    if not d:
+        return None
+    log(f"▶ {city['province']} {city['name']} (관광공사 한도 소진 → 저장된 관광지로 화제성만 갱신)")
+    allp, foods = [], []
+    for sp in d.get("spots", []):
+        if sp.get("lat") is None:
+            continue
+        p = {k: v for k, v in sp.items() if k not in ("hot", "yt", "rank")}
+        p["videos"] = []
+        p.setdefault("ld", ("", ""))
+        if sp.get("rank"):
+            p["score"] = sp["rank"]
+        allp.append(p)
+    for f in d.get("restaurants", []):
+        foods.append(dict(f))
+    return finish_city(city, allp, foods, set(city.get("ldong") or []), None, args, caches, budget)
+
+
+def finish_city(city, allp, foods, ldong, api, args, caches, budget) -> dict:
     # ── 요즘 뜨는 곳: 유튜브 최근 영상 화제성 + 카카오 후보 (도시별 14일 캐시) ──
     kakao_new = apply_buzz(city, allp, args, caches, budget)
 
@@ -759,7 +789,7 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     # 개요(설명): 캐시 우선, 없으면 상위 일부만 detailCommon2 호출
     ov = caches["overview"]
     for p in [p for p in places if p["id"].isdigit()][: args.overview_top]:
-        if p["id"] not in ov and budget["overview"] > 0:
+        if api is not None and p["id"] not in ov and budget["overview"] > 0:
             try:
                 d = api.get("detailCommon2", contentId=p["id"])
                 ov[p["id"]] = clean_text((d[0] if d else {}).get("overview"), 160)
@@ -769,7 +799,7 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
                 log("   개요 실패:", e)
                 ov[p["id"]] = ""
             budget["overview"] -= 1
-        p["desc"] = ov.get(p["id"], "")
+        p["desc"] = ov.get(p["id"], p.get("desc", ""))
 
     # 관광지별 주변 식당: 2km 이내에서 인기 순위 → 거리 순으로 3곳
     for p in places:
@@ -895,14 +925,25 @@ def main():
               "yt": buzz.YouTube(SESSION, args.youtube_key, args.youtube_units) if args.youtube_key else None,
               "kakao": buzz.Kakao(SESSION, args.kakao_key) if args.kakao_key else None}
 
+    tour_off = False
     for city in targets:
-        try:
-            out = process_city(city, api, args, caches, budget)
-        except RuntimeError as e:
-            log("   건너뜀:", e)
-            if isinstance(e, QuotaError) or "한도" in str(e) or "인증" in str(e):
+        out = None
+        if not tour_off:
+            try:
+                out = process_city(city, api, args, caches, budget)
+            except RuntimeError as e:
+                log("   건너뜀:", e)
+                RUNLOG.append(f"{city['name']}: {str(e)[:160]}")
+                if isinstance(e, QuotaError) or "한도" in str(e) or "인증" in str(e):
+                    tour_off = True
+                else:
+                    continue
+        if out is None and tour_off:
+            if not (budget["yt"] and budget["yt"].units >= 320):
                 break
-            continue
+            out = buzz_only_city(city, args, caches, budget)
+            if out is None:
+                continue
         city.update({
             "hasData": bool(out["spots"]), "spotCount": len(out["spots"]),
             "image": next((s["thumb"] for s in out["spots"] if s["thumb"]), ""),
@@ -914,7 +955,7 @@ def main():
         index["updatedAt"] = now_iso()
         save_json(index_path, index)
 
-    save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "lines": DIAG[:300]})
+    save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "run": RUNLOG[-100:], "lines": DIAG[:300]})
     log(f"완료 · 인기순위 호출 {api.hub_calls}회 · TourAPI 호출 {api.calls}회 · 남은 유튜브 unit {budget['yt'].units if budget['yt'] else '-'}")
 
 
