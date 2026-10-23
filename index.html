@@ -279,34 +279,30 @@ img { max-width: 100%; }
 .chart-table table { width: 100%; border-collapse: collapse; margin-top: 6px; font-variant-numeric: tabular-nums; }
 .chart-table td, .chart-table th { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: right; }
 .chart-table td:first-child, .chart-table th:first-child { text-align: left; }
-.wx { margin-top: 14px; padding: 14px 14px 12px; border-radius: 22px; background: linear-gradient(160deg, color-mix(in srgb, #7EC8F0 22%, var(--surface)), var(--surface) 70%); box-shadow: var(--shadow); }
-.wx-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 2px 8px; }
-.wx-head h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
-.wx-head a { color: var(--celadon); font-size: 13.5px; font-weight: 700; text-decoration: none; white-space: nowrap; }
-.wx-regions { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -14px 10px; padding: 0 14px 2px; }
+.wx { margin-top: 12px; padding: 10px 12px 9px; border-radius: 18px; background: linear-gradient(160deg, color-mix(in srgb, #7EC8F0 18%, var(--surface)), var(--surface) 70%); box-shadow: var(--shadow); }
+.wx-head { display: flex; align-items: center; gap: 8px; margin: 0 0 7px; }
+.wx-head h2 { margin: 0; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.wx-head a { margin-left: auto; color: var(--celadon); font-size: 12.5px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.wx-regions { display: flex; gap: 5px; overflow-x: auto; scrollbar-width: none; margin: 0 -12px 7px; padding: 0 12px 1px; }
 .wx-regions::-webkit-scrollbar { display: none; }
-.wx-regions button { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.wx-regions button { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 3px 10px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
 .wx-regions button[aria-pressed="true"] { background: var(--celadon); border-color: var(--celadon); color: var(--celadon-ink); }
-.wx-days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
-.wx-day { display: grid; justify-items: center; gap: 1px; padding: 8px 2px 9px; border-radius: 16px; background: color-mix(in srgb, var(--surface) 75%, transparent); border: 1px solid var(--line); }
+.wx-days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+.wx-day { display: grid; justify-items: center; gap: 0; padding: 4px 0 5px; border-radius: 12px; background: color-mix(in srgb, var(--surface) 75%, transparent); border: 1px solid var(--line); }
 .wx-day.we { border-color: color-mix(in srgb, var(--vermilion) 40%, transparent); }
-.wx-day .dw { font-size: 13px; font-weight: 700; color: var(--muted); }
+.wx-day .dw { font-size: 11.5px; font-weight: 700; color: var(--muted); }
 .wx-day.we .dw { color: var(--vermilion); }
-.wx-day .ic { font-size: 30px; line-height: 1.25; }
-.wx-days.many { gap: 4px; }
-.wx-days.many .wx-day { padding-inline: 0; border-radius: 12px; }
-.wx-days.many .tx, .wx-days.many .pp i { display: none; }
-.wx-day .pp i { font-style: normal; }
-.wx-days.many .ic { font-size: 24px; }
-.wx-days.many .tp { font-size: 12.5px; }
-.wx-day .tx { font-size: 12px; color: var(--muted); }
-.wx-day .tp { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.wx-day .tp small { color: var(--muted); font-weight: 500; }
-.wx-day .pp { font-size: 11.5px; color: #2F7FC1; font-weight: 700; }
-.wx-say { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 14.5px; font-weight: 600; }
-.wx-say img { width: 34px; height: auto; flex: none; }
-.wx-say span { background: var(--surface); border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; padding: 7px 11px; }
-.wx-note { margin: 8px 2px 0; font-size: 11.5px; color: var(--muted); }
+.wx-day .ic { font-size: 20px; line-height: 1.3; }
+.wx-day .tx { display: none; }
+.wx-day .tp { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wx-day .tp small { color: var(--muted); font-weight: 500; font-size: 11px; }
+.wx-day .pp { font-size: 10.5px; color: #2F7FC1; font-weight: 700; line-height: 1.2; }
+.wx-day .pp i { display: none; }
+.wx-say { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 12.5px; font-weight: 600; }
+.wx-say img { width: 24px; height: auto; flex: none; }
+.wx-say span { flex: 1; }
+.wx-note { margin: 0; font-size: 12px; color: var(--muted); }
+.wx-src { font-size: 10.5px; color: var(--muted); }
 @media (prefers-reduced-motion: no-preference) { .wx-day .ic { animation: wxbob 3s ease-in-out infinite; } .wx-day:nth-child(2) .ic { animation-delay: .4s; } .wx-day:nth-child(3) .ic { animation-delay: .8s; } }
 @keyframes wxbob { 50% { transform: translateY(-3px); } }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
@@ -692,7 +688,7 @@ img { max-width: 100%; }
       const idx = [...Array(end + 1).keys()];
       const days = idx.map((i) => {
         const [ic, tx] = wxIcon(d.weather_code[i]), we = dows[i] === 0 || dows[i] === 6;
-        const label = i === 0 ? "오늘" : DOW[dows[i]] + (idx.length > 4 ? "" : "요일");
+        const label = i === 0 ? "오늘" : DOW[dows[i]];
         const pp = d.precipitation_probability_max?.[i];
         return `<div class="wx-day${we ? " we" : ""}"><span class="dw">${label}</span><span class="ic" role="img" aria-label="${tx}">${ic}</span>
           <span class="tx">${tx}</span><span class="tp">${Math.round(d.temperature_2m_max[i])}° <small>${Math.round(d.temperature_2m_min[i])}°</small></span>
@@ -703,17 +699,16 @@ img { max-width: 100%; }
       const rain = Math.max(...look.map((i) => d.precipitation_probability_max?.[i] || 0));
       const hi = Math.max(...look.map((i) => d.temperature_2m_max[i])), lo = Math.min(...look.map((i) => d.temperature_2m_min[i]));
       const when = wk.length ? "주말" : "이번 주";
-      const say = rain >= 60 ? `${when}에 비 소식이 있어요. 우산 챙기고 실내 코스 어때냥? ☔`
-        : rain >= 30 ? `${when}에 비가 올 수도 있어요. 작은 우산 하나 챙기라냥 🌂`
-        : lo <= 3 ? `${when} 아침은 꽤 추워요. 목도리 단단히 하고 가자냥 🧣`
-        : hi >= 30 ? `${when} 엄청 더워요! 물 꼭 챙기라냥 🧊`
-        : `${when} 날씨 최고! ${name} 어디든 떠나자냥 🐾`;
+      const say = rain >= 60 ? `${when}에 비 소식! 우산 챙기라냥 ☔`
+        : rain >= 30 ? `${when}에 비 올 수도 있다냥 🌂`
+        : lo <= 3 ? `${when} 아침은 추워요, 따뜻하게 입으라냥 🧣`
+        : hi >= 30 ? `${when} 엄청 더워요, 물 챙기라냥 🧊`
+        : `${when} 날씨 최고! 떠나자냥 🐾`;
       const city = state.index.cities.find((c) => c.name === cityName && c.hasData);
-      box.innerHTML = `<div class="wx-head"><h2>이번 주 날씨</h2>${city ? `<a href="#${enc(city.id)}" data-city="${esc(city.id)}">${esc(name)} 여행지 →</a>` : ""}</div>
+      box.innerHTML = `<div class="wx-head"><h2>☀️ 이번 주 날씨</h2><span class="wx-src">Open-Meteo</span>${city ? `<a href="#${enc(city.id)}" data-city="${esc(city.id)}">${esc(name)} 여행지 →</a>` : ""}</div>
         <div class="wx-regions" role="group" aria-label="지역">${WX_REGIONS.map((r, i) => `<button data-wx="${i}" aria-pressed="${i === ri}">${r[0]}</button>`).join("")}</div>
         <div class="wx-days${idx.length > 4 ? " many" : ""}">${days}</div>
-        <div class="wx-say"><img src="icons/mascot-160.png" alt=""><span>${say}</span></div>
-        <p class="wx-note">날씨: Open-Meteo · ${+today.slice(5, 7)}/${+today.slice(8, 10)} 기준 예보</p>`;
+        <div class="wx-say"><img src="icons/mascot-160.png" alt=""><span>${say}</span></div>`;
     };
     draw();
     const sel = box.querySelector(".wx-regions [aria-pressed=true]"), bar = box.querySelector(".wx-regions");
