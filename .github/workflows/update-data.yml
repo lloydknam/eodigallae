@@ -2,7 +2,10 @@ name: 데이터 갱신
 
 on:
   schedule:
-    - cron: "17 19 * * *"   # 매일 한국시간 04:17
+    - cron: "17 15 * * *"   # 매일 한국시간 00:17 (공공데이터 하루 한도가 자정에 새로 채워진 직후)
+  push:   # .github/run-now 파일을 고쳐 올리면 바로 한 번 실행
+    branches: [main]
+    paths: [".github/run-now"]
   workflow_dispatch:
     inputs:
       cities:
@@ -24,7 +27,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v5
 
@@ -44,7 +47,7 @@ jobs:
           if [ -n "${{ github.event.inputs.cities }}" ]; then
             python scripts/collect.py --cities "${{ github.event.inputs.cities }}"
           else
-            python scripts/collect.py --batch "${{ github.event.inputs.batch || '40' }}"
+            python scripts/collect.py --batch "${{ github.event.inputs.batch || '70' }}"
           fi
 
       - name: 꾸준한 인기·숨은 핫플 갱신

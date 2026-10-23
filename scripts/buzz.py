@@ -81,12 +81,12 @@ class YouTube:
             raise RuntimeError(f"유튜브 HTTP {r.status_code}")
         return r.json()
 
-    def city_pool(self, city: dict, months: int = 6) -> list[dict]:
+    def city_pool(self, city: dict, months: int = 6, queries: int = 3) -> list[dict]:
         """도시 관련 최근 영상 모음 (검색 3회 = 300 unit + 상세 조회 몇 unit)."""
         base = city_base(city["name"])
         after = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=30 * months)).strftime("%Y-%m-%dT%H:%M:%SZ")
         ids: list[str] = []
-        for q in YT_QUERIES:
+        for q in YT_QUERIES[:queries]:
             js = self._get(YT_SEARCH, 100, part="id", q=q.format(c=base), type="video", maxResults=50,
                            regionCode="KR", relevanceLanguage="ko", publishedAfter=after, safeSearch="moderate")
             for it in js.get("items", []):

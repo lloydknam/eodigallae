@@ -173,11 +173,19 @@ class TourAPI:
                 time.sleep(1.5 * (attempt + 1))
         raise RuntimeError(f"{endpoint} 실패: {last_err}")
 
+    page_size = 500   # 한 번에 많이 받아 하루 호출 한도를 아낀다. 100개로 잘리면 100개씩으로 되돌림
+
     def list_all(self, endpoint: str, max_rows: int, **params) -> list[dict]:
         rows, page = [], 1
         while len(rows) < max_rows:
-            n = min(100, max_rows - len(rows))
+            size = self.page_size
+            n = min(size, max_rows - len(rows))
             batch = self.get(endpoint, numOfRows=n, pageNo=page, **params)
+            if size > 100 and n > 100 and len(batch) == 100:   # 서버가 100개로 자름 → 100개씩 이어 받기
+                TourAPI.page_size = 100
+                rows.extend(batch)
+                page = 2
+                continue
             rows.extend(batch)
             if len(batch) < n:
                 break
@@ -618,7 +626,7 @@ def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -
     fresh = entry and entry.get("at", "") >= (dt.date.today() - dt.timedelta(days=args.video_days)).isoformat()
     if not fresh and args.youtube_key and budget["yt"] is not None and budget["yt"].units >= 320:
         try:
-            pool = budget["yt"].city_pool(city)
+            pool = budget["yt"].city_pool(city, queries=2 if city.get("_light") else 3)
         except Exception as e:  # noqa: BLE001
             log("   유튜브 건너뜀:", str(e)[:120])
             RUNLOG.append(f"{city['name']}: 유튜브 오류 {str(e)[:200]}")
@@ -670,6 +678,10 @@ def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -
 
 def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> dict:
     log(f"▶ {city['province']} {city['name']}")
+    first = not city.get("hasData")
+    if first and args.fast_first:   # 빨리 채우기: 첫 수집은 가볍게
+        args = argparse.Namespace(**{**vars(args), "overview_top": min(args.overview_top, 5), "hub_resolve": min(args.hub_resolve, 6)})
+        city["_light"] = True
     # 법정동 코드: 도시 목록에 저장된 값이 없으면 음식점 목록(옛 코드로도 잘 잡힘)에서 추출
     ldong = clean_ldong(city.get("ldong") or [])
     if not ldong:
@@ -880,6 +892,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--hub-resolve", type=int, default=12, help="연결 안 된 인기 관광지를 이름으로 찾을 최대 개수")
     ap.add_argument("--batch", type=int, default=30, help="이번 실행에서 처리할 도시 수(오래된 순)")
+    ap.add_argument("--fast-first", type=int, default=1, help="처음 수집하는 도시는 가볍게(호출 절약) 해서 더 많은 도시를 채움")
     ap.add_argument("--cities", default="", help="쉼표로 구분한 도시 이름 또는 id (지정 시 batch 무시)")
     ap.add_argument("--only-city-list", action="store_true")
     ap.add_argument("--max-spots", type=int, default=30)
@@ -967,7 +980,8 @@ def main():
         city.update({
             "hasData": bool(out["spots"]), "spotCount": len(out["spots"]),
             "image": next((s["thumb"] for s in out["spots"] if s["thumb"]), ""),
-            "updatedAt": out["updatedAt"], "center": out["center"], "v": DATA_VERSION,
+            "updatedAt": out["updatedAt"], "center": out["center"],
+            "v": "light" if city.pop("_light", False) else DATA_VERSION,   # 가볍게 채운 도시는 나중에 다시 꼼꼼히
         })
         # 중간 저장(실행이 끊겨도 진행분 보존)
         for name, obj in caches.items():
