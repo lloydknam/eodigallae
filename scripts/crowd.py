@@ -63,7 +63,11 @@ def main():
         return (cur or {}).get("at", "")
 
     targets = [c for c in index["cities"] if c.get("hasData") and c.get("ldong")]
-    targets = [c for c in targets if age(c) < stale_before]
+    def empty(c):
+        cur = collect.load_json(OUT / f"{c['id']}.json", None)
+        return bool(cur) and not cur.get("spots") and cur.get("at", "") < today.isoformat()
+
+    targets = [c for c in targets if age(c) < stale_before or empty(c)]
     targets.sort(key=age)
     done = 0
     for c in targets:
@@ -74,6 +78,12 @@ def main():
             rows = []
             for code in c["ldong"]:
                 rows += fetch_code(api, code)
+            if not rows and any(x.startswith("12") for x in c["ldong"]):
+                # 전남광주통합특별시 새 코드(12xxx)로 예측 자료가 없으면 옛 코드로
+                old = [v for k, v in collect.OLD_SIGUNGU.items() if v.startswith("29")] if c["name"] == "광주" \
+                    else [collect.OLD_SIGUNGU[c["name"]]] if c["name"] in collect.OLD_SIGUNGU else []
+                for code in old:
+                    rows += fetch_code(api, code)
         except collect.QuotaError as e:
             print("한도:", e)
             break
