@@ -1459,5 +1459,16 @@ img { max-width: 100%; }
   }
 })();
 </script>
+<script>
+  // 방문자 통계(Cloudflare Web Analytics): 쿠키 없이 방문 수만 센다. 토큰이 비어 있으면 아무것도 하지 않는다.
+  (() => {
+    const CF_TOKEN = "";
+    if (!CF_TOKEN || location.protocol !== "https:") return;
+    const s = document.createElement("script");
+    s.defer = true; s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+    s.dataset.cfBeacon = JSON.stringify({ token: CF_TOKEN, spa: true });
+    document.head.appendChild(s);
+  })();
+</script>
 </body>
 </html>
