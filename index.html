@@ -162,6 +162,8 @@ img { max-width: 100%; }
 .city-top { margin: 18px 0 8px; }
 .map-sec { margin-top: 22px; }
 .hotmap { height: min(70vh, 440px); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--celadon-soft); position: relative; z-index: 0; }
+.hotmap .leaflet-tile-pane { filter: saturate(.75) brightness(1.03); }
+.hotmap.dark-tiles .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6); }
 .map-wait { margin: 0; padding: 40px 16px; text-align: center; color: var(--muted); }
 .mpin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermilion); color: #fff;
   font: 400 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
@@ -473,10 +475,12 @@ img { max-width: 100%; }
       || document.documentElement.dataset.theme === "dark";
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15 })
       .fitBounds([[33.1, 125.0], [38.6, 130.0]]);
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? "dark_all" : "rastertiles/voyager"}/{z}/{x}/{y}{r}.png`, {
-      subdomains: "abcd", maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    // 바탕지도: 오픈스트리트맵 공식 타일 (키 불필요, 출처 표시 필수). 어두운 모드는 색을 뒤집어 맞춘다.
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
     }).addTo(map);
+    box.classList.toggle("dark-tiles", dark);
     const maxV = Math.max(...mapData.cities.map((c) => c.views || 0), 1);
     const css = getComputedStyle(document.documentElement);
     const teal = css.getPropertyValue("--celadon").trim() || "#12907A";
