@@ -6,40 +6,49 @@
 <title>어디갈래</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="전국 시·군별 관광지, 추천 코스, 이동시간, 주변 맛집과 최신 여행 영상을 한곳에서.">
-<meta name="theme-color" content="#2F7D6D">
+<meta name="theme-color" content="#12907A">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-48.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: 한 손으로 쓰는 세로 앱. 도시 목록 → 도시 화면(코스·관광지·맛집 탭). 코스는 버스 노선도처럼 세로로 잇는다. */
+/* Layout: 한 손으로 쓰는 세로 앱. 마스코트 '어디냥'(위치 핀을 꽂은 크림색 고양이)이 브랜드.
+   색은 아이콘에서: 청록 바탕, 크림 얼굴, 핀 코럴, 볼터치 핑크. 둥글고 말랑한 카드. */
 :root {
-  --paper: #F4F6F3;
+  --paper: #F1F8F5;
   --surface: #FFFFFF;
-  --ink: #1B2423;
-  --muted: #5A6966;
-  --line: #D8E0DC;
-  --celadon: #2F7D6D;
+  --ink: #1C2422;
+  --muted: #5B6B67;
+  --line: #DCE8E3;
+  --celadon: #12907A;
+  --celadon-deep: #0B6E61;
   --celadon-ink: #FFFFFF;
-  --celadon-soft: #E2EEEA;
-  --vermilion: #C2462F;
-  --ochre: #A8781F;
-  --font-display: "Gowun Batang", "Nanum Myeongjo", "AppleMyungjo", serif;
+  --celadon-soft: #DFF2EB;
+  --cream: #FFF3DC;
+  --vermilion: #E4503A;
+  --blush: #F7A39A;
+  --ochre: #B7791F;
+  --font-display: "Jua", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
-  --radius: 14px;
+  --radius: 20px;
+  --shadow: 0 1px 2px rgba(11, 110, 97, .08), 0 8px 24px rgba(11, 110, 97, .10);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #111716; --surface: #18201F; --ink: #E5ECEA; --muted: #98A8A4; --line: #2B3735;
-    --celadon: #63B9A4; --celadon-ink: #0E1615; --celadon-soft: #1D302C; --vermilion: #E0735C; --ochre: #D4A64A;
+    --paper: #0E1715; --surface: #16211F; --ink: #E7EFEC; --muted: #9AABA7; --line: #26332F;
+    --celadon: #3CC4A6; --celadon-deep: #1C8C77; --celadon-ink: #0E1715; --celadon-soft: #18302A; --cream: #2B261D;
+    --vermilion: #F07A62; --blush: #E58D84; --ochre: #E0AE52;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #111716; --surface: #18201F; --ink: #E5ECEA; --muted: #98A8A4; --line: #2B3735;
-  --celadon: #63B9A4; --celadon-ink: #0E1615; --celadon-soft: #1D302C; --vermilion: #E0735C; --ochre: #D4A64A;
+  --paper: #0E1715; --surface: #16211F; --ink: #E7EFEC; --muted: #9AABA7; --line: #26332F;
+  --celadon: #3CC4A6; --celadon-deep: #1C8C77; --celadon-ink: #0E1715; --celadon-soft: #18302A; --cream: #2B261D;
+  --vermilion: #F07A62; --blush: #E58D84; --ochre: #E0AE52;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -73,15 +82,27 @@ img { max-width: 100%; }
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.brand { font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: -0.01em; text-decoration: none; }
-.brand span { color: var(--celadon); }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 26px; text-decoration: none; color: var(--celadon); }
+.brand img { width: 36px; height: auto; display: block; }
 .topbar .sub { color: var(--muted); font-size: 14px; margin-left: auto; white-space: nowrap; }
 .back { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 12px 4px; cursor: pointer; color: var(--ink); font-size: 16px; font-weight: 600; }
 .back:hover { color: var(--ink); }
 
 /* ── 홈 ── */
 .intro { padding-block: 28px 8px; }
-.intro h1 { font-family: var(--font-display); font-size: clamp(30px, 8vw, 38px); line-height: 1.3; margin: 0 0 6px; text-wrap: balance; font-weight: 700; }
+.hero-card {
+  position: relative; margin-top: 18px; padding: 24px 22px 26px; padding-right: 150px; border-radius: 28px; overflow: hidden;
+  background: linear-gradient(160deg, #22B79A 0%, #12907A 55%, #0B6E61 100%); color: #fff; box-shadow: var(--shadow);
+}
+.hero-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 80% at 10% 0%, rgba(255,255,255,.22), transparent 55%); pointer-events: none; }
+.hero-card h1 { position: relative; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 8.4vw, 40px); line-height: 1.2; margin: 0 0 8px; text-wrap: balance; }
+.hero-card p { position: relative; margin: 0; font-size: 15px; line-height: 1.55; opacity: .92; }
+.hero-card .mascot { position: absolute; right: 10px; bottom: -14px; width: 138px; height: auto; filter: drop-shadow(0 8px 14px rgba(0,0,0,.18)); transform-origin: 50% 90%; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-card .mascot { animation: bob 3.2s ease-in-out infinite; }
+  @keyframes bob { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(3deg) translateY(-4px); } }
+}
+.intro h1 { font-family: var(--font-display); font-size: clamp(30px, 8vw, 38px); line-height: 1.3; margin: 0 0 6px; text-wrap: balance; font-weight: 400; }
 .intro p { margin: 0; color: var(--muted); }
 .search { position: relative; margin-top: 18px; }
 .search input {
@@ -96,25 +117,24 @@ img { max-width: 100%; }
   flex: none; border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 999px;
   font-size: 15px; font-weight: 500; cursor: pointer; white-space: nowrap; min-height: 42px;
 }
-.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--celadon); color: var(--celadon-ink); border-color: var(--celadon); font-weight: 700; }
 .section-label { font-size: 14px; letter-spacing: 0.06em; color: var(--muted); margin: 26px 0 10px; font-weight: 600; }
 .ready { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .city-card {
   display: flex; flex-direction: column; text-align: left; border: 0; padding: 0; cursor: pointer;
-  background: var(--surface); border-radius: var(--radius); overflow: hidden;
-  box-shadow: 0 1px 0 var(--line), 0 0 0 1px var(--line);
+  background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
 }
 .city-card:hover .art { filter: saturate(1.15); }
 .city-card .body { padding: 10px 12px 12px; display: grid; gap: 2px; }
-.city-card .name { font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.city-card .name { font-family: var(--font-display); font-weight: 400; font-size: 22px; }
 .city-card .meta { color: var(--muted); font-size: 13.5px; }
 .art {
   position: relative; aspect-ratio: 4 / 3; width: 100%; max-width: 100%; overflow: hidden;
   display: grid; place-items: center; color: rgba(255,255,255,.92);
-  font-family: var(--font-display); font-weight: 700;
+  font-family: var(--font-display); font-weight: 400;
 }
-.art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.art .glyph { font-size: 44px; text-shadow: 0 1px 12px rgba(0,0,0,.18); }
+.art img:not(.glyph) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.art .glyph, .rthumb .rglyph { width: 34%; max-width: 110px; opacity: .9; filter: drop-shadow(0 4px 10px rgba(0,0,0,.15)); }
 .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .02em; padding: 2px 7px; border-radius: 6px; background: var(--celadon-soft); color: var(--celadon); }
 .rank { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 1px 7px; border-radius: 6px; background: color-mix(in srgb, var(--vermilion) 12%, transparent); color: var(--vermilion); font-variant-numeric: tabular-nums; vertical-align: 2px; margin-left: 6px; }
 .rank.hot { background: color-mix(in srgb, var(--ochre) 16%, transparent); color: var(--ochre); }
@@ -123,17 +143,18 @@ img { max-width: 100%; }
 
 .weekly { margin-top: 20px; }
 .weekly-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.weekly-head h2 { font-family: var(--font-display); font-size: 26px; margin: 0; }
+.weekly-head h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0; display: flex; align-items: center; gap: 6px; }
+.weekly-head h2 img { width: 30px; height: auto; }
 .weekly-head .wk { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .weekly .chips { padding-top: 10px; }
 .weekly-desc { font-size: 14.5px; color: var(--muted); margin: 6px 0 10px; }
 .rank-grid { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
 .rank-card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.rthumb { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 14px; overflow: hidden; text-decoration: none; }
-.rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.rthumb .rglyph { font-family: var(--font-display); font-weight: 700; font-size: 44px; color: rgba(255,255,255,.9); }
+.rthumb { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; text-decoration: none; }
+.rthumb img:not(.rglyph) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
 .rthumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, transparent 35%, transparent 70%, rgba(0,0,0,.35) 100%); pointer-events: none; }
-.rthumb .no { position: absolute; left: 10px; top: 4px; z-index: 1; font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.2; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.45); font-variant-numeric: tabular-nums; }
+.rthumb .no { position: absolute; left: 12px; top: 6px; z-index: 1; font-family: var(--font-display); font-weight: 400; font-size: 38px; line-height: 1.2; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.45); font-variant-numeric: tabular-nums; }
 .rthumb .chg { position: absolute; right: 8px; top: 10px; z-index: 1; margin: 0; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,.92); }
 .rplay { position: absolute; right: 8px; bottom: 8px; z-index: 1; width: 30px; height: 30px; border-radius: 50%; background: rgba(10,16,15,.7); color: #fff; display: grid; place-items: center; }
 .rplay svg { width: 13px; height: 13px; }
@@ -157,7 +178,7 @@ img { max-width: 100%; }
 /* ── 도시 ── */
 .hero { padding-block: 22px 6px; display: grid; gap: 4px; }
 .hero .prov { color: var(--muted); font-size: 13px; letter-spacing: .04em; }
-.hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 9vw, 46px); line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
+.hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 9vw, 46px); line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
 .hero .meta { color: var(--muted); font-size: 13.5px; font-variant-numeric: tabular-nums; }
 .notice {
   margin-top: 12px; padding: 10px 12px; border-radius: 10px; font-size: 13.5px;
@@ -181,7 +202,7 @@ img { max-width: 100%; }
 .days button[aria-pressed="true"] { background: var(--celadon); color: var(--celadon-ink); font-weight: 600; }
 .course-grid { display: grid; gap: 18px; margin-top: 16px; }
 @media (min-width: 680px) { .course-grid { grid-template-columns: minmax(0, 1fr) 260px; align-items: start; } .sketch { position: sticky; top: 72px; } }
-.sketch { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; }
+.sketch { background: var(--surface); box-shadow: var(--shadow); border-radius: var(--radius); padding: 10px; }
 .sketch svg { display: block; width: 100%; height: auto; }
 .sketch .cap { font-size: 12px; color: var(--muted); margin: 6px 2px 0; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .sketch .cap a { color: var(--celadon); text-decoration: none; font-weight: 600; }
@@ -221,7 +242,7 @@ img { max-width: 100%; }
 
 /* 관광지 */
 .spots { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
-.spot { background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); display: flex; flex-direction: column; }
+.spot { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
 .spot .photo { display: block; text-decoration: none; position: relative; }
 .spot .art { aspect-ratio: 16 / 9; }
 .play {
@@ -243,7 +264,7 @@ img { max-width: 100%; }
 
 /* 맛집 */
 .foods { display: grid; gap: 10px; }
-.food { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; }
+.food { background: var(--surface); box-shadow: var(--shadow); border-radius: 16px; padding: 12px 14px; display: grid; gap: 2px; }
 .food h4 { margin: 0; font-size: 18px; font-weight: 600; }
 .food .addr, .food .near { font-size: 13px; color: var(--muted); }
 .empty-card { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 10px; }
@@ -254,7 +275,10 @@ img { max-width: 100%; }
 .btn-link { display: inline-flex; width: fit-content; align-items: center; gap: 6px; text-decoration: none; padding: 9px 14px; border-radius: 10px; background: var(--celadon); color: var(--celadon-ink); font-weight: 600; font-size: 14px; }
 
 .credit { color: var(--muted); font-size: 12px; margin-top: 36px; border-top: 1px solid var(--line); padding-top: 12px; }
-.loading { color: var(--muted); padding: 40px 0; }
+.loading { color: var(--muted); padding: 56px 0; display: grid; justify-items: center; gap: 12px; text-align: center; font-size: 16px; }
+.loading img { width: 96px; height: auto; }
+@media (prefers-reduced-motion: no-preference) { .loading img { animation: bob 1.4s ease-in-out infinite; } }
+.empty-cat { width: 110px; height: auto; justify-self: center; }
 @media (prefers-reduced-motion: no-preference) {
   .panel { animation: rise .22s ease-out both; }
   @keyframes rise { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }
@@ -263,7 +287,7 @@ img { max-width: 100%; }
 </head>
 <body>
 <header class="topbar"><div class="inner" id="topbar"></div></header>
-<main class="wrap" id="app"><p class="loading">불러오는 중…</p></main>
+<main class="wrap" id="app"><p class="loading"><img src="icons/mascot-160.png" alt="">어디냥이 길을 찾는 중이에요…</p></main>
 
 <script>
 (() => {
@@ -309,16 +333,15 @@ img { max-width: 100%; }
   const kakaoSearch = (q) => `https://map.kakao.com/?q=${enc(q)}`;
 
   // ── 사진 대체 그림: 이름으로 색을 정해 이니셜을 얹는다 ──
-  const ART_HUES = [168, 182, 152, 205, 38, 12, 196];
+  const ART_HUES = [166, 172, 160, 178, 154, 184, 168];
   function hash(s) { let h = 0; for (const ch of String(s)) h = (h * 31 + ch.codePointAt(0)) >>> 0; return h; }
   function artBg(seed) {
     const h = ART_HUES[hash(seed) % ART_HUES.length];
-    return `background: linear-gradient(140deg, hsl(${h} 38% 42%), hsl(${(h + 24) % 360} 34% 30%));`;
+    return `background: linear-gradient(160deg, hsl(${h} 62% 46%), hsl(${(h + 6) % 360} 80% 24%));`;
   }
   function art(seed, label, img) {
-    const glyph = esc(String(label).trim().charAt(0));
     const pic = img ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : "";
-    return `<div class="art" style="${artBg(seed)}"><span class="glyph">${glyph}</span>${pic}</div>`;
+    return `<div class="art" style="${artBg(seed)}"><img class="glyph" src="icons/mascot-160.png" alt="">${pic}</div>`;
   }
   const playIcon = `<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2.5v11l9-5.5z"/></svg>`;
 
@@ -362,12 +385,13 @@ img { max-width: 100%; }
   function showHome() {
     state.city = null;
     const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
-    topbar.innerHTML = `<a class="brand" href="#" data-home>어디<span>갈래</span></a><span class="sub">전국 ${total}개 시·군</span>`;
+    topbar.innerHTML = `<a class="brand" href="#" data-home><img src="icons/mascot-160.png" alt="">어디갈래</a><span class="sub">전국 ${total}개 시·군</span>`;
     const provinces = ["전체", ...new Set(state.index.cities.map((c) => c.province))];
     app.innerHTML = `
-      <section class="intro">
-        <h1>이번 주말, 어디 갈래?</h1>
-        <p>요즘 사람들이 많이 가는 곳을 빅데이터로 골랐어요. 도시를 고르면 추천 코스와 이동시간, 맛집도 보여드려요.</p>
+      <section class="hero-card">
+        <h1>이번 주말,<br>어디 갈래?</h1>
+        <p>어디냥이 유튜브·카카오맵·T맵 빅데이터로 요즘 뜨는 곳을 골라왔어요.</p>
+        <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
       <section id="weekly" class="weekly"></section>
       <section class="intro" style="padding-top:8px">
@@ -417,7 +441,7 @@ img { max-width: 100%; }
     const hasCity = new Set(state.index.cities.filter((c) => c.hasData).map((c) => c.id));
     box.innerHTML = `
       <div class="weekly-head">
-        <h2>전국 핫플 랭킹</h2>
+        <h2><img src="icons/mascot-160.png" alt="">전국 핫플 랭킹</h2>
         <span class="wk">${esc(weekText(w.week))} · ${esc((w.updatedAt || "").slice(5, 10).replace("-", "."))} 업데이트</span>
       </div>
       <div class="chips" role="group" aria-label="랭킹 종류">${lists.map((l) =>
@@ -431,7 +455,7 @@ img { max-width: 100%; }
         const stat = cur.key === "rising" && e.ratio ? `평소의 ${e.ratio}배` : `영상 ${e.n}편 · ${fmtViews(e.views)}회`;
         return `<li class="rank-card">
           <a class="rthumb" href="${vid ? ytWatch(vid) : ytSearch(e.city, e.name)}" target="_blank" rel="noopener" aria-label="${esc(e.name)} 영상 보기" style="${artBg(e.name)}">
-            <span class="rglyph">${esc(String(e.name).charAt(0))}</span>
+            <img class="rglyph" src="icons/mascot-160.png" alt="">
             ${thumb ? `<img src="${esc(thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
             <span class="no">${i + 1}</span>
             ${changeBadge(e.change)}
@@ -478,13 +502,14 @@ img { max-width: 100%; }
   // ── 도시 ──
   async function showCity(meta) {
     topbar.innerHTML = `<button class="back" data-home aria-label="전체 도시로">← 전체 도시</button><span class="sub">${esc(meta.province)}</span>`;
-    app.innerHTML = `<p class="loading">${esc(meta.name)} 정보를 불러오는 중…</p>`;
+    app.innerHTML = `<p class="loading"><img src="icons/mascot-160.png" alt="">${esc(meta.name)}(으)로 가는 중이에요…</p>`;
     const d = meta.hasData ? await loadCity(meta.id) : null;
     if (!d) {
       app.innerHTML = `
         <section class="hero"><span class="prov">${esc(meta.province)}</span><h1>${esc(meta.name)}</h1></section>
         <div class="empty-card" style="margin-top:16px">
-          <h4>아직 정리 중인 도시예요</h4>
+          <img class="empty-cat" src="icons/mascot-160.png" alt="">
+          <h4>어디냥이 아직 둘러보는 중인 도시예요</h4>
           <p>관광공사 데이터가 수집되면 추천 코스와 관광지가 여기에 채워져요. 그동안 영상과 지도로 먼저 둘러보세요.</p>
           <div class="links">
             <a href="${ytSearch(meta.name, "가볼만한곳")}" target="_blank" rel="noopener">유튜브 여행 영상 ↗</a>
