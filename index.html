@@ -743,7 +743,16 @@ img { max-width: 100%; }
 
   // 오프라인 캐시 (GitHub Pages 등 https 배포에서만)
   if ("serviceWorker" in navigator && location.protocol === "https:") {
-    try { navigator.serviceWorker.register("sw.js").catch(() => {}); } catch { /* 미지원 환경 */ }
+    try {
+      const hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
+        .then((reg) => reg.update()).catch(() => {});
+      // 새 버전이 설치되면 한 번만 새로고침해서 바로 보여준다
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (hadController && !reloaded) { reloaded = true; location.reload(); }
+      });
+    } catch { /* 미지원 환경 */ }
   }
 })();
 </script>

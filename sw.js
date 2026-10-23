@@ -1,16 +1,13 @@
-// 어디갈래 서비스워커: 앱 껍데기는 캐시 우선, 데이터는 네트워크 우선(오프라인이면 캐시)
-const SHELL = "eodigallae-shell-v1";
-const DATA = "eodigallae-data-v1";
-const SHELL_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
+// 어디갈래 서비스워커: 항상 네트워크에서 최신을 먼저 받고, 오프라인일 때만 저장해 둔 것을 보여준다.
+// (예전 버전은 화면 파일을 캐시에서 먼저 꺼내 새 기능이 늦게 보이는 문제가 있었음)
+const CACHE = "eodigallae-v2";
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(SHELL).then((c) => c.addAll(SHELL_FILES)).then(() => self.skipWaiting()));
-});
+self.addEventListener("install", () => self.skipWaiting());
 
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => ![SHELL, DATA].includes(k)).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -18,13 +15,15 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
-  if (url.pathname.includes("/data/")) {
-    e.respondWith(
-      fetch(e.request)
-        .then((res) => { const copy = res.clone(); caches.open(DATA).then((c) => c.put(e.request, copy)); return res; })
-        .catch(() => caches.match(e.request))
-    );
-    return;
-  }
-  e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request)));
+  e.respondWith(
+    fetch(e.request, { cache: "no-cache" })
+      .then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request).then((hit) => hit || caches.match("./index.html")))
+  );
 });
