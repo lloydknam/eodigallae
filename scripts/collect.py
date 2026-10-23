@@ -20,6 +20,7 @@
 from __future__ import annotations
 
 import argparse
+import traceback
 import collections
 import datetime as dt
 import json
@@ -644,11 +645,13 @@ def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -
             for p in new:   # 사진 대신 가장 많이 본 영상의 썸네일
                 p["thumb"] = p["image"] = p["videos"][0]["thumb"] if p.get("videos") else ""
             entry = {"at": dt.date.today().isoformat(), "videos": len(pool),
-                     "scores": {p["id"]: {"yt": p["yt"], "videos": p["videos"], **({"kakao": p["kakao"]} if p.get("kakao") else {})}
+                     "scores": {p["id"]: {**({"yt": p["yt"], "videos": p.get("videos", [])} if p.get("yt") else {}),
+                                          **({"kakao": p["kakao"]} if p.get("kakao") else {})}
                                 for p in allp if p.get("yt") or p.get("kakao")},
                      "new": new}
             bc[city["id"]] = entry
-            msg = f"유튜브 영상 {len(pool)}편 · 화제 장소 {len(entry['scores'])}곳 · 카카오 새 후보 {len(new)}곳"
+            msg = (f"유튜브 영상 {len(pool)}편 · 화제 장소 {sum(1 for v in entry['scores'].values() if 'yt' in v)}곳 · "
+                   f"카카오 후보 {len(found)}곳 중 기존 장소 연결 {sum(1 for v in entry['scores'].values() if 'kakao' in v)}·새 장소 {len(new)}곳")
             log("   " + msg)
             RUNLOG.append(f"{city['name']}: {msg}")
     if not entry:
@@ -931,6 +934,10 @@ def main():
         if not tour_off:
             try:
                 out = process_city(city, api, args, caches, budget)
+            except (KeyError, TypeError, ValueError, AttributeError, IndexError, ZeroDivisionError) as e:
+                RUNLOG.append(f"{city['name']}: 코드 오류 " + traceback.format_exc()[-600:])
+                log(traceback.format_exc())
+                continue
             except RuntimeError as e:
                 log("   건너뜀:", e)
                 RUNLOG.append(f"{city['name']}: {str(e)[:160]}")
@@ -941,7 +948,12 @@ def main():
         if out is None and tour_off:
             if not (budget["yt"] and budget["yt"].units >= 320):
                 break
-            out = buzz_only_city(city, args, caches, budget)
+            try:
+                out = buzz_only_city(city, args, caches, budget)
+            except Exception:  # noqa: BLE001
+                RUNLOG.append(f"{city['name']}: 코드 오류 " + traceback.format_exc()[-600:])
+                log(traceback.format_exc())
+                continue
             if out is None:
                 continue
         city.update({
