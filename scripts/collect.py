@@ -863,6 +863,7 @@ def finish_city(city, allp, foods, ldong, api, args, caches, budget) -> dict:
     out = {
         "id": city["id"], "name": city["name"], "province": city["province"],
         "center": center, "updatedAt": now_iso(), "sample": False,
+        "ytAt": (caches["buzz"].get(city["id"]) or {}).get("at"),
         "spots": [{**{k: p.get(k) for k in ("id", "type", "name", "addr", "lat", "lng", "image", "thumb", "desc", "videos", "foods")},
                    **{k: p[k] for k in ("rank", "hot", "yt", "kakao", "cat") if k in p}}
                   for p in places],
