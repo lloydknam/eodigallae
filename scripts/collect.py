@@ -883,7 +883,7 @@ def main():
     ap.add_argument("--video-days", type=int, default=14, help="영상 캐시 유효기간(일)")
     ap.add_argument("--tour-max-calls", type=int, default=900, help="TourAPI 하루 호출 상한(개발계정 1,000)")
     ap.add_argument("--overview-budget", type=int, default=250)
-    ap.add_argument("--youtube-units", type=int, default=9000, help="유튜브 하루 할당 10,000 unit 중 사용할 양 (도시당 약 305)")
+    ap.add_argument("--youtube-units", type=int, default=8600, help="유튜브 하루 할당 10,000 unit 중 사용할 양 (도시당 약 305)")
     ap.add_argument("--claude-budget", type=int, default=40)
     args = ap.parse_args()
 
