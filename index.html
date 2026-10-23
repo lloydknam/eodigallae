@@ -233,6 +233,13 @@ img { max-width: 100%; }
 .plan-extra a { color: var(--celadon); font-weight: 600; text-decoration: none; font-size: 14px; }
 .toast { position: fixed; left: 50%; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30;
   background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 999px; font-size: 14.5px; font-weight: 600; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
+.crowd { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; font-size: 13.5px; }
+.cw-label { color: var(--muted); font-weight: 600; }
+.cw { padding: 2px 9px; border-radius: 999px; font-weight: 700; font-size: 13px; }
+.cw.busy { background: color-mix(in srgb, var(--vermilion) 15%, transparent); color: var(--vermilion); }
+.cw.mid { background: color-mix(in srgb, var(--ochre) 15%, transparent); color: var(--ochre); }
+.cw.calm { background: var(--celadon-soft); color: var(--celadon); }
+.cw-tip { color: var(--muted); }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -421,6 +428,21 @@ img { max-width: 100%; }
     return { id: s.id, cityId: d.id, city: d.name, name: s.name, lat: s.lat ?? null, lng: s.lng ?? null,
              kakao: s.kakao || null, thumb: (s.videos?.[0]?.thumb) || s.image || s.thumb || "" };
   }
+  // 붐빔 예보: 0~100(그 관광지의 가장 붐비는 때 = 100). 40 미만 여유, 70 이상 혼잡
+  const crowdLevel = (v) => (v >= 70 ? ["혼잡", "busy"] : v >= 40 ? ["보통", "mid"] : ["여유", "calm"]);
+  const DOW = ["일", "월", "화", "수", "목", "금", "토"];
+  const ymdDate = (ymd) => new Date(+ymd.slice(0, 4), +ymd.slice(4, 6) - 1, +ymd.slice(6, 8));
+  function crowdHTML(spotId) {
+    const days = state.city?.crowd?.[spotId];
+    if (!days || !days.length) return "";
+    const wk = days.filter(([ymd]) => [0, 6].includes(ymdDate(ymd).getDay())).slice(0, 2);
+    const calm = days.slice(0, 10).reduce((a, b) => (b[1] < a[1] ? b : a));
+    const chip = ([ymd, v]) => { const [t, c] = crowdLevel(v); const d = ymdDate(ymd);
+      return `<span class="cw ${c}">${DOW[d.getDay()]} ${t}</span>`; };
+    const cd = ymdDate(calm[0]);
+    return `<div class="crowd"><span class="cw-label">이번 주말</span>${wk.map(chip).join("")}
+      <span class="cw-tip">한산한 날 ${cd.getMonth() + 1}/${cd.getDate()}(${DOW[cd.getDay()]})</span></div>`;
+  }
   function heartBtn(s) {
     const on = inPlan(s.id);
     return `<button class="heart${on ? " on" : ""}" data-heart="${esc(s.id)}" aria-pressed="${on}" aria-label="${esc(s.name)} ${on ? "코스에서 빼기" : "코스에 담기"}">${on ? "♥ 담음" : "♡ 담기"}</button>`;
@@ -576,6 +598,10 @@ img { max-width: 100%; }
     if (!r.ok) return null;
     const d = await r.json();
     d.spotMap = new Map(d.spots.map((s) => [s.id, s]));
+    try {   // 붐빔 예보 (없으면 무시)
+      const cr = await fetch(`data/crowd/${id}.json`, { cache: "no-cache" });
+      d.crowd = cr.ok ? (await cr.json()).spots || {} : {};
+    } catch { d.crowd = {}; }
     d.foodMap = new Map((d.restaurants || []).map((f) => [f.id, f]));
     cityCache.set(id, d);
     return d;
@@ -1097,6 +1123,7 @@ img { max-width: 100%; }
             ${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}
             <h4>${esc(sp.name)}${sp.hot ? `<span class="rank hot">요즘 뜨는 ${sp.hot}위</span>` : ""}${sp.rank ? `<span class="rank">인기 ${sp.rank}위</span>` : ""}</h4>
             ${sp.desc ? `<p class="desc">${esc(sp.desc)}</p>` : ""}
+            ${crowdHTML(sp.id)}
             <div class="links">
               <a href="${video ? ytWatch(video.id) : ytSearch(state.city.name, sp.name)}" target="_blank" rel="noopener">${video ? "영상 보기" : "영상 찾기"} ↗</a>
               <a href="${kakaoPin(sp)}" target="_blank" rel="noopener">지도 ↗</a>
@@ -1186,6 +1213,7 @@ img { max-width: 100%; }
           ${s.cat ? `<span class="addr">${esc(s.cat)} · 카카오맵 장소</span>` : ""}
           ${s.addr ? `<span class="addr">${esc(s.addr)}</span>` : ""}
           ${s.yt ? `<span class="buzz">최근 영상 ${s.yt.n}편 · 조회 ${fmtViews(s.yt.views)}회</span>` : ""}
+          ${crowdHTML(s.id)}
           ${s.desc ? `<p class="desc">${esc(s.desc)}</p>` : ""}
           ${v.length > 1 ? `<ul class="vids">${v.slice(1, 4).map((x) => `<li><a href="${ytWatch(x.id)}" target="_blank" rel="noopener">
               <span class="th">${x.thumb ? `<img src="${esc(x.thumb)}" alt="" loading="lazy" onerror="this.remove()">` : ""}</span>
