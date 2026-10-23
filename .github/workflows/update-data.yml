@@ -47,12 +47,6 @@ jobs:
             python scripts/collect.py --batch "${{ github.event.inputs.batch || '40' }}"
           fi
 
-      - name: 이번 주말 붐빔 예보
-        continue-on-error: true
-        env:
-          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
-        run: python scripts/crowd.py
-
       - name: 꾸준한 인기·숨은 핫플 갱신
         run: python scripts/weekly.py --steady-only
 

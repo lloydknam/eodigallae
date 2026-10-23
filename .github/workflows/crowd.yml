@@ -1,0 +1,43 @@
+name: 붐빔 예보
+
+on:
+  schedule:
+    - cron: "37 20 * * *"   # 매일 한국시간 05:37 (관광정보 수집 뒤)
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/crowd.py", ".github/workflows/crowd.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  crowd:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - name: 관광지 집중률 예측 수집
+        env:
+          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
+        run: python scripts/crowd.py
+      - name: 변경분 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/crowd
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "붐빔 예보 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M')"
+            git pull --rebase origin main
+            git push
+          fi
