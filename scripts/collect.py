@@ -32,6 +32,9 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import buzz  # noqa: E402  유튜브·카카오 화제성
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 CITY_DIR = DATA / "cities"
@@ -50,7 +53,7 @@ CT_SPOT, CT_CULTURE, CT_FOOD = "12", "14", "39"
 ABOLISHED = {"마산시", "진해시", "남제주군", "북제주군", "청원군", "연기군"}
 
 KST = dt.timezone(dt.timedelta(hours=9))
-DATA_VERSION = 3   # 수집 방식이 바뀌면 올림 → 예전 방식으로 수집된 도시를 우선 다시 수집
+DATA_VERSION = 4   # 수집 방식이 바뀌면 올림 → 예전 방식으로 수집된 도시를 우선 다시 수집
 SESSION = requests.Session()
 SESSION.headers["User-Agent"] = "korea-trip-collector/1.0"
 
@@ -600,6 +603,58 @@ def claude_courses(key: str, model: str, city: dict, spots: list[dict], foods: l
 
 # ───────────────────────── 도시 처리 ─────────────────────────
 
+def apply_buzz(city: dict, allp: list[dict], args, caches: dict, budget: dict) -> list[dict]:
+    """유튜브 화제성 점수를 장소에 붙이고, 카카오에서 찾은 새 후보(영상에 나온 곳만)를 돌려준다.
+    결과는 도시별로 14일 캐시 (영상 원문은 저장하지 않고 점수·영상 목록만)."""
+    bc = caches["buzz"]
+    entry = bc.get(city["id"])
+    fresh = entry and entry.get("at", "") >= (dt.date.today() - dt.timedelta(days=args.video_days)).isoformat()
+    if not fresh and args.youtube_key and budget["yt"] is not None and budget["yt"].units >= 320:
+        try:
+            pool = budget["yt"].city_pool(city)
+        except Exception as e:  # noqa: BLE001
+            log("   유튜브 건너뜀:", str(e)[:120])
+            pool = []
+        if pool:
+            geo = [p for p in allp if p.get("lat") is not None]
+            center = ((sum(p["lat"] for p in geo) / len(geo), sum(p["lng"] for p in geo) / len(geo)) if geo else None)
+            found = []
+            if args.kakao_key and budget["kakao"] is not None:
+                names = [n for n, _, _ in buzz.extract_names(pool, city)]
+                try:
+                    found = buzz.discover_kakao(budget["kakao"], city, center, names)
+                except Exception as e:  # noqa: BLE001
+                    log("   카카오 건너뜀:", str(e)[:120])
+            # 카카오 후보가 이미 있는 장소면 카카오 링크만 붙이고, 아니면 새 후보 (좌표는 여기서만 쓰고 버림)
+            new = []
+            for k in found:
+                nk = norm_name(k["name"])
+                twin = next((p for p in geo if haversine_km(p["lat"], p["lng"], k["_lat"], k["_lng"]) < 0.3
+                             and (nk in norm_name(p["name"]) or norm_name(p["name"]) in nk)), None)
+                if twin:
+                    twin["kakao"] = k["kakao"]
+                else:
+                    new.append({"id": "k" + k["kakao"], "type": "kakao", "name": k["name"], "cat": k["cat"],
+                                "kakao": k["kakao"], "addr": "", "lat": None, "lng": None, "image": "", "thumb": ""})
+            buzz.score_places(allp + new, pool, city)
+            new = [p for p in new if p.get("yt")]
+            for p in new:   # 사진 대신 가장 많이 본 영상의 썸네일
+                p["thumb"] = p["image"] = p["videos"][0]["thumb"] if p.get("videos") else ""
+            entry = {"at": dt.date.today().isoformat(), "videos": len(pool),
+                     "scores": {p["id"]: {"yt": p["yt"], "videos": p["videos"], **({"kakao": p["kakao"]} if p.get("kakao") else {})}
+                                for p in allp if p.get("yt") or p.get("kakao")},
+                     "new": new}
+            bc[city["id"]] = entry
+            log(f"   유튜브 영상 {len(pool)}편 · 화제 장소 {len(entry['scores'])}곳 · 카카오 새 후보 {len(new)}곳")
+    if not entry:
+        return []
+    for p in allp:
+        sc = entry["scores"].get(p["id"])
+        if sc:
+            p.update({k: v for k, v in sc.items()})
+    return [dict(p) for p in entry.get("new", [])]
+
+
 def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> dict:
     log(f"▶ {city['province']} {city['name']}")
     # 법정동 코드: 도시 목록에 저장된 값이 없으면 음식점 목록(옛 코드로도 잘 잡힘)에서 추출
@@ -663,6 +718,9 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
     log(f"   대표 명소 고정 {n_cur}곳 · 후보 관광지 {len(spots)}·문화시설 {len(culture)}·식당 {len(foods)} · 인기 순위 {len(hub_spot)}곳 중 "
         f"{sum(1 for h in hub_spot if h.get('matched'))}곳 연결 · 호출 {api.calls}/{api.hub_calls}")
 
+    # ── 요즘 뜨는 곳: 유튜브 최근 영상 화제성 + 카카오 후보 (도시별 14일 캐시) ──
+    kakao_new = apply_buzz(city, allp, args, caches, budget)
+
     # 순위 있는 곳(인기순) → 순위 없는 곳 중 사진 있는 관광지 → 나머지
     for p in allp:
         p.pop("rank", None)
@@ -677,18 +735,30 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
         kept.append(p)
         if len(kept) >= max_spots:
             break
-    places = kept
-    for i, p in enumerate([p for p in places if "score" in p], 1):
+    for i, p in enumerate([p for p in kept if "score" in p], 1):
         p["rank"] = i   # 화면에 보이는 '인기 n위' = 도시 안 순서
+    # 요즘 뜨는 곳 상위 20곳을 더한다 (대표 명소 목록에 없으면 추가)
+    hot_pool = sorted([p for p in allp + kakao_new if p.get("yt")], key=lambda p: -p["yt"]["score"])
+    places = list(kept)
+    names = {norm_name(p["name"]) for p in places}
+    for p in hot_pool:
+        if sum(1 for q in places if q.get("yt")) >= 20 and p not in places:
+            break
+        n = norm_name(p["name"])
+        if p in places or any(n and (n == m or (len(min(n, m, key=len)) >= 3 and (n in m or m in n))) for m in names):
+            continue
+        places.append(p)
+        names.add(n)
+    for i, p in enumerate(sorted([p for p in places if p.get("yt")], key=lambda p: -p["yt"]["score"]), 1):
+        p["hot"] = i   # '요즘 뜨는 n위'
+    geo = [p for p in places if p.get("lat") is not None]
     for p in places:
         p.setdefault("desc", "")
         p.setdefault("videos", [])
 
     # 개요(설명): 캐시 우선, 없으면 상위 일부만 detailCommon2 호출
     ov = caches["overview"]
-    for p in places[: args.overview_top]:
-        if p["id"].startswith("h"):
-            continue
+    for p in [p for p in places if p["id"].isdigit()][: args.overview_top]:
         if p["id"] not in ov and budget["overview"] > 0:
             try:
                 d = api.get("detailCommon2", contentId=p["id"])
@@ -703,44 +773,43 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
 
     # 관광지별 주변 식당: 2km 이내에서 인기 순위 → 거리 순으로 3곳
     for p in places:
+        if p.get("lat") is None:
+            p["foods"] = []
+            continue
         near = [f for f in foods if haversine_km(p["lat"], p["lng"], f["lat"], f["lng"]) <= 2.0]
         p["foods"] = [f["id"] for f in sorted(near, key=lambda f: food_rank_key(p, f))[:3]]
 
-    # 영상: 캐시가 오래된 순으로 할당량 안에서 갱신
+    # 영상: 도시 영상 모음에서 그 장소가 나온 영상(조회수 순). 없으면 예전에 받아 둔 영상
     vc = caches["videos"]
-    for p in places[: args.video_top]:
-        entry = vc.get(p["id"])
-        stale = (not entry) or (entry.get("at", "") < (dt.date.today() - dt.timedelta(days=args.video_days)).isoformat())
-        if args.youtube_key and stale and budget["youtube"] > 0:
-            base = re.sub(r"(특별자치시|특별자치도|광역시|특별시|시|군)$", "", city["name"]) or city["name"]
-            q = f"{base} {p['name']} 여행"
-            try:
-                vc[p["id"]] = {"at": dt.date.today().isoformat(), "items": youtube_search(args.youtube_key, q)}
-            except Exception as e:  # noqa: BLE001
-                log("   유튜브 중단:", e)
-                budget["youtube"] = 0
-            budget["youtube"] -= 1
-        p["videos"] = (vc.get(p["id"]) or {}).get("items", [])
+    for p in places:
+        if not p.get("videos"):
+            p["videos"] = (vc.get(p["id"]) or {}).get("items", [])
+
+    # 코스용 순서: 요즘 뜨는 순위와 대표 명소 순위를 반반 섞는다 (좌표 있는 곳만)
+    def pos(p, key, n):
+        return (p[key] - 1) / max(n, 1) if p.get(key) else 1.0
+    n_hot, n_rank = sum(1 for p in geo if p.get("hot")), sum(1 for p in geo if p.get("rank"))
+    course_pool = sorted(geo, key=lambda p: 0.55 * pos(p, "hot", n_hot) + 0.45 * pos(p, "rank", n_rank))
 
     # 코스: 관광지 구성이 바뀌었거나 30일 지나면 재생성
     cc = caches["courses"]
-    sig = ",".join(p["id"] for p in places[:25])
+    sig = ",".join(p["id"] for p in course_pool[:25])
     entry = cc.get(city["id"])
     courses = None
     if entry and entry.get("sig") == sig and entry.get("at", "") >= (dt.date.today() - dt.timedelta(days=30)).isoformat():
         courses = entry["courses"]
     elif args.anthropic_key and budget["claude"] > 0:
         try:
-            courses = claude_courses(args.anthropic_key, args.model, city, places, foods)
+            courses = claude_courses(args.anthropic_key, args.model, city, course_pool, foods)
             budget["claude"] -= 1
         except Exception as e:  # noqa: BLE001
             log("   코스 생성 실패, 기본 코스로 대체:", e)
         if courses:
             cc[city["id"]] = {"sig": sig, "at": dt.date.today().isoformat(), "courses": courses, "by": "claude"}
     if not courses:
-        courses = heuristic_courses(places, foods)
+        courses = heuristic_courses(course_pool, foods)
     # 캐시된 코스가 사라진 장소를 가리키지 않도록 정리
-    valid = {p["id"] for p in places} | {f["id"] for f in foods}
+    valid = {p["id"] for p in geo} | {f["id"] for f in foods}
     for c in courses:
         for d in c["days"]:
             d["stops"] = [s for s in d["stops"] if s["id"] in valid]
@@ -751,17 +820,17 @@ def process_city(city: dict, api: TourAPI, args, caches: dict, budget: dict) -> 
                  **({"rank": f["rank"]} if "rank" in f else {})}
                 for f in sorted(foods, key=lambda f: f.get("rank", 999)) if f["id"] in used_food]
 
-    center = ([round(sum(p["lat"] for p in places) / len(places), 5),
-               round(sum(p["lng"] for p in places) / len(places), 5)] if places else None)
+    center = ([round(sum(p["lat"] for p in geo) / len(geo), 5),
+               round(sum(p["lng"] for p in geo) / len(geo), 5)] if geo else None)
     out = {
         "id": city["id"], "name": city["name"], "province": city["province"],
         "center": center, "updatedAt": now_iso(), "sample": False,
-        "spots": [{**{k: p[k] for k in ("id", "type", "name", "addr", "lat", "lng", "image", "thumb", "desc", "videos", "foods")},
-                   **({"rank": p["rank"]} if "rank" in p else {})}
+        "spots": [{**{k: p.get(k) for k in ("id", "type", "name", "addr", "lat", "lng", "image", "thumb", "desc", "videos", "foods")},
+                   **{k: p[k] for k in ("rank", "hot", "yt", "kakao", "cat") if k in p}}
                   for p in places],
         "restaurants": food_out,
         "courses": courses,
-        "credit": "관광정보: 한국관광공사 TourAPI(공공누리) · 인기 순위: 한국관광공사 지자체 중심 관광지(T map 검색 기반) · 영상: YouTube",
+        "credit": "관광정보: 한국관광공사 TourAPI(공공누리) · 인기 순위: 한국관광공사 지자체 중심 관광지(T map 검색 기반) · 요즘 뜨는 곳: YouTube 최근 영상 · 장소 링크: 카카오맵",
     }
     save_json(CITY_DIR / f"{city['id']}.json", out, compact=True)
     log(f"   관광지 {len(out['spots'])} · 식당 {len(food_out)} · 코스 {len(courses)}")
@@ -781,7 +850,7 @@ def main():
     ap.add_argument("--video-days", type=int, default=14, help="영상 캐시 유효기간(일)")
     ap.add_argument("--tour-max-calls", type=int, default=900, help="TourAPI 하루 호출 상한(개발계정 1,000)")
     ap.add_argument("--overview-budget", type=int, default=250)
-    ap.add_argument("--youtube-budget", type=int, default=90, help="검색 1회=100 unit, 기본 할당 10,000/일")
+    ap.add_argument("--youtube-units", type=int, default=9000, help="유튜브 하루 할당 10,000 unit 중 사용할 양 (도시당 약 305)")
     ap.add_argument("--claude-budget", type=int, default=40)
     args = ap.parse_args()
 
@@ -789,6 +858,7 @@ def main():
     if not tour_key:
         sys.exit("TOURAPI_KEY 환경변수가 필요합니다 (공공데이터포털 일반 인증키 Decoding).")
     args.youtube_key = os.environ.get("YOUTUBE_API_KEY", "").strip()
+    args.kakao_key = os.environ.get("KAKAO_REST_KEY", "").strip()
     args.anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     args.model = os.environ.get("CLAUDE_MODEL", "claude-haiku-5-5")
 
@@ -820,8 +890,10 @@ def main():
         targets = sorted(index["cities"], key=lambda c: (c.get("updatedAt") is not None,
                                                          c.get("v") == DATA_VERSION, c.get("updatedAt") or ""))[: args.batch]
 
-    caches = {name: load_json(CACHE_DIR / f"{name}.json", {}) for name in ("overview", "videos", "courses", "hub", "hubspots")}
-    budget = {"overview": args.overview_budget, "youtube": args.youtube_budget, "claude": args.claude_budget}
+    caches = {name: load_json(CACHE_DIR / f"{name}.json", {}) for name in ("overview", "videos", "courses", "hub", "hubspots", "buzz")}
+    budget = {"overview": args.overview_budget, "claude": args.claude_budget,
+              "yt": buzz.YouTube(SESSION, args.youtube_key, args.youtube_units) if args.youtube_key else None,
+              "kakao": buzz.Kakao(SESSION, args.kakao_key) if args.kakao_key else None}
 
     for city in targets:
         try:
@@ -843,7 +915,7 @@ def main():
         save_json(index_path, index)
 
     save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "lines": DIAG[:300]})
-    log(f"완료 · 인기순위 호출 {api.hub_calls}회 · TourAPI 호출 {api.calls}회 · 남은 YouTube 예산 {max(budget['youtube'], 0)}")
+    log(f"완료 · 인기순위 호출 {api.hub_calls}회 · TourAPI 호출 {api.calls}회 · 남은 유튜브 unit {budget['yt'].units if budget['yt'] else '-'}")
 
 
 if __name__ == "__main__":

@@ -117,6 +117,8 @@ img { max-width: 100%; }
 .art .glyph { font-size: 44px; text-shadow: 0 1px 12px rgba(0,0,0,.18); }
 .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .02em; padding: 2px 7px; border-radius: 6px; background: var(--celadon-soft); color: var(--celadon); }
 .rank { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 1px 7px; border-radius: 6px; background: color-mix(in srgb, var(--vermilion) 12%, transparent); color: var(--vermilion); font-variant-numeric: tabular-nums; vertical-align: 2px; margin-left: 6px; }
+.rank.hot { background: color-mix(in srgb, var(--ochre) 16%, transparent); color: var(--ochre); }
+.buzz { font-size: 12.5px; color: var(--ochre); font-weight: 600; font-variant-numeric: tabular-nums; }
 .badge.warn { background: color-mix(in srgb, var(--ochre) 16%, transparent); color: var(--ochre); }
 
 .province { margin-top: 22px; }
@@ -245,7 +247,7 @@ img { max-width: 100%; }
 (() => {
   const app = document.getElementById("app");
   const topbar = document.getElementById("topbar");
-  const state = { index: null, prov: "전체", q: "", city: null, tab: "course", course: 0, day: 0 };
+  const state = { index: null, prov: "전체", q: "", city: null, tab: "course", course: 0, day: 0, sort: "hot" };
   const cityCache = new Map();
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -277,7 +279,10 @@ img { max-width: 100%; }
   const ytSearch = (city, spot) => `https://www.youtube.com/results?search_query=${enc(`${baseCity(city)} ${spot} 여행`)}`;
   const ytWatch = (id) => `https://www.youtube.com/watch?v=${enc(id)}`;
   const igTag = (spot) => `https://www.instagram.com/explore/tags/${enc(spot.replace(/\s+/g, ""))}/`;
-  const kakaoPin = (p) => `https://map.kakao.com/link/map/${enc(safeName(p.name))},${p.lat},${p.lng}`;
+  const kakaoPin = (p) => p.kakao ? `https://place.map.kakao.com/${enc(p.kakao)}`
+    : p.lat != null ? `https://map.kakao.com/link/map/${enc(safeName(p.name))},${p.lat},${p.lng}`
+    : kakaoSearch(`${baseCity(state.city?.name || "")} ${p.name}`);
+  const fmtViews = (n) => n >= 1e8 ? `${(n / 1e8).toFixed(1)}억` : n >= 1e4 ? `${Math.round(n / 1e4).toLocaleString()}만` : n.toLocaleString();
   const kakaoRoute = (a, b) => `https://map.kakao.com/link/from/${enc(safeName(a.name))},${a.lat},${a.lng}/to/${enc(safeName(b.name))},${b.lat},${b.lng}`;
   const kakaoSearch = (q) => `https://map.kakao.com/?q=${enc(q)}`;
 
@@ -400,6 +405,7 @@ img { max-width: 100%; }
     if (state.city !== d) {
       state.city = d; state.course = 0; state.day = 0;
       state.tab = store.get("tab") || "course";
+      state.sort = store.get("sort") || "hot";
       if (state.tab === "course" && !d.courses.length) state.tab = "spots";
     }
     renderCity();
@@ -408,11 +414,12 @@ img { max-width: 100%; }
   function renderCity() {
     const d = state.city;
     const vidCount = d.spots.reduce((n, s) => n + (s.videos?.length || 0), 0);
+    const hotCount = d.spots.filter((s) => s.hot).length;
     app.innerHTML = `
       <section class="hero">
         <span class="prov">${esc(d.province)}</span>
         <h1>${esc(d.name)}</h1>
-        <span class="meta">관광지 ${d.spots.length}곳 · 추천 코스 ${d.courses.length}개${vidCount ? ` · 영상 ${vidCount}편` : ""} · ${esc((d.updatedAt || "").slice(0, 10))} 기준</span>
+        <span class="meta">관광지 ${d.spots.length}곳${hotCount ? ` · 요즘 뜨는 곳 ${hotCount}곳` : ""} · 추천 코스 ${d.courses.length}개${vidCount ? ` · 영상 ${vidCount}편` : ""} · ${esc((d.updatedAt || "").slice(0, 10))} 기준</span>
         ${d.sample ? `<div class="notice">샘플 데이터예요. 좌표는 근사치이고, 사진·영상·식당은 API를 연결하면 자동으로 채워져요. 지금은 사진을 누르면 유튜브 검색으로 연결돼요.</div>` : ""}
       </section>
       <div class="tabs" role="tablist">
@@ -491,7 +498,7 @@ img { max-width: 100%; }
         html += `<li class="stop"><span class="rail"><span class="dot">${n}</span></span>
           <div class="content">
             ${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}
-            <h4>${esc(sp.name)}${sp.rank ? `<span class="rank">인기 ${sp.rank}위</span>` : ""}</h4>
+            <h4>${esc(sp.name)}${sp.hot ? `<span class="rank hot">요즘 뜨는 ${sp.hot}위</span>` : ""}${sp.rank ? `<span class="rank">인기 ${sp.rank}위</span>` : ""}</h4>
             ${sp.desc ? `<p class="desc">${esc(sp.desc)}</p>` : ""}
             <div class="links">
               <a href="${video ? ytWatch(video.id) : ytSearch(state.city.name, sp.name)}" target="_blank" rel="noopener">${video ? "영상 보기" : "영상 찾기"} ↗</a>
@@ -553,26 +560,43 @@ img { max-width: 100%; }
   // 관광지 패널: 사진을 누르면 영상으로
   function spotsPanel() {
     const d = state.city;
-    return `<div class="spots">${d.spots.map((s) => {
+    const hasHot = d.spots.some((s) => s.hot);
+    const sort = hasHot ? state.sort : "rank";
+    const list = [...d.spots].sort(sort === "hot"
+      ? (a, b) => (a.hot || 999) - (b.hot || 999) || (a.rank || 999) - (b.rank || 999)
+      : (a, b) => (a.rank || 999) - (b.rank || 999) || (a.hot || 999) - (b.hot || 999));
+    const toggle = hasHot ? `<div class="course-pick" role="group" aria-label="정렬" style="margin-bottom:14px">
+        <button class="chip" data-sort="hot" aria-pressed="${sort === "hot"}">요즘 뜨는 순</button>
+        <button class="chip" data-sort="rank" aria-pressed="${sort === "rank"}">대표 명소 순</button></div>
+      ${sort === "hot" ? `<p class="course-summary" style="margin:-4px 0 14px">최근 6개월 유튜브 여행 영상에 많이 나오고 많이 본 곳 순서예요.</p>` : ""}` : "";
+    return `${toggle}<div class="spots">${list.map((s) => {
       const v = s.videos || [];
       const href = v[0] ? ytWatch(v[0].id) : ytSearch(d.name, s.name);
       const foods = (s.foods || []).map((id) => d.foodMap.get(id)).filter(Boolean);
+      const badges = [
+        s.hot && sort === "hot" ? `<span class="rank hot">요즘 뜨는 ${s.hot}위</span>` : "",
+        s.rank && sort === "rank" ? `<span class="rank">인기 ${s.rank}위</span>` : "",
+        s.hot && sort === "rank" ? `<span class="rank hot">요즘 뜨는 ${s.hot}위</span>` : "",
+        s.rank && sort === "hot" ? `<span class="rank">인기 ${s.rank}위</span>` : "",
+      ].join("");
       return `<article class="spot">
         <a class="photo" href="${href}" target="_blank" rel="noopener" aria-label="${esc(s.name)} 영상 보기">
           ${art(s.id, s.name, s.image)}
-          <span class="play">${playIcon}${v.length ? `영상 ${v.length}편` : "영상 찾기"}</span>
+          <span class="play">${playIcon}${v.length ? `영상 ${s.yt ? s.yt.n : v.length}편` : "영상 찾기"}</span>
         </a>
         <div class="body">
-          <h4>${esc(s.name)}${s.rank ? `<span class="rank">인기 ${s.rank}위</span>` : ""}</h4>
+          <h4>${esc(s.name)}${badges}</h4>
+          ${s.cat ? `<span class="addr">${esc(s.cat)} · 카카오맵 장소</span>` : ""}
           ${s.addr ? `<span class="addr">${esc(s.addr)}</span>` : ""}
+          ${s.yt ? `<span class="buzz">최근 영상 ${s.yt.n}편 · 조회 ${fmtViews(s.yt.views)}회</span>` : ""}
           ${s.desc ? `<p class="desc">${esc(s.desc)}</p>` : ""}
           ${v.length > 1 ? `<ul class="vids">${v.slice(1, 4).map((x) => `<li><a href="${ytWatch(x.id)}" target="_blank" rel="noopener">
               <span class="th">${x.thumb ? `<img src="${esc(x.thumb)}" alt="" loading="lazy" onerror="this.remove()">` : ""}</span>
-              <span><span class="t">${esc(x.title)}</span><span class="c">${esc(x.channel)} · ${esc(x.published)}</span></span></a></li>`).join("")}</ul>` : ""}
+              <span><span class="t">${esc(x.title)}</span><span class="c">${esc(x.channel)} · ${esc(x.published)}${x.views ? ` · 조회 ${fmtViews(x.views)}` : ""}</span></span></a></li>`).join("")}</ul>` : ""}
           ${foods.length ? `<span class="addr">근처 식당: ${foods.map((f) => esc(f.name)).join(", ")}</span>` : ""}
           <div class="links">
             <a href="${igTag(s.name)}" target="_blank" rel="noopener">인스타그램 #${esc(s.name.replace(/\s+/g, ""))} ↗</a>
-            <a href="${kakaoPin(s)}" target="_blank" rel="noopener">지도 ↗</a>
+            <a href="${kakaoPin(s)}" target="_blank" rel="noopener">${s.kakao ? "카카오맵·리뷰" : "지도"} ↗</a>
           </div>
         </div>
       </article>`;
@@ -606,7 +630,7 @@ img { max-width: 100%; }
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort]");
     if (!t) return;
     if (t.dataset.city) { e.preventDefault(); go(t.dataset.city); }
     else if ("home" in t.dataset) { e.preventDefault(); go(null); }
@@ -620,6 +644,7 @@ img { max-width: 100%; }
       renderPanel();
     } else if (t.dataset.course) { state.course = +t.dataset.course; state.day = 0; renderPanel(); }
     else if (t.dataset.day) { state.day = +t.dataset.day; renderPanel(); }
+    else if (t.dataset.sort) { state.sort = t.dataset.sort; store.set("sort", state.sort); renderPanel(); }
   });
 
   // ── 시작 ──
