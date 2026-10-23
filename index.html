@@ -290,7 +290,7 @@ img { max-width: 100%; }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
-.hotmap { aspect-ratio: 1 / 1; width: 100%; max-width: 100%; height: auto; touch-action: pan-y; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--celadon-soft); position: relative; z-index: 0; }
+.hotmap { aspect-ratio: 1 / 1; width: 100%; max-width: 100%; height: auto; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--celadon-soft); position: relative; z-index: 0; }
 .hotmap .leaflet-tile-pane { filter: saturate(.75) brightness(1.03); }
 .hotmap.dark-tiles .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6); }
 .map-wait { margin: 0; padding: 40px 16px; text-align: center; color: var(--muted); }
@@ -927,7 +927,7 @@ img { max-width: 100%; }
     app.innerHTML = `
       <section class="page-head">
         <h1><img src="icons/mascot-160.png" alt="">핫플 지도</h1>
-        <p>동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요. 두 손가락으로 벌리거나 +버튼을 누르면 확대돼요.</p>
+        <p>동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요. 한 손가락으로 끌어서 옮기고, 두 손가락으로 벌리거나 +버튼을 누르면 확대돼요. 화면을 내릴 땐 지도 바깥을 밀어 주세요.</p>
       </section>
       <section class="weekly map-sec" style="margin-top:14px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
@@ -1108,10 +1108,9 @@ img { max-width: 100%; }
     document.getElementById("map-at").textContent = (mapData.updatedAt || "").slice(5, 10).replace("-", ".") + " 업데이트";
     box.innerHTML = "";
     const dark = false;   // 앱은 항상 밝은 화면
-    // 휴대폰: 한 손가락은 화면 스크롤로 넘기고, 지도는 두 손가락(확대·축소)이나 +/− 버튼으로만 움직인다
-    const touch = matchMedia("(pointer: coarse)").matches;
+    // 한 손가락으로 끌어서 이동, 두 손가락으로 확대·축소 (화면 스크롤은 지도 바깥에서)
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15,
-      dragging: !touch, tap: !touch })
+      dragging: true })
       .fitBounds([[33.1, 125.0], [38.6, 130.0]]);
     // 바탕지도: 오픈스트리트맵 공식 타일 (키 불필요, 출처 표시 필수). 어두운 모드는 색을 뒤집어 맞춘다.
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
