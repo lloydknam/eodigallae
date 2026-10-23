@@ -259,6 +259,26 @@ img { max-width: 100%; }
 .vid-card b { font-size: 15px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .vid-card span { color: var(--muted); font-size: 13px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
+.stat-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.stat-tile { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); padding: 12px 14px; display: grid; gap: 2px; }
+.stat-tile span { color: var(--muted); font-size: 13px; }
+.stat-tile b { font-size: 26px; font-variant-numeric: tabular-nums; }
+.stat-tile small { color: var(--muted); font-size: 12px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chart-card { --bar: #25A68C; } }
+:root[data-theme="dark"] .chart-card { --bar: #25A68C; }
+.chart-card { position: relative; margin: 14px 0 0; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 12px 10px; --bar: #12907A; }
+.chart-card h3 { margin: 0 4px 8px; font-size: 16px; }
+.chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-card .grid { stroke: var(--line); stroke-width: 1; }
+.chart-card .axis { fill: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.chart-card .bar { fill: var(--bar); pointer-events: none; }
+.chart-card .hit { fill: transparent; cursor: pointer; }
+.chart-card .hit:hover + .bar, .chart-card .bar.on { fill: var(--celadon-deep); }
+.chart-tip { position: absolute; pointer-events: none; transform: translate(-50%, -100%); background: var(--ink); color: var(--paper); border-radius: 10px; padding: 6px 10px; font-size: 13px; line-height: 1.45; white-space: nowrap; box-shadow: var(--shadow); }
+.chart-table { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.chart-table table { width: 100%; border-collapse: collapse; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.chart-table td, .chart-table th { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: right; }
+.chart-table td:first-child, .chart-table th:first-child { text-align: left; }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -540,6 +560,73 @@ img { max-width: 100%; }
       <div class="plan-actions"><button class="btn-ghost" data-take-plan ${items.length ? "" : "disabled"}>내 코스에 담기</button></div>
       ${planHTML(items, { shared: true })}`;
   }
+  // ── 방문 통계: 가입 없는 무료 카운터(Abacus)에 하루 숫자만 올린다. 개인정보·쿠키 없음 ──
+  const COUNTER = "https://abacus.jasoncameron.dev";
+  const COUNTER_NS = "eodigallae.lloydknam";
+  const kstDay = (offset = 0) => new Date(Date.now() + 9 * 3600e3 - offset * 86400e3).toISOString().slice(0, 10).replace(/-/g, "");
+  function countVisit() {
+    if (location.hostname !== "lloydknam.github.io") return;   // 개발·테스트 화면은 세지 않음
+    const d = kstDay(), hit = (k) => fetch(`${COUNTER}/hit/${COUNTER_NS}/${k}-${d}`, { keepalive: true }).catch(() => {});
+    try {
+      if (!sessionStorage.getItem("opened")) { sessionStorage.setItem("opened", "1"); hit("p"); }   // 앱 열기
+      if (localStorage.getItem("seenDay") !== d) { localStorage.setItem("seenDay", d); hit("v"); }  // 그날 처음 온 기기
+    } catch { /* 저장 불가 환경은 세지 않음 */ }
+  }
+  async function showStatsPage() {
+    setTabbar("about"); homeTopbar();
+    app.innerHTML = `<section class="page-head"><h1><img src="icons/mascot-160.png" alt="">방문 통계</h1>
+      <p>하루에 몇 대의 기기가 어디갈래를 열었는지 보여줘요. 개인정보 없이 숫자만 세요.</p></section>
+      <p class="loading"><img src="icons/mascot-160.png" alt="">숫자를 세는 중…</p>`;
+    let days = {};
+    try { days = (await (await fetch("data/stats.json", { cache: "no-cache" })).json()).days || {}; } catch { /* 아직 없음 */ }
+    const live = async (k) => { try { const r = await fetch(`${COUNTER}/get/${COUNTER_NS}/${k}`); return r.ok ? (await r.json()).value || 0 : 0; } catch { return 0; } };
+    for (const off of [0, 1]) {   // 오늘·어제는 실시간
+      const d = kstDay(off); const [v, p] = await Promise.all([live(`v-${d}`), live(`p-${d}`)]);
+      days[d] = [Math.max(v, days[d]?.[0] || 0), Math.max(p, days[d]?.[1] || 0)];
+    }
+    const N = 30, rows = [];
+    for (let i = N - 1; i >= 0; i--) { const d = kstDay(i); rows.push({ d, v: days[d]?.[0] || 0, p: days[d]?.[1] || 0 }); }
+    const sum = rows.reduce((a, r) => a + r.v, 0), all = Object.values(days).reduce((a, x) => a + x[0], 0);
+    const md = (d) => `${+d.slice(4, 6)}/${+d.slice(6, 8)}`;
+    // 막대그래프 (단일 계열: 방문 기기 수)
+    const W = 360, H = 170, L = 26, B = 20, T = 8, cw = (W - L) / N, bw = Math.max(cw - 2, 2);
+    const max = Math.max(4, ...rows.map((r) => r.v)), step = Math.ceil(max / 4), top = step * 4;
+    const y = (v) => T + (H - T - B) * (1 - v / top);
+    const bar = (x, v) => { const h = H - B - y(v); if (v <= 0) return ""; const r = Math.min(4, bw / 2, h);
+      return `M${x},${H - B}V${y(v) + r}Q${x},${y(v)} ${x + r},${y(v)}H${x + bw - r}Q${x + bw},${y(v)} ${x + bw},${y(v) + r}V${H - B}Z`; };
+    const grid = [0, 1, 2, 3, 4].map((k) => `<line class="grid" x1="${L}" x2="${W}" y1="${y(step * k)}" y2="${y(step * k)}"/>
+      <text class="axis" x="${L - 5}" y="${y(step * k) + 3}" text-anchor="end">${step * k}</text>`).join("");
+    const bars = rows.map((r, i) => { const x = L + i * cw + 1;
+      return `<rect class="hit" data-i="${i}" x="${L + i * cw}" y="${T}" width="${cw}" height="${H - T - B}"/><path class="bar" d="${bar(x, r.v)}"/>
+        ${i % 7 === 2 || i === N - 1 ? `<text class="axis" x="${x + bw / 2}" y="${H - 5}" text-anchor="middle">${i === N - 1 ? "오늘" : md(r.d)}</text>` : ""}`; }).join("");
+    app.innerHTML = `<section class="page-head"><h1><img src="icons/mascot-160.png" alt="">방문 통계</h1>
+        <p>하루에 몇 대의 기기가 어디갈래를 열었는지 보여줘요. 개인정보 없이 숫자만 세요.</p></section>
+      <div class="stat-tiles">
+        <div class="stat-tile"><span>오늘</span><b>${rows[N - 1].v.toLocaleString()}</b><small>열기 ${rows[N - 1].p.toLocaleString()}회</small></div>
+        <div class="stat-tile"><span>어제</span><b>${rows[N - 2].v.toLocaleString()}</b><small>열기 ${rows[N - 2].p.toLocaleString()}회</small></div>
+        <div class="stat-tile"><span>최근 30일</span><b>${sum.toLocaleString()}</b><small>누적 ${all.toLocaleString()}</small></div>
+      </div>
+      <figure class="chart-card" id="chart"><h3>일별 방문 기기 수 · 최근 30일</h3>
+        <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="최근 30일 일별 방문 기기 수 막대그래프">${grid}${bars}</svg>
+        <div class="chart-tip" hidden></div>
+        <details class="chart-table"><summary>표로 보기</summary><table><thead><tr><th>날짜</th><th>방문 기기</th><th>앱 열기</th></tr></thead>
+          <tbody>${rows.slice().reverse().map((r) => `<tr><td>${md(r.d)}</td><td>${r.v}</td><td>${r.p}</td></tr>`).join("")}</tbody></table></details>
+      </figure>
+      <p class="credit">같은 기기는 하루 한 번만 세요(방문 기기). '앱 열기'는 앱을 새로 연 횟수예요. 한국시간 자정 기준.</p>`;
+    const card = document.getElementById("chart"), tip = card.querySelector(".chart-tip"), svg = card.querySelector("svg");
+    const show = (el) => {
+      const r = rows[+el.dataset.i];
+      card.querySelectorAll(".bar.on").forEach((b) => b.classList.remove("on")); el.nextElementSibling.classList.add("on");
+      const box = el.getBoundingClientRect(), cb = card.getBoundingClientRect(), sb = svg.getBoundingClientRect();
+      const x = Math.min(Math.max(box.left + box.width / 2 - cb.left, 70), cb.width - 70);
+      tip.innerHTML = `<b>${md(r.d)}</b><br>방문 기기 ${r.v.toLocaleString()} · 열기 ${r.p.toLocaleString()}`;
+      tip.style.left = x + "px"; tip.style.top = (sb.top - cb.top + (y(r.v) / H) * sb.height - 6) + "px"; tip.hidden = false;
+    };
+    svg.addEventListener("pointerover", (e) => { if (e.target.classList.contains("hit")) show(e.target); });
+    svg.addEventListener("click", (e) => { if (e.target.classList.contains("hit")) show(e.target); });
+    svg.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { tip.hidden = true; card.querySelectorAll(".bar.on").forEach((b) => b.classList.remove("on")); } });
+  }
+
   // ── 영상 링크로 코스 만들기 ──
   const ytIdOf = (u) => { const m = String(u).match(/(?:youtu\.be\/|v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : (/^[A-Za-z0-9_-]{11}$/.test(u) ? u : ""); };
   function showVideoPage(vid) {
@@ -714,6 +801,7 @@ img { max-width: 100%; }
     const id = decodeURIComponent(location.hash.slice(1));
     if (id.startsWith("plan=")) { await showSharedPlan(id.slice(5)); window.scrollTo({ top: 0 }); return; }
     if (id === "video" || id.startsWith("video=")) { showVideoPage(id.slice(6)); window.scrollTo({ top: 0 }); return; }
+    if (id === "stats") { await showStatsPage(); window.scrollTo({ top: 0 }); return; }
     if (id === "report" || id.startsWith("report=")) { showReportPage(id.slice(7)); window.scrollTo({ top: 0 }); return; }
     const city = id && state.index.cities.find((c) => c.id === id);
     if (city) { setTabbar("cities"); await showCity(city); }
@@ -905,6 +993,7 @@ img { max-width: 100%; }
         </ul></div>
         <div class="about-card"><h3>데이터 출처</h3><p>한국관광공사 TourAPI(공공누리)·지자체 중심 관광지 정보, YouTube API 서비스, 카카오맵, OpenStreetMap</p></div>
         <div class="about-card"><h3>개인정보</h3><p>회원가입이 없고 개인정보를 수집하지 않아요. <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침 ↗</a></p></div>
+        <div class="about-card"><h3>방문 통계</h3><p>하루 몇 명이 어디갈래를 여는지 그래프로 볼 수 있어요. <a href="#stats">일별 방문 그래프 보기 →</a></p></div>
       </div>`;
   }
 
@@ -1440,6 +1529,7 @@ img { max-width: 100%; }
     const id = shared && ytIdOf(shared);
     if (id) history.replaceState(null, "", location.pathname + "#video=" + id);
   })();
+  countVisit();
   loadIndex().then(route).catch((err) => {
     app.innerHTML = `<p class="empty-note">${esc(err.message)} 잠시 후 다시 열어 주세요.</p>`;
   });
@@ -1458,17 +1548,6 @@ img { max-width: 100%; }
     } catch { /* 미지원 환경 */ }
   }
 })();
-</script>
-<script>
-  // 방문자 통계(Cloudflare Web Analytics): 쿠키 없이 방문 수만 센다. 토큰이 비어 있으면 아무것도 하지 않는다.
-  (() => {
-    const CF_TOKEN = "";
-    if (!CF_TOKEN || location.protocol !== "https:") return;
-    const s = document.createElement("script");
-    s.defer = true; s.src = "https://static.cloudflareinsights.com/beacon.min.js";
-    s.dataset.cfBeacon = JSON.stringify({ token: CF_TOKEN, spa: true });
-    document.head.appendChild(s);
-  })();
 </script>
 </body>
 </html>
