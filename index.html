@@ -181,6 +181,32 @@ img { max-width: 100%; }
 .about-card p, .about-card li { margin: 0; color: var(--muted); font-size: 15px; }
 .about-card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .about-card a { color: var(--celadon); font-weight: 600; text-decoration: none; }
+.stamp-btn { display: inline-flex; align-items: center; gap: 6px; margin: 8px 0 4px; padding: 7px 14px 7px 8px; border-radius: 999px;
+  border: 2px dashed var(--celadon); background: transparent; color: var(--celadon); font-weight: 700; font-size: 15px; cursor: pointer; width: fit-content; }
+.stamp-btn img { width: 26px; height: auto; filter: grayscale(1) opacity(.55); }
+.stamp-btn.on { border-style: solid; background: var(--celadon); color: var(--celadon-ink); }
+.stamp-btn.on img { filter: none; }
+.stamp-hero { margin-top: 14px; padding: 20px; border-radius: 24px; color: #fff; display: grid; gap: 8px;
+  background: linear-gradient(160deg, #22B79A 0%, #12907A 55%, #0B6E61 100%); box-shadow: var(--shadow); }
+.stamp-count { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); }
+.stamp-count b { font-weight: 400; font-size: 64px; line-height: 1; }
+.stamp-count span { font-size: 22px; opacity: .85; }
+.stamp-level { font-family: var(--font-display); font-size: 24px; color: #FFF3DC; display: grid; }
+.stamp-level small { font-family: var(--font-body); font-size: 14px; color: #fff; opacity: .85; }
+.stamp-bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,.25); overflow: hidden; }
+.stamp-bar span { display: block; height: 100%; background: #FFF3DC; border-radius: 999px; }
+.stamp-share { justify-self: start; margin-top: 6px; }
+.stamp-share:disabled { opacity: .6; cursor: default; }
+.stamp-prov { margin-top: 20px; }
+.stamp-prov h3 { margin: 0 0 10px; font-size: 17px; display: flex; gap: 8px; align-items: baseline; }
+.stamp-prov h3 small { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.wrap { overflow-x: clip; }
+.stamps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.stamp { aspect-ratio: 1 / 1; max-width: 100%; border-radius: 50%; border: 2px dashed var(--line); background: var(--surface); color: var(--muted);
+  display: grid; place-items: center; align-content: center; gap: 0; font-size: 13.5px; font-weight: 600; cursor: pointer; padding: 4px; line-height: 1.2; }
+.stamp img { width: 46%; height: auto; }
+.stamp.on { border: 3px solid var(--vermilion); color: var(--vermilion); background: color-mix(in srgb, var(--vermilion) 8%, var(--surface)); transform: rotate(-6deg); }
+@media (prefers-reduced-motion: no-preference) { .stamp.on { animation: stampIn .25s ease-out; } @keyframes stampIn { from { transform: scale(1.3) rotate(-6deg); opacity: .4; } } }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -333,7 +359,7 @@ img { max-width: 100%; }
   <button data-view="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z" fill="currentColor"/></svg><span>홈</span></button>
   <button data-view="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg><span>핫플 지도</span></button>
   <button data-view="cities"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>도시 찾기</span></button>
-  <button data-view="about"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2.2" fill="currentColor"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><circle cx="19" cy="12" r="2.2" fill="currentColor"/></svg><span>더보기</span></button>
+  <button data-view="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m8 12.5 2.6 2.6L16.5 9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>내 여행</span></button>
 </nav>
 
 <script>
@@ -349,6 +375,17 @@ img { max-width: 100%; }
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch { /* 저장 불가 환경 */ } },
   };
+  // 다녀온 도시(도장): 이 휴대폰에만 저장
+  const visited = new Set((() => { try { return JSON.parse(store.get("visited") || "[]"); } catch { return []; } })());
+  const saveVisited = () => store.set("visited", JSON.stringify([...visited]));
+  const LEVELS = [[0, "여행 새싹"], [3, "동네 탐험가"], [10, "주말 여행러"], [25, "지역 여행가"], [50, "전국 유랑자"], [100, "국토 대장정"], [161, "전국 정복"]];
+  const levelOf = (n) => LEVELS.filter(([k]) => n >= k).pop()[1];
+  const nextLevel = (n) => LEVELS.find(([k]) => k > n);
+  function stampBtn(id) {
+    const on = visited.has(id);
+    return `<button class="stamp-btn${on ? " on" : ""}" data-stamp="${esc(id)}" aria-pressed="${on}">
+      <img src="icons/mascot-160.png" alt="">${on ? "도장 쾅! 다녀온 곳" : "다녀왔어요"}</button>`;
+  }
 
   // ── 거리·이동시간 추정 (직선거리 × 도로 보정) ──
   function km(a, b) {
@@ -430,7 +467,7 @@ img { max-width: 100%; }
   }
 
   // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
-  const VIEWS = ["map", "cities", "about"];
+  const VIEWS = ["map", "cities", "about", "me"];
   function setTabbar(view) {
     document.querySelectorAll("#tabbar [data-view]").forEach((b) => {
       if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
@@ -447,6 +484,7 @@ img { max-width: 100%; }
     if (view === "map") return showMapPage();
     if (view === "cities") return showCitiesPage();
     if (view === "about") return showAboutPage();
+    if (view === "me") return showMePage();
     app.innerHTML = `
       <section class="hero-card">
         <h1>이번 주말,<br>어디 갈래?</h1>
@@ -489,6 +527,88 @@ img { max-width: 100%; }
     q.addEventListener("input", () => { state.q = q.value.trim(); renderResults(); });
     renderResults();
   }
+  function showMePage() {
+    const cities = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData));
+    const total = cities.length;
+    const n = cities.filter((c) => visited.has(c.id)).length;
+    const nx = nextLevel(n);
+    const byProv = new Map();
+    const provOf = (c) => (c.province === c.name ? "특별·광역시" : c.province);   // 서울·부산 등은 한데 묶기
+    for (const c of cities) { const k = provOf(c); if (!byProv.has(k)) byProv.set(k, []); byProv.get(k).push(c); }
+    app.innerHTML = `
+      <section class="page-head">
+        <h1><img src="icons/mascot-160.png" alt="">내 여행</h1>
+        <p>다녀온 도시를 눌러 도장을 찍어보세요. 이 휴대폰에만 저장돼요.</p>
+      </section>
+      <section class="stamp-hero">
+        <div class="stamp-count"><b>${n}</b><span>/ ${total}곳</span></div>
+        <div class="stamp-level">${esc(levelOf(n))}${nx ? `<small>${nx[0] - n}곳 더 가면 '${esc(nx[1])}'</small>` : "<small>전국을 다 다녀왔어요!</small>"}</div>
+        <div class="stamp-bar"><span style="width:${(n / Math.max(total, 1) * 100).toFixed(1)}%"></span></div>
+        <button class="btn-ghost stamp-share" data-share-stamps ${n ? "" : "disabled"}>내 도장판 공유하기</button>
+      </section>
+      ${[...byProv].map(([prov, cs]) => {
+        const k = cs.filter((c) => visited.has(c.id)).length;
+        return `<section class="stamp-prov">
+          <h3>${esc(prov)} <small>${k} / ${cs.length}</small></h3>
+          <div class="stamps">${cs.map((c) => `<button class="stamp${visited.has(c.id) ? " on" : ""}" data-stamp="${esc(c.id)}" aria-pressed="${visited.has(c.id)}">
+            ${visited.has(c.id) ? `<img src="icons/mascot-160.png" alt="">` : ""}<span>${esc(baseCity(c.name) || c.name)}</span></button>`).join("")}</div>
+        </section>`;
+      }).join("")}
+      <div class="home-more"><button class="btn-ghost" data-view="about">앱 정보 · 데이터 출처</button></div>`;
+  }
+
+  // 도장판 공유 이미지 (1080×1350, 인스타 세로)
+  async function shareStamps() {
+    const cities = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData));
+    const n = cities.filter((c) => visited.has(c.id)).length;
+    const W = 1080, H = 1350, cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    const g = cv.getContext("2d");
+    const grad = g.createLinearGradient(0, 0, W * 0.4, H);
+    grad.addColorStop(0, "#22B79A"); grad.addColorStop(0.55, "#12907A"); grad.addColorStop(1, "#0B6E61");
+    g.fillStyle = grad; g.fillRect(0, 0, W, H);
+    await document.fonts.load('80px "Jua"').catch(() => {});
+    const font = (px) => `${px}px "Jua", "Apple SD Gothic Neo", sans-serif`;
+    g.fillStyle = "#fff"; g.font = font(64); g.fillText("나의 국내여행 도장깨기", 80, 140);
+    g.font = font(220); g.fillText(String(n), 80, 400);
+    const w = g.measureText(String(n)).width;
+    g.font = font(72); g.globalAlpha = .85; g.fillText(`/ ${cities.length}곳`, 100 + w, 400); g.globalAlpha = 1;
+    g.font = font(60); g.fillStyle = "#FFF3DC"; g.fillText(levelOf(n), 80, 500);
+    // 시·도별 막대
+    const byProv = new Map();
+    for (const c of cities) {
+      const key = c.province === c.name ? "특별·광역시" : c.province;
+      const v = byProv.get(key) || [0, 0]; v[1]++; if (visited.has(c.id)) v[0]++; byProv.set(key, v);
+    }
+    const rows = [...byProv].sort((a, b) => b[1][0] / b[1][1] - a[1][0] / a[1][1]).slice(0, 9);
+    let y = 600;
+    g.font = font(38);
+    for (const [prov, [k, t]] of rows) {
+      g.fillStyle = "#fff"; g.fillText(prov.replace(/특별자치도|특별자치시|광역시|특별시/, ""), 80, y + 34);
+      g.fillStyle = "rgba(255,255,255,.22)"; g.beginPath(); g.roundRect(330, y + 6, 560, 34, 17); g.fill();
+      if (k) { g.fillStyle = "#FFF3DC"; g.beginPath(); g.roundRect(330, y + 6, Math.max(34, 560 * k / t), 34, 17); g.fill(); }
+      g.fillStyle = "#fff"; g.fillText(`${k}/${t}`, 915, y + 34);
+      y += 64;
+    }
+    const img = new Image(); img.src = "icons/mascot-360.png";
+    await img.decode().catch(() => {});
+    if (img.naturalWidth) g.drawImage(img, W - 380, 210, 300, 300 * img.naturalHeight / img.naturalWidth);
+    g.fillStyle = "#fff"; g.font = font(44); g.fillText("어디갈래", 80, H - 90);
+    g.globalAlpha = .8; g.font = font(30); g.fillText("lloydknam.github.io/eodigallae", 80, H - 45); g.globalAlpha = 1;
+    const blob = await new Promise((ok) => cv.toBlob(ok, "image/png"));
+    const file = new File([blob], "eodigallae-stamps.png", { type: "image/png" });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "나의 도장깨기", text: `국내여행 도장깨기 ${n}/${cities.length}곳 — 어디갈래` });
+        return;
+      }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "eodigallae-stamps.png";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
   function showAboutPage() {
     const ready = state.index.cities.filter((c) => c.hasData).length;
     const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
@@ -688,7 +808,7 @@ img { max-width: 100%; }
     const d = meta.hasData ? await loadCity(meta.id) : null;
     if (!d) {
       app.innerHTML = `
-        <section class="hero"><span class="prov">${esc(meta.province)}</span><h1>${esc(meta.name)}</h1></section>
+        <section class="hero"><span class="prov">${esc(meta.province)}</span><h1>${esc(meta.name)}</h1>${stampBtn(meta.id)}</section>
         <div class="empty-card" style="margin-top:16px">
           <img class="empty-cat" src="icons/mascot-160.png" alt="">
           <h4>어디냥이 아직 둘러보는 중인 도시예요</h4>
@@ -717,6 +837,7 @@ img { max-width: 100%; }
       <section class="hero">
         <span class="prov">${esc(d.province)}</span>
         <h1>${esc(d.name)}</h1>
+        ${stampBtn(d.id)}
         <span class="meta">관광지 ${d.spots.length}곳${hotCount ? ` · 요즘 뜨는 곳 ${hotCount}곳` : ""} · 추천 코스 ${d.courses.length}개${vidCount ? ` · 영상 ${vidCount}편` : ""} · ${esc((d.updatedAt || "").slice(0, 10))} 기준</span>
         ${d.sample ? `<div class="notice">샘플 데이터예요. 좌표는 근사치이고, 사진·영상·식당은 API를 연결하면 자동으로 채워져요. 지금은 사진을 누르면 유튜브 검색으로 연결돼요.</div>` : ""}
       </section>
@@ -960,8 +1081,17 @@ img { max-width: 100%; }
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps]");
     if (!t) return;
+    if (t.dataset.stamp) {
+      const id = t.dataset.stamp;
+      if (visited.has(id)) visited.delete(id); else visited.add(id);
+      saveVisited();
+      if (location.hash === "#me") showMePage();
+      else t.outerHTML = stampBtn(id);
+      return;
+    }
+    if ("shareStamps" in t.dataset) { shareStamps(); return; }
     if (t.dataset.view) { e.preventDefault(); go(t.dataset.view === "home" ? null : t.dataset.view); }
     else if (t.dataset.city) { e.preventDefault(); go(t.dataset.city); }
     else if ("home" in t.dataset) { e.preventDefault(); go(null); }
