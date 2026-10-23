@@ -219,6 +219,20 @@ img { max-width: 100%; }
 .half-home b { font-size: 16.5px; }
 .half-home span:not(.half-tag) { color: var(--muted); font-size: 14px; }
 .half-dot { margin-left: 5px; font-size: 11px; font-weight: 700; color: #fff; background: var(--vermilion); border-radius: 999px; padding: 1px 6px; vertical-align: 1px; }
+.heart { border: 1.5px solid var(--vermilion); color: var(--vermilion); background: transparent; border-radius: 999px; padding: 4px 12px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.heart.on { background: var(--vermilion); color: #fff; }
+.linkbtn { border: 0; background: none; color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; padding: 4px 2px; text-decoration: underline; text-underline-offset: 3px; }
+.plan-actions { display: flex; align-items: center; gap: 14px; margin: 10px 0 6px; flex-wrap: wrap; }
+.plan-city { margin-top: 16px; padding: 14px 14px 4px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+.plan-city h3 { margin: 0 0 10px; font-size: 18px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.plan-city h3 a { color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
+.plan-city h3 small { color: var(--muted); font-weight: 500; font-size: 14px; }
+.plan-note { margin: 4px 0; font-size: 13px; color: var(--muted); }
+.plan-extras { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
+.plan-extra { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 15px; }
+.plan-extra a { color: var(--celadon); font-weight: 600; text-decoration: none; font-size: 14px; }
+.toast { position: fixed; left: 50%; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30;
+  background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 999px; font-size: 14.5px; font-weight: 600; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -399,6 +413,97 @@ img { max-width: 100%; }
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch { /* 저장 불가 환경 */ } },
   };
+  // 내 코스: 담은 관광지 (이 휴대폰에만 저장)
+  let plan = (() => { try { return JSON.parse(store.get("plan") || "[]"); } catch { return []; } })();
+  const savePlan = () => store.set("plan", JSON.stringify(plan));
+  const inPlan = (id) => plan.some((p) => p.id === id);
+  function planItem(s, d) {
+    return { id: s.id, cityId: d.id, city: d.name, name: s.name, lat: s.lat ?? null, lng: s.lng ?? null,
+             kakao: s.kakao || null, thumb: (s.videos?.[0]?.thumb) || s.image || s.thumb || "" };
+  }
+  function heartBtn(s) {
+    const on = inPlan(s.id);
+    return `<button class="heart${on ? " on" : ""}" data-heart="${esc(s.id)}" aria-pressed="${on}" aria-label="${esc(s.name)} ${on ? "코스에서 빼기" : "코스에 담기"}">${on ? "♥ 담음" : "♡ 담기"}</button>`;
+  }
+  // 동선: 모든 출발점에서 가까운 곳 순으로 이어 보고 가장 짧은 순서를 고른다
+  function orderRoute(pts) {
+    if (pts.length < 3) return pts.slice();
+    let best = null, bestLen = Infinity;
+    for (const start of pts) {
+      const rest = pts.filter((p) => p !== start), route = [start];
+      let len = 0;
+      while (rest.length) {
+        const cur = route[route.length - 1];
+        let k = 0;
+        for (let i = 1; i < rest.length; i++) if (km(cur, rest[i]) < km(cur, rest[k])) k = i;
+        len += km(cur, rest[k]);
+        route.push(rest.splice(k, 1)[0]);
+      }
+      if (len < bestLen) { bestLen = len; best = route; }
+    }
+    return best;
+  }
+  function planHTML(items, { shared = false } = {}) {
+    if (!items.length) return `<div class="empty-card"><h4>아직 담은 곳이 없어요</h4>
+      <p>도시 화면의 관광지 카드에서 <b>♡ 담기</b>를 누르면 여기에 모이고, 가까운 순서로 동선을 짜드려요.</p></div>`;
+    const byCity = new Map();
+    for (const p of items) { if (!byCity.has(p.cityId)) byCity.set(p.cityId, []); byCity.get(p.cityId).push(p); }
+    return [...byCity].map(([cid, ps]) => {
+      const geo = orderRoute(ps.filter((p) => p.lat != null));
+      const rest = ps.filter((p) => p.lat == null);
+      let total = 0, html = "";
+      geo.forEach((p, i) => {
+        if (i) {
+          const e = estimate(geo[i - 1], p); total += e.min;
+          html += `<li class="leg"><span class="rail"></span><div class="info"><b>${e.mode}</b> 약 ${fmtMin(e.min)} · ${fmtKm(e.km)}
+            <a href="${kakaoRoute(geo[i - 1], p)}" target="_blank" rel="noopener">길찾기 ↗</a></div></li>`;
+        }
+        html += `<li class="stop"><span class="rail"><span class="dot">${i + 1}</span></span><div class="content">
+          <h4>${esc(p.name)}</h4><div class="links">
+          <a href="${kakaoPin(p)}" target="_blank" rel="noopener">지도 ↗</a>
+          ${shared ? "" : `<button class="linkbtn" data-unheart="${esc(p.id)}">빼기</button>`}</div></div></li>`;
+      });
+      const extra = rest.map((p) => `<li class="plan-extra"><span>${esc(p.name)}</span>
+        <a href="${kakaoPin(p)}" target="_blank" rel="noopener">카카오맵 ↗</a>
+        ${shared ? "" : `<button class="linkbtn" data-unheart="${esc(p.id)}">빼기</button>`}</li>`).join("");
+      return `<section class="plan-city">
+        <h3><a href="#${enc(cid)}" data-city="${esc(cid)}">${esc(ps[0].city)}</a> <small>${ps.length}곳${total ? ` · 이동 약 ${fmtMin(total)}` : ""}</small></h3>
+        ${geo.length ? `<ol class="line">${html}</ol>` : ""}
+        ${extra ? `<p class="plan-note">위치 정보가 없어 순서에서 뺀 곳</p><ul class="plan-extras">${extra}</ul>` : ""}
+      </section>`;
+    }).join("");
+  }
+  const planToken = (items) => "plan=" + items.map((p) => `${p.cityId}.${p.id}`).join("~");
+  async function sharePlan() {
+    const url = location.origin + location.pathname + "#" + planToken(plan);
+    try {
+      if (navigator.share) { await navigator.share({ title: "어디갈래 내 코스", text: "내가 짠 여행 코스 보러 와!", url }); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); toast("코스 링크를 복사했어요"); }
+    catch { prompt("이 링크를 복사해서 보내세요", url); }
+  }
+  async function showSharedPlan(token) {
+    setTabbar("me"); homeTopbar();
+    app.innerHTML = `<p class="loading"><img src="icons/mascot-160.png" alt="">친구가 보낸 코스를 펼치는 중…</p>`;
+    const pairs = token.split("~").map((x) => x.split(".")).filter((x) => x.length === 2);
+    const items = [];
+    for (const [cid, sid] of pairs) {
+      const meta = state.index.cities.find((c) => c.id === cid);
+      const d = meta && meta.hasData ? await loadCity(cid) : null;
+      const s = d && d.spotMap.get(sid);
+      if (s) items.push(planItem(s, d));
+    }
+    state.sharedPlan = items;
+    app.innerHTML = `<section class="page-head"><h1><img src="icons/mascot-160.png" alt="">친구의 코스</h1>
+      <p>${items.length}곳 · 가까운 순서로 정리했어요.</p></section>
+      <div class="plan-actions"><button class="btn-ghost" data-take-plan ${items.length ? "" : "disabled"}>내 코스에 담기</button></div>
+      ${planHTML(items, { shared: true })}`;
+  }
+  function toast(msg) {
+    const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+    document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
+  }
+
   // 다녀온 도시(도장): 이 휴대폰에만 저장
   const visited = new Set((() => { try { return JSON.parse(store.get("visited") || "[]"); } catch { return []; } })());
   const saveVisited = () => store.set("visited", JSON.stringify([...visited]));
@@ -486,6 +591,7 @@ img { max-width: 100%; }
 
   async function route() {
     const id = decodeURIComponent(location.hash.slice(1));
+    if (id.startsWith("plan=")) { await showSharedPlan(id.slice(5)); window.scrollTo({ top: 0 }); return; }
     const city = id && state.index.cities.find((c) => c.id === id);
     if (city) { setTabbar("cities"); await showCity(city); }
     else showHome(VIEWS.includes(id) ? id : "home");
@@ -569,8 +675,15 @@ img { max-width: 100%; }
     app.innerHTML = `
       <section class="page-head">
         <h1><img src="icons/mascot-160.png" alt="">내 여행</h1>
-        <p>다녀온 도시를 눌러 도장을 찍어보세요. 이 휴대폰에만 저장돼요.</p>
+        <p>담아 둔 코스와 다녀온 도시 도장판이에요. 이 휴대폰에만 저장돼요.</p>
       </section>
+      <section class="weekly">
+        <div class="weekly-head"><h2>내 코스</h2><span class="wk">${plan.length}곳</span></div>
+        ${plan.length ? `<div class="plan-actions"><button class="btn-ghost" data-share-plan>코스 공유하기</button>
+          <button class="linkbtn" data-clear-plan>모두 비우기</button></div>` : ""}
+        ${planHTML(plan)}
+      </section>
+      <div class="weekly-head" style="margin-top:28px"><h2>도장깨기</h2></div>
       <section class="stamp-hero">
         <div class="stamp-count"><b>${n}</b><span>/ ${total}곳</span></div>
         <div class="stamp-level">${esc(levelOf(n))}${nx ? `<small>${nx[0] - n}곳 더 가면 '${esc(nx[1])}'</small>` : "<small>전국을 다 다녀왔어요!</small>"}</div>
@@ -1079,6 +1192,7 @@ img { max-width: 100%; }
               <span><span class="t">${esc(x.title)}</span><span class="c">${esc(x.channel)} · ${esc(x.published)}${x.views ? ` · 조회 ${fmtViews(x.views)}` : ""}</span></span></a></li>`).join("")}</ul>` : ""}
           ${foods.length ? `<span class="addr">근처 식당: ${foods.map((f) => esc(f.name)).join(", ")}</span>` : ""}
           <div class="links">
+            ${heartBtn(s)}
             <a href="${igTag(s.name)}" target="_blank" rel="noopener">인스타그램 #${esc(s.name.replace(/\s+/g, ""))} ↗</a>
             <a href="${kakaoPin(s)}" target="_blank" rel="noopener">${s.kakao ? "카카오맵·리뷰" : "지도"} ↗</a>
           </div>
@@ -1114,7 +1228,7 @@ img { max-width: 100%; }
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go],[data-heart],[data-unheart],[data-share-plan],[data-clear-plan],[data-take-plan]");
     if (!t) return;
     if (t.dataset.stamp) {
       const id = t.dataset.stamp;
@@ -1125,6 +1239,20 @@ img { max-width: 100%; }
       return;
     }
     if ("shareStamps" in t.dataset) { shareStamps(); return; }
+    if (t.dataset.heart) {
+      const d = state.city, s = d && d.spotMap.get(t.dataset.heart);
+      if (!s) return;
+      if (inPlan(s.id)) plan = plan.filter((p) => p.id !== s.id);
+      else { plan.push(planItem(s, d)); toast(`'${s.name}'을(를) 내 코스에 담았어요`); }
+      savePlan(); t.outerHTML = heartBtn(s); return;
+    }
+    if (t.dataset.unheart) { plan = plan.filter((p) => p.id !== t.dataset.unheart); savePlan(); showMePage(); return; }
+    if ("sharePlan" in t.dataset) { sharePlan(); return; }
+    if ("clearPlan" in t.dataset) { plan = []; savePlan(); showMePage(); return; }
+    if ("takePlan" in t.dataset) {
+      for (const p of state.sharedPlan || []) if (!inPlan(p.id)) plan.push(p);
+      savePlan(); toast("내 코스에 담았어요"); go("me"); return;
+    }
     if ("halfGo" in t.dataset) { state.prov = "반값여행"; state.q = ""; go("cities"); return; }
     if (t.dataset.view) { e.preventDefault(); go(t.dataset.view === "home" ? null : t.dataset.view); }
     else if (t.dataset.city) { e.preventDefault(); go(t.dataset.city); }
