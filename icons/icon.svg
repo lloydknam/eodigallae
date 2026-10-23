@@ -1,38 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
 <rect width="512" height="512" rx="112" fill="#2F7D6D"/>
-<g transform="translate(256 270) scale(1.0) translate(-256 -270)">
-  <!-- 길 (점선 동선) -->
-  <path d="M70 440 C 150 400, 170 470, 256 430 S 380 400, 450 440" fill="none" stroke="#E2EEEA" stroke-opacity=".55" stroke-width="14" stroke-linecap="round" stroke-dasharray="2 30"/>
-  <!-- 귀 -->
-  <path d="M120 230 L140 92 L232 168 Z" fill="#FFE7C2"/>
-  <path d="M392 230 L372 92 L280 168 Z" fill="#FFE7C2"/>
-  <path d="M146 196 L155 125 L205 166 Z" fill="#F4A79A"/>
-  <path d="M366 196 L357 125 L307 166 Z" fill="#F4A79A"/>
-  <!-- 얼굴 -->
-  <ellipse cx="256" cy="282" rx="156" ry="132" fill="#FFE7C2"/>
-  <!-- 이마 줄무늬 -->
-  <path d="M236 168 q20 -6 40 0" stroke="#E9B877" stroke-width="12" stroke-linecap="round" fill="none"/>
-  <path d="M244 192 q12 -4 24 0" stroke="#E9B877" stroke-width="10" stroke-linecap="round" fill="none"/>
-  <!-- 볼터치 -->
-  <ellipse cx="170" cy="320" rx="26" ry="16" fill="#F4A79A" opacity=".75"/>
-  <ellipse cx="342" cy="320" rx="26" ry="16" fill="#F4A79A" opacity=".75"/>
-  <!-- 눈 -->
-  <ellipse cx="200" cy="272" rx="22" ry="28" fill="#1B2423"/>
-  <ellipse cx="312" cy="272" rx="22" ry="28" fill="#1B2423"/>
-  <circle cx="208" cy="261" r="8" fill="#fff"/>
-  <circle cx="320" cy="261" r="8" fill="#fff"/>
-  <!-- 코·입 -->
-  <path d="M244 308 h24 l-12 14 z" fill="#C2462F"/>
-  <path d="M256 322 q-10 18 -26 10 M256 322 q10 18 26 10" stroke="#1B2423" stroke-width="6" stroke-linecap="round" fill="none"/>
-  <!-- 수염 -->
-  <g stroke="#1B2423" stroke-width="5" stroke-linecap="round" opacity=".55">
-    <path d="M150 296 l-58 -10"/><path d="M152 312 l-60 6"/>
-    <path d="M362 296 l58 -10"/><path d="M360 312 l60 6"/>
-  </g>
-  <!-- 여행 위치 핀 (귀에 꽂은 핀) -->
-  <g transform="translate(372 96)">
-    <path d="M0 -46 a40 40 0 0 1 40 40 c0 30 -40 70 -40 70 s-40 -40 -40 -70 a40 40 0 0 1 40 -40z" fill="#C2462F" stroke="#2F7D6D" stroke-width="10"/>
-    <circle cx="0" cy="-6" r="14" fill="#fff"/>
+<g transform="translate(256 276) scale(1.0) translate(-256 -276)">
+  <path d="M112 250 L132 104 L226 176 Z" fill="#FFE7C2"/>
+  <path d="M400 250 L380 104 L286 176 Z" fill="#FFE7C2"/>
+  <ellipse cx="256" cy="292" rx="160" ry="138" fill="#FFE7C2"/>
+  <circle cx="198" cy="284" r="22" fill="#1B2423"/>
+  <circle cx="314" cy="284" r="22" fill="#1B2423"/>
+  <path d="M242 326 h28 l-14 16 z" fill="#C2462F"/>
+  <g transform="translate(384 112)">
+    <path d="M0 -50 a44 44 0 0 1 44 44 c0 32 -44 76 -44 76 s-44 -44 -44 -76 a44 44 0 0 1 44 -44z" fill="#C2462F" stroke="#2F7D6D" stroke-width="12"/>
+    <circle cx="0" cy="-6" r="15" fill="#2F7D6D"/>
   </g>
 </g>
 </svg>
