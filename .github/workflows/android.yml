@@ -1,0 +1,48 @@
+name: 안드로이드 앱(APK) 만들기
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["android/**", ".github/workflows/android.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: APK 빌드
+        env:
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+        run: |
+          set -o pipefail
+          bash android/build.sh 2>&1 | tee android-build.log
+      - name: 실패하면 로그 남기기
+        if: failure()
+        run: |
+          mkdir -p download && cp android-build.log download/build.log || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add download/build.log && git commit -m "APK 빌드 실패 로그" && git pull --rebase origin main && git push || true
+      - name: APK 올리기
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -q --ignore-unmatch download/build.log
+          git add download/eodigallae.apk
+          git commit -m "안드로이드 앱(APK) 새로 만듦 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M')"
+          git pull --rebase origin main
+          git push
