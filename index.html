@@ -160,6 +160,29 @@ img { max-width: 100%; }
 .rplay svg { width: 13px; height: 13px; }
 .rbody { display: grid; gap: 2px; text-decoration: none; min-width: 0; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
 .city-top { margin: 18px 0 8px; }
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(4, 1fr);
+  background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line); box-shadow: 0 -4px 18px rgba(11, 110, 97, .08);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px));
+}
+.tabbar button { border: 0; background: none; padding: 9px 0 8px; display: grid; justify-items: center; gap: 2px; cursor: pointer; color: var(--muted); font-size: 12.5px; font-weight: 600; min-height: 60px; }
+.tabbar svg { width: 26px; height: 26px; }
+.tabbar button[aria-current="page"] { color: var(--celadon); }
+.wrap { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+.page-head { padding-block: 22px 4px; }
+.page-head h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 8vw, 38px); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+.page-head h1 img { width: 40px; height: auto; }
+.page-head p { margin: 0; color: var(--muted); }
+.about { display: grid; gap: 14px; margin-top: 16px; }
+.about-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; }
+.about-card h3 { margin: 0 0 6px; font-size: 17px; }
+.about-card p, .about-card li { margin: 0; color: var(--muted); font-size: 15px; }
+.about-card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.about-card a { color: var(--celadon); font-weight: 600; text-decoration: none; }
+.home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
+.btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
 .hotmap { aspect-ratio: 1 / 1; width: 100%; max-width: 100%; height: auto; touch-action: pan-y; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--celadon-soft); position: relative; z-index: 0; }
 .hotmap .leaflet-tile-pane { filter: saturate(.75) brightness(1.03); }
@@ -306,6 +329,12 @@ img { max-width: 100%; }
 <body>
 <header class="topbar"><div class="inner" id="topbar"></div></header>
 <main class="wrap" id="app"><p class="loading"><img src="icons/mascot-160.png" alt="">어디냥이 길을 찾는 중이에요…</p></main>
+<nav class="tabbar" id="tabbar" aria-label="메뉴">
+  <button data-view="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z" fill="currentColor"/></svg><span>홈</span></button>
+  <button data-view="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg><span>핫플 지도</span></button>
+  <button data-view="cities"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>도시 찾기</span></button>
+  <button data-view="about"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2.2" fill="currentColor"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><circle cx="19" cy="12" r="2.2" fill="currentColor"/></svg><span>더보기</span></button>
+</nav>
 
 <script>
 (() => {
@@ -395,16 +424,29 @@ img { max-width: 100%; }
   async function route() {
     const id = decodeURIComponent(location.hash.slice(1));
     const city = id && state.index.cities.find((c) => c.id === id);
-    if (city) await showCity(city); else showHome();
+    if (city) { setTabbar("cities"); await showCity(city); }
+    else showHome(VIEWS.includes(id) ? id : "home");
     window.scrollTo({ top: 0 });
   }
 
-  // ── 홈 ──
-  function showHome() {
-    state.city = null;
+  // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
+  const VIEWS = ["map", "cities", "about"];
+  function setTabbar(view) {
+    document.querySelectorAll("#tabbar [data-view]").forEach((b) => {
+      if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+  }
+  function homeTopbar() {
     const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
     topbar.innerHTML = `<a class="brand" href="#" data-home><img src="icons/mascot-160.png" alt="">어디갈래</a><span class="sub">전국 ${total}개 시·군</span>`;
-    const provinces = ["전체", ...new Set(state.index.cities.map((c) => c.province))];
+  }
+  function showHome(view = "home") {
+    state.city = null;
+    homeTopbar();
+    setTabbar(view);
+    if (view === "map") return showMapPage();
+    if (view === "cities") return showCitiesPage();
+    if (view === "about") return showAboutPage();
     app.innerHTML = `
       <section class="hero-card">
         <h1>이번 주말,<br>어디 갈래?</h1>
@@ -412,16 +454,29 @@ img { max-width: 100%; }
         <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
       <section id="weekly" class="weekly"></section>
-      <section class="weekly map-sec">
-        <div class="weekly-head">
-          <h2><img src="icons/mascot-160.png" alt="">핫플 지도</h2>
-          <span class="wk" id="map-at"></span>
-        </div>
-        <p class="weekly-desc">동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요. 두 손가락으로 벌리거나 +버튼을 누르면 확대돼요.</p>
-        <div id="hotmap" class="hotmap" role="region" aria-label="전국 핫플 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
+    renderWeekly();
+  }
+  function showMapPage() {
+    app.innerHTML = `
+      <section class="page-head">
+        <h1><img src="icons/mascot-160.png" alt="">핫플 지도</h1>
+        <p>동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요. 두 손가락으로 벌리거나 +버튼을 누르면 확대돼요.</p>
       </section>
-      <section class="intro" style="padding-top:8px">
-        <p class="section-label" style="margin:18px 0 0">도시로 찾기</p>
+      <section class="weekly map-sec" style="margin-top:14px">
+        <div class="weekly-head"><span class="wk" id="map-at"></span></div>
+        <div id="hotmap" class="hotmap" role="region" aria-label="전국 핫플 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      </section>`;
+    renderMap();
+  }
+  function showCitiesPage() {
+    const provinces = ["전체", ...new Set(state.index.cities.map((c) => c.province))];
+    app.innerHTML = `
+      <section class="page-head">
+        <h1><img src="icons/mascot-160.png" alt="">도시 찾기</h1>
+        <p>도시를 고르면 유튜브 조회수 Top 10, 추천 코스, 이동시간, 맛집을 보여드려요.</p>
+      </section>
+      <section class="intro" style="padding-top:6px">
         <label class="search" for="q">
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <input id="q" type="search" placeholder="도시 이름 검색 (예: 남원, 통영)" autocomplete="off" value="${esc(state.q)}">
@@ -429,13 +484,35 @@ img { max-width: 100%; }
         <div class="chips" role="group" aria-label="시·도">${provinces.map((p) =>
           `<button class="chip" data-prov="${esc(p)}" aria-pressed="${p === state.prov}">${esc(p)}</button>`).join("")}</div>
       </section>
-      <div id="results"></div>
-      ${state.index.sample ? `<p class="credit">지금은 원주·남원·전주 샘플 데이터예요. 관광공사 API를 연결하면 전국 시·군이 매일 자동으로 채워져요.</p>` : `<p class="credit">관광정보 한국관광공사 TourAPI · 영상 YouTube · 업데이트 ${esc((state.index.updatedAt || "").slice(0, 10))}</p>`}`;
+      <div id="results"></div>`;
     const q = document.getElementById("q");
     q.addEventListener("input", () => { state.q = q.value.trim(); renderResults(); });
-    renderWeekly();
     renderResults();
-    renderMap();
+  }
+  function showAboutPage() {
+    const ready = state.index.cities.filter((c) => c.hasData).length;
+    const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
+    const w = state.weekly;
+    app.innerHTML = `
+      <section class="page-head">
+        <h1><img src="icons/mascot-160.png" alt="">더보기</h1>
+        <p>어디갈래는 요즘 사람들이 실제로 찾는 국내 여행지를 빅데이터로 골라 보여주는 앱이에요.</p>
+      </section>
+      <div class="about">
+        <div class="about-card"><h3>업데이트 현황</h3><ul>
+          <li>정리된 도시: 전국 ${total}곳 중 ${ready}곳 (매일 새벽 자동으로 늘어나요)</li>
+          <li>전국 랭킹: ${w ? esc(weekText(w.week)) : "준비 중"} · 매주 월요일 새벽</li>
+          <li>도시별 유튜브 순위: 2주마다</li>
+        </ul></div>
+        <div class="about-card"><h3>순위는 이렇게 매겨요</h3><ul>
+          <li><b>유튜브</b>: 최근 여행 영상에 장소가 얼마나 자주, 얼마나 많이 본 영상에 나오는지</li>
+          <li><b>카카오맵</b>: 관광공사 목록에 없는 카페·골목·전시를 찾아내는 데 사용</li>
+          <li><b>T맵</b>: 한국관광공사 지자체 중심 관광지(내비 검색 순위)로 대표 명소 순위</li>
+          <li>이동시간은 직선거리로 추정해요. 정확한 길은 카카오맵 길찾기로 확인하세요.</li>
+        </ul></div>
+        <div class="about-card"><h3>데이터 출처</h3><p>한국관광공사 TourAPI(공공누리)·지자체 중심 관광지 정보, YouTube API 서비스, 카카오맵, OpenStreetMap</p></div>
+        <div class="about-card"><h3>개인정보</h3><p>회원가입이 없고 개인정보를 수집하지 않아요. <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침 ↗</a></p></div>
+      </div>`;
   }
 
   // ── 전국 핫플 지도 (Leaflet + OpenStreetMap/CARTO 바탕지도) ──
@@ -606,7 +683,7 @@ img { max-width: 100%; }
 
   // ── 도시 ──
   async function showCity(meta) {
-    topbar.innerHTML = `<button class="back" data-home aria-label="전체 도시로">← 전체 도시</button><span class="sub">${esc(meta.province)}</span>`;
+    topbar.innerHTML = `<button class="back" data-view="cities" aria-label="도시 찾기로">← 도시 찾기</button><span class="sub">${esc(meta.province)}</span>`;
     app.innerHTML = `<p class="loading"><img src="icons/mascot-160.png" alt="">${esc(meta.name)}(으)로 가는 중이에요…</p>`;
     const d = meta.hasData ? await loadCity(meta.id) : null;
     if (!d) {
@@ -883,9 +960,10 @@ img { max-width: 100%; }
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view]");
     if (!t) return;
-    if (t.dataset.city) { e.preventDefault(); go(t.dataset.city); }
+    if (t.dataset.view) { e.preventDefault(); go(t.dataset.view === "home" ? null : t.dataset.view); }
+    else if (t.dataset.city) { e.preventDefault(); go(t.dataset.city); }
     else if ("home" in t.dataset) { e.preventDefault(); go(null); }
     else if (t.dataset.prov) {
       state.prov = t.dataset.prov;
