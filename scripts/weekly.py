@@ -175,7 +175,10 @@ def main():
                 break
         return out
 
-    rising = [dict(e, ratio=round(e["n"] / (e["base_n"] / 26 + 0.5), 1)) for e in weekly if e["n"] >= 2]
+    # 급상승은 6개월 기준치가 있는 도시(유튜브 점수를 이미 매긴 도시)만 비교한다
+    has_base = {e["city"] for e in steady}
+    rising = [dict(e, ratio=round(e["n"] / (e["base_n"] / 26 + 0.5), 1)) for e in weekly
+              if e["n"] >= 2 and e["city"] in has_base]
     result = {
         "week": label, "updatedAt": dt.datetime.now(KST).isoformat(timespec="seconds"),
         "videos": len(pool), "citiesWithData": len(with_data),
