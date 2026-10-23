@@ -3,6 +3,8 @@ name: 데이터 갱신
 on:
   schedule:
     - cron: "17 15 * * *"   # 매일 한국시간 00:17 (공공데이터 하루 한도가 자정에 새로 채워진 직후)
+    - cron: "47 17 * * *"   # 02:47 예비 (GitHub 예약 실행이 가끔 건너뛰어짐 → 오늘 이미 했으면 그냥 끝)
+    - cron: "17 20 * * *"   # 05:17 예비
   push:   # .github/run-now 파일을 고쳐 올리면 바로 한 번 실행
     branches: [main]
     paths: [".github/run-now"]
@@ -30,14 +32,27 @@ jobs:
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 30
+
+      - name: 오늘 이미 수집했는지 확인 (예비 예약용)
+        id: guard
+        run: |
+          since="$(TZ=Asia/Seoul date +%Y-%m-%dT00:00:00+09:00)"
+          if [ "${{ github.event_name }}" = "schedule" ] && git log --since="$since" --grep="^데이터 갱신" --oneline | grep -q .; then
+            echo "오늘 이미 수집했어요. 건너뜀"; echo "skip=1" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-python@v6
+        if: steps.guard.outputs.skip != '1'
         with:
           python-version: "3.12"
 
       - run: pip install -r scripts/requirements.txt
+        if: steps.guard.outputs.skip != '1'
 
       - name: 관광지·영상·코스 수집
+        if: steps.guard.outputs.skip != '1'
         env:
           TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -51,9 +66,11 @@ jobs:
           fi
 
       - name: 꾸준한 인기·숨은 핫플 갱신
+        if: steps.guard.outputs.skip != '1'
         run: python scripts/weekly.py --steady-only
 
       - name: 변경분 커밋
+        if: steps.guard.outputs.skip != '1'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
