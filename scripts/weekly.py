@@ -96,6 +96,38 @@ def entry_of(p: dict, city: dict, score: dict, kind: str) -> dict:
     }
 
 
+def build_map():
+    """지도용 데이터: 도시별 화제성(최근 6개월 유튜브 조회수 합)과 전국 상위 화제 장소(좌표 있는 곳만).
+    카카오에서만 찾은 장소는 좌표를 저장할 수 없어 장소 점으로는 넣지 않는다."""
+    index = collect.load_json(DATA / "cities.json", {"cities": []})
+    weekly = collect.load_json(DATA / "weekly.json", {}) or {}
+    wk = {(e["city"], e["name"]): i for i, e in enumerate(weekly.get("lists", {}).get("youtube", []), 1)}
+    cities, spots = [], []
+    for c in index["cities"]:
+        if not c.get("hasData") or not c.get("center"):
+            continue
+        d = collect.load_json(DATA / "cities" / f"{c['id']}.json", None)
+        if not d:
+            continue
+        hot = sorted([s for s in d["spots"] if s.get("yt")], key=lambda s: -s["yt"]["views"])
+        views = sum(s["yt"]["views"] for s in hot)
+        cities.append({"id": c["id"], "name": c["name"], "lat": c["center"][0], "lng": c["center"][1],
+                       "views": views, "top": [s["name"] for s in hot[:3]]})
+        for s in hot[:8]:
+            if s.get("lat") is None:
+                continue
+            v = (s.get("videos") or [{}])[0]
+            spots.append({"cityId": c["id"], "city": c["name"], "id": s["id"], "name": s["name"],
+                          "lat": s["lat"], "lng": s["lng"], "views": s["yt"]["views"], "n": s["yt"]["n"],
+                          "thumb": v.get("thumb") or s.get("image") or "", "video": v.get("id"),
+                          "week": wk.get((c["name"], s["name"]))})
+    spots.sort(key=lambda x: -x["views"])
+    out = {"updatedAt": dt.datetime.now(KST).isoformat(timespec="seconds"),
+           "cities": sorted(cities, key=lambda x: -x["views"]), "spots": spots[:60]}
+    collect.save_json(DATA / "map.json", out, compact=True)
+    print("지도 데이터: 도시", len(cities), "· 장소", len(out["spots"]))
+
+
 def refresh_steady():
     """매일 수집 뒤: 유튜브를 새로 부르지 않고 도시 파일의 6개월 점수로 '꾸준한 인기'·'숨은 핫플'만 다시 계산."""
     cur = collect.load_json(DATA / "weekly.json", None)
@@ -116,6 +148,7 @@ def refresh_steady():
     cur["updatedAt"] = dt.datetime.now(KST).isoformat(timespec="seconds")
     collect.save_json(DATA / "weekly.json", cur)
     print("꾸준한 인기·숨은 핫플 갱신:", len(steady), "곳 중 상위 10")
+    build_map()
 
 
 HIDDEN_WORDS = re.compile(r"(길|거리|골목|마을|공방|서점|책방|갤러리|전시|팝업|스튜디오|아트|시장)")
@@ -239,6 +272,7 @@ def main():
     for k, v in result["lists"].items():
         print(k, [f"{e['city']} {e['name']}" for e in v])
     print("남은 유튜브 unit", yt.units)
+    build_map()
 
 
 if __name__ == "__main__":

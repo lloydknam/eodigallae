@@ -160,6 +160,19 @@ img { max-width: 100%; }
 .rplay svg { width: 13px; height: 13px; }
 .rbody { display: grid; gap: 2px; text-decoration: none; min-width: 0; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
 .city-top { margin: 18px 0 8px; }
+.map-sec { margin-top: 22px; }
+.hotmap { height: min(70vh, 440px); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--celadon-soft); position: relative; z-index: 0; }
+.map-wait { margin: 0; padding: 40px 16px; text-align: center; color: var(--muted); }
+.mpin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermilion); color: #fff;
+  font: 400 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+.mpin.top { width: 34px; height: 34px; margin: -2px; font-size: 18px; }
+.mpop { display: grid; gap: 3px; font: 14px/1.45 var(--font-body); color: #1C2422; min-width: 180px; }
+.mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
+.mpop b { font-size: 15.5px; }
+.mpop span { color: #5B6B67; font-size: 13px; }
+.mpop .mweek { color: #E4503A; font-weight: 600; }
+.mpop .mlinks { display: flex; gap: 12px; margin-top: 4px; }
+.mpop a { color: #12907A; font-weight: 600; text-decoration: none; }
 .spot { scroll-margin-top: calc(70px + env(safe-area-inset-top, 0px)); transition: box-shadow .3s; }
 .spot.flash { box-shadow: 0 0 0 3px var(--celadon), var(--shadow); }
 .rname { font-weight: 700; font-size: 17px; line-height: 1.3; overflow-wrap: anywhere; }
@@ -396,6 +409,14 @@ img { max-width: 100%; }
         <p>어디냥이 유튜브·카카오맵·T맵 빅데이터로 요즘 뜨는 곳을 골라왔어요.</p>
         <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
+      <section class="weekly map-sec">
+        <div class="weekly-head">
+          <h2><img src="icons/mascot-160.png" alt="">핫플 지도</h2>
+          <span class="wk" id="map-at"></span>
+        </div>
+        <p class="weekly-desc">동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위, 확대하면 더 보여요.</p>
+        <div id="hotmap" class="hotmap" role="region" aria-label="전국 핫플 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      </section>
       <section id="weekly" class="weekly"></section>
       <section class="intro" style="padding-top:8px">
         <p class="section-label" style="margin:18px 0 0">도시로 찾기</p>
@@ -412,6 +433,80 @@ img { max-width: 100%; }
     q.addEventListener("input", () => { state.q = q.value.trim(); renderResults(); });
     renderWeekly();
     renderResults();
+    renderMap();
+  }
+
+  // ── 전국 핫플 지도 (Leaflet + OpenStreetMap/CARTO 바탕지도) ──
+  let mapData = null, leafletReady = null;
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve();
+    if (leafletReady) return leafletReady;
+    leafletReady = new Promise((ok, fail) => {
+      const css = document.createElement("link");
+      css.rel = "stylesheet"; css.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+      document.head.appendChild(css);
+      const js = document.createElement("script");
+      js.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+      js.onload = ok; js.onerror = fail;
+      document.head.appendChild(js);
+    });
+    return leafletReady;
+  }
+  async function renderMap() {
+    const box = document.getElementById("hotmap");
+    if (!box) return;
+    try {
+      if (!mapData) {
+        const r = await fetch("data/map.json", { cache: "no-cache" });
+        mapData = r.ok ? await r.json() : null;
+      }
+      if (!mapData || !mapData.cities.length) { box.closest(".map-sec").hidden = true; return; }
+      await loadLeaflet();
+    } catch {
+      box.innerHTML = `<p class="map-wait">지도를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p>`;
+      return;
+    }
+    if (!document.body.contains(box)) return;
+    document.getElementById("map-at").textContent = (mapData.updatedAt || "").slice(5, 10).replace("-", ".") + " 업데이트";
+    box.innerHTML = "";
+    const dark = matchMedia("(prefers-color-scheme: dark)").matches && document.documentElement.dataset.theme !== "light"
+      || document.documentElement.dataset.theme === "dark";
+    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15 })
+      .fitBounds([[33.1, 125.0], [38.6, 130.0]]);
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? "dark_all" : "rastertiles/voyager"}/{z}/{x}/{y}{r}.png`, {
+      subdomains: "abcd", maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    }).addTo(map);
+    const maxV = Math.max(...mapData.cities.map((c) => c.views || 0), 1);
+    const css = getComputedStyle(document.documentElement);
+    const teal = css.getPropertyValue("--celadon").trim() || "#12907A";
+    for (const c of mapData.cities) {
+      const r = 10 + 30 * Math.sqrt((c.views || 0) / maxV);
+      L.circleMarker([c.lat, c.lng], { radius: r, color: teal, weight: 2, fillColor: teal, fillOpacity: 0.28 })
+        .addTo(map)
+        .bindPopup(`<div class="mpop"><b>${esc(c.name)}</b><span>최근 6개월 영상 조회 ${fmtViews(c.views || 0)}회</span>
+          ${c.top.length ? `<span>요즘 뜨는 곳: ${c.top.map(esc).join(", ")}</span>` : ""}
+          <a href="#${enc(c.id)}" data-city="${esc(c.id)}">도시 보기 →</a></div>`);
+    }
+    const pins = mapData.spots.map((s, i) => {
+      const icon = L.divIcon({ className: "", iconSize: [30, 30], iconAnchor: [15, 15],
+        html: `<span class="mpin${i < 3 ? " top" : ""}">${i + 1}</span>` });
+      return L.marker([s.lat, s.lng], { icon, zIndexOffset: 1000 - i, title: s.name })
+        .bindPopup(`<div class="mpop">
+          ${s.thumb ? `<img src="${esc(s.thumb)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+          <b>${i + 1}. ${esc(s.name)}</b><span>${esc(s.city)} · 조회 ${fmtViews(s.views)}회 · 영상 ${s.n}편</span>
+          ${s.week ? `<span class="mweek">이번 주 유튜브 ${s.week}위</span>` : ""}
+          <span class="mlinks">${s.video ? `<a href="${ytWatch(s.video)}" target="_blank" rel="noopener">영상 보기 ↗</a>` : ""}
+          <a href="#${enc(s.cityId)}" data-city="${esc(s.cityId)}">도시 보기 →</a></span></div>`, { maxWidth: 240 });
+    });
+    const layer = L.layerGroup().addTo(map);
+    const sync = () => {   // 멀리서는 상위 15곳만, 확대하면 60곳 전부
+      layer.clearLayers();
+      const n = map.getZoom() >= 9 ? pins.length : 15;
+      pins.slice(0, n).forEach((m) => layer.addLayer(m));
+    };
+    map.on("zoomend", sync);
+    sync();
   }
 
   // ── 전국 주간 랭킹 ──
