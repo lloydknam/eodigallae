@@ -134,7 +134,7 @@ img { max-width: 100%; }
 .weekly-desc { font-size: 14.5px; color: var(--muted); margin: 6px 0 10px; }
 .rank-grid { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 8px; }
 .rank-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.rthumb { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; text-decoration: none; }
+.rthumb { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; text-decoration: none; }
 .rthumb img:not(.rglyph) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 .rthumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, transparent 35%, transparent 70%, rgba(0,0,0,.35) 100%); pointer-events: none; }
@@ -239,7 +239,7 @@ img { max-width: 100%; }
 .entry b { font-size: 15.5px; }
 .entry span { color: var(--muted); font-size: 13px; }
 .vid-card { display: grid; grid-template-columns: 128px 1fr; gap: 12px; align-items: center; margin-top: 14px; padding: 10px; border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); text-decoration: none; }
-.vid-card img { width: 128px; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; }
+.vid-card img { width: 128px; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; }
 .vid-card b { font-size: 15px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .vid-card span { color: var(--muted); font-size: 13px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
@@ -389,7 +389,7 @@ img { max-width: 100%; }
 
 /* 관광지 */
 .spots { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
-.spot { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.spot { background: var(--surface); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
 .spot .photo { display: block; text-decoration: none; position: relative; }
 .spot .art { aspect-ratio: 16 / 9; }
 .play {
@@ -404,7 +404,7 @@ img { max-width: 100%; }
 .spot .desc { font-size: 15px; margin: 2px 0 0; }
 .vids { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
 .vids a { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 10px; text-decoration: none; align-items: center; }
-.vids .th { aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: var(--celadon-soft); max-width: 100%; }
+.vids .th { aspect-ratio: 16 / 9; border-radius: 3px; overflow: hidden; background: var(--celadon-soft); max-width: 100%; }
 .vids .th img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .vids .t { font-size: 13px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .vids .c { font-size: 11.5px; color: var(--muted); }
