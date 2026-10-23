@@ -144,6 +144,8 @@ def refresh_steady():
     weekly_kakao = [e for e in cur["lists"].get("youtube", []) if is_hidden(e)]
     cur["lists"]["steady"] = top(steady, lambda e: -e["score"])
     cur["lists"]["hidden"] = top([e for e in steady if is_hidden(e)] + weekly_kakao, lambda e: -e["score"])
+    half = {r["id"] for r in collect.load_json(DATA / "halfprice.json", {}).get("regions", []) if r.get("active")}
+    cur["lists"]["halfprice"] = top([e for e in steady if e["cityId"] in half], lambda e: -e["score"])
     cur["citiesWithData"] = len(with_data)
     cur["updatedAt"] = dt.datetime.now(KST).isoformat(timespec="seconds")
     collect.save_json(DATA / "weekly.json", cur)

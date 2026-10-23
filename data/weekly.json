@@ -1,6 +1,6 @@
 {
  "week": "2026-W43",
- "updatedAt": "2026-10-23T14:00:50+09:00",
+ "updatedAt": "2026-10-23T14:46:14+09:00",
  "videos": 426,
  "citiesWithData": 22,
  "lists": {
@@ -685,6 +685,7 @@
     "ratio": 2.4,
     "change": null
    }
-  ]
+  ],
+  "halfprice": []
  }
 }

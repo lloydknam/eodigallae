@@ -925,8 +925,10 @@ def main():
         wanted = {w.strip() for w in args.cities.split(",") if w.strip()}
         targets = [c for c in index["cities"] if c["name"] in wanted or c["id"] in wanted]
     else:
-        # 아직 안 한 곳 → 예전 방식으로 수집된 곳 → 오래된 곳 순
-        targets = sorted(index["cities"], key=lambda c: (c.get("updatedAt") is not None,
+        # 반값여행 지역 중 아직 안 한 곳 → 아직 안 한 곳 → 예전 방식으로 수집된 곳 → 오래된 곳 순
+        half = {r["id"] for r in load_json(DATA / "halfprice.json", {}).get("regions", []) if r.get("active")}
+        targets = sorted(index["cities"], key=lambda c: (not (c["id"] in half and c.get("updatedAt") is None),
+                                                         c.get("updatedAt") is not None,
                                                          c.get("v") == DATA_VERSION, c.get("updatedAt") or ""))[: args.batch]
 
     caches = {name: load_json(CACHE_DIR / f"{name}.json", {}) for name in ("overview", "videos", "courses", "hub", "hubspots", "buzz")}

@@ -1,0 +1,27 @@
+{
+  "_설명": "지역사랑 휴가지원('반값 여행') 시행 지역. 직접 고쳐서 관리하는 파일. active=true인 지역에 배지가 붙고 수집도 먼저 한다.",
+  "updated": "2026-10-23",
+  "season": "2026 가을",
+  "benefit": "여행경비의 50%를 지역사랑상품권으로 환급 (개인 최대 10만 원, 청년 최대 14만 원)",
+  "howto": "여행 전 해당 지자체에 여행 계획을 신청해 승인받고, 다녀와서 영수증 등 증빙을 내면 환급돼요. 지역마다 기간·조건이 달라요.",
+  "applyUrl": "https://korean.visitkorea.or.kr",
+  "sources": [
+    "https://www.etoday.co.kr/news/view/2618667",
+    "https://www.traveltimes.co.kr/news/articleView.html?idxno=415404"
+  ],
+  "regions": [
+    {"id": "a32-s17", "name": "화천군", "note": "가을 신규", "active": true},
+    {"id": "a36-s3",  "name": "고성군(경남)", "note": "가을 신규", "active": true},
+    {"id": "a36-s9",  "name": "산청군", "note": "가을 신규", "active": true},
+    {"id": "a36-s20", "name": "함양군", "note": "가을 신규", "active": true},
+    {"id": "a35-s11", "name": "안동시", "note": "가을 신규", "active": true},
+    {"id": "a35-s15", "name": "영천시", "note": "가을 신규", "active": true},
+    {"id": "a34-s8",  "name": "서천군", "note": "가을 신규", "active": true},
+    {"id": "a34-s14", "name": "태안군", "note": "가을 신규", "active": true},
+    {"id": "a38-s20", "name": "장흥군", "note": "가을 신규", "active": true},
+    {"id": "a36-s7",  "name": "밀양시", "note": "상반기에 이어 계속", "active": true},
+    {"id": "a36-s2",  "name": "거창군", "note": "상반기에 이어 계속", "active": true},
+    {"id": "a38-s18", "name": "완도군", "note": "상반기에 이어 계속", "active": true},
+    {"id": "a38-s16", "name": "영광군", "note": "상반기에 이어 계속", "active": true}
+  ]
+}

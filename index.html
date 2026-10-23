@@ -207,6 +207,18 @@ img { max-width: 100%; }
 .stamp img { width: 46%; height: auto; }
 .stamp.on { border: 3px solid var(--vermilion); color: var(--vermilion); background: color-mix(in srgb, var(--vermilion) 8%, var(--surface)); transform: rotate(-6deg); }
 @media (prefers-reduced-motion: no-preference) { .stamp.on { animation: stampIn .25s ease-out; } @keyframes stampIn { from { transform: scale(1.3) rotate(-6deg); opacity: .4; } } }
+.half-tag { display: inline-block; width: fit-content; padding: 3px 10px; border-radius: 999px; background: var(--vermilion); color: #fff; font-size: 13px; font-weight: 700; }
+.half-tag.sm { font-size: 11px; padding: 2px 7px; margin-top: 2px; }
+.half-card { margin-top: 10px; padding: 14px 16px; border-radius: 18px; display: grid; gap: 4px;
+  background: color-mix(in srgb, var(--vermilion) 9%, var(--surface)); border: 1.5px solid color-mix(in srgb, var(--vermilion) 35%, transparent); }
+.half-card b { font-size: 15.5px; line-height: 1.45; }
+.half-card span:not(.half-tag) { color: var(--muted); font-size: 14px; }
+.half-card a { color: var(--vermilion); font-weight: 700; text-decoration: none; font-size: 14.5px; }
+.half-home { width: 100%; margin-top: 14px; padding: 14px 16px; border-radius: 18px; text-align: left; cursor: pointer; display: grid; gap: 4px;
+  background: color-mix(in srgb, var(--vermilion) 9%, var(--surface)); border: 1.5px solid color-mix(in srgb, var(--vermilion) 35%, transparent); color: var(--ink); }
+.half-home b { font-size: 16.5px; }
+.half-home span:not(.half-tag) { color: var(--muted); font-size: 14px; }
+.half-dot { margin-left: 5px; font-size: 11px; font-weight: 700; color: #fff; background: var(--vermilion); border-radius: 999px; padding: 1px 6px; vertical-align: 1px; }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -371,6 +383,18 @@ img { max-width: 100%; }
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const enc = encodeURIComponent;
+  // 반값여행(지역사랑 휴가지원) 시행 지역
+  const halfOf = (id) => (state.half?.regions || []).find((r) => r.id === id && r.active);
+  function halfBanner(id) {
+    const h = halfOf(id);
+    if (!h) return "";
+    return `<div class="half-card">
+      <span class="half-tag">반값여행</span>
+      <b>${esc(state.half.benefit)}</b>
+      <span>${esc(h.note)} · ${esc(state.half.howto)}</span>
+      <a href="${esc(state.half.applyUrl)}" target="_blank" rel="noopener">신청 방법 보기 (대한민국 구석구석) ↗</a>
+    </div>`;
+  }
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch { /* 저장 불가 환경 */ } },
@@ -431,10 +455,12 @@ img { max-width: 100%; }
 
   // ── 데이터 ──
   async function loadIndex() {
-    const [r, w] = await Promise.all([
+    const [r, w, hp] = await Promise.all([
       fetch("data/cities.json", { cache: "no-cache" }),
       fetch("data/weekly.json", { cache: "no-cache" }).catch(() => null),
+      fetch("data/halfprice.json", { cache: "no-cache" }).catch(() => null),
     ]);
+    try { state.half = hp && hp.ok ? await hp.json() : null; } catch { state.half = null; }
     if (!r.ok) throw new Error("도시 목록을 불러오지 못했어요.");
     state.index = await r.json();
     try { state.weekly = w && w.ok ? await w.json() : null; } catch { state.weekly = null; }
@@ -491,6 +517,11 @@ img { max-width: 100%; }
         <p>어디냥이 유튜브·카카오맵·T맵 빅데이터로 요즘 뜨는 곳을 골라왔어요.</p>
         <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
+      ${state.half?.regions?.some((r) => r.active) ? `<button class="half-home" data-half-go>
+        <span class="half-tag">반값여행</span>
+        <b>${esc(state.half.season)} ${state.half.regions.filter((r) => r.active).length}개 지역, 여행경비 절반 돌려받기</b>
+        <span>${state.half.regions.filter((r) => r.active).slice(0, 6).map((r) => esc(r.name.replace(/\(.*\)/, ""))).join(" · ")} 등 →</span>
+      </button>` : ""}
       <section id="weekly" class="weekly"></section>
       <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
     renderWeekly();
@@ -508,7 +539,7 @@ img { max-width: 100%; }
     renderMap();
   }
   function showCitiesPage() {
-    const provinces = ["전체", ...new Set(state.index.cities.map((c) => c.province))];
+    const provinces = ["전체", ...(state.half?.regions?.length ? ["반값여행"] : []), ...new Set(state.index.cities.map((c) => c.province))];
     app.innerHTML = `
       <section class="page-head">
         <h1><img src="icons/mascot-160.png" alt="">도시 찾기</h1>
@@ -718,6 +749,7 @@ img { max-width: 100%; }
     { key: "youtube", label: "유튜브 이번 주", desc: (w) => `지난 7일 올라온 국내 여행 영상 ${w.videos}편에서 많이 나오고 많이 본 곳` },
     { key: "hidden", label: "숨은 핫플", desc: () => "관광공사 목록엔 없고 카카오맵에서 찾은 곳 중, 유튜브 영상에 많이 나온 카페·골목·전시" },
     { key: "rising", label: "급상승", desc: () => "이번 주 영상 언급이 지난 6개월 평균보다 크게 늘어난 곳" },
+    { key: "halfprice", label: "반값여행", desc: () => "여행경비 절반을 돌려받는 지역에서 요즘 유튜브에 많이 나오는 곳" },
     { key: "steady", label: "꾸준한 인기", desc: (w) => `최근 6개월 유튜브 영상 기준 · 지금까지 모은 ${w.citiesWithData}개 시·군` },
   ];
   function weekText(label) {
@@ -778,7 +810,7 @@ img { max-width: 100%; }
     const q = state.q.replace(/\s/g, "");
     // 수집했는데 관광지가 없는 곳(옛 행정구역 등)은 숨긴다
     let list = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData))
-      .filter((c) => state.prov === "전체" || c.province === state.prov);
+      .filter((c) => state.prov === "전체" || (state.prov === "반값여행" ? !!halfOf(c.id) : c.province === state.prov));
     if (q) list = list.filter((c) => (c.name + c.province).replace(/\s/g, "").includes(q));
     const ready = list.filter((c) => c.hasData).sort((a, b) => (b.spotCount || 0) - (a.spotCount || 0));
     const groups = new Map();
@@ -792,12 +824,12 @@ img { max-width: 100%; }
           ${art(c.id, baseCity(c.name), c.image)}
           <span class="body"><span class="name">${esc(c.name)}</span>
           <span class="meta">${esc(c.province)}</span><span class="meta">관광지 ${c.spotCount || 0}곳</span>
-          ${c.sample ? `<span><span class="badge warn">샘플</span></span>` : ""}</span>
+          ${c.sample ? `<span><span class="badge warn">샘플</span></span>` : ""}${halfOf(c.id) ? `<span><span class="half-tag sm">반값여행</span></span>` : ""}</span>
         </button>`).join("")}</div>` : ""}
       <p class="section-label">시·도별 전체</p>
       ${[...groups].map(([prov, cs]) => `
         <div class="province"><h3>${esc(prov)} <small>${cs.length}</small></h3>
-          <div class="names">${cs.map((c) => `<button class="name-btn ${c.hasData ? "has" : ""}" data-city="${esc(c.id)}">${esc(c.name)}</button>`).join("")}</div>
+          <div class="names">${cs.map((c) => `<button class="name-btn ${c.hasData ? "has" : ""}" data-city="${esc(c.id)}">${esc(c.name)}${halfOf(c.id) ? `<span class="half-dot">반값</span>` : ""}</button>`).join("")}</div>
         </div>`).join("")}`;
   }
 
@@ -808,7 +840,7 @@ img { max-width: 100%; }
     const d = meta.hasData ? await loadCity(meta.id) : null;
     if (!d) {
       app.innerHTML = `
-        <section class="hero"><span class="prov">${esc(meta.province)}</span><h1>${esc(meta.name)}</h1>${stampBtn(meta.id)}</section>
+        <section class="hero"><span class="prov">${esc(meta.province)}</span><h1>${esc(meta.name)}</h1>${stampBtn(meta.id)}${halfBanner(meta.id)}</section>
         <div class="empty-card" style="margin-top:16px">
           <img class="empty-cat" src="icons/mascot-160.png" alt="">
           <h4>어디냥이 아직 둘러보는 중인 도시예요</h4>
@@ -838,6 +870,7 @@ img { max-width: 100%; }
         <span class="prov">${esc(d.province)}</span>
         <h1>${esc(d.name)}</h1>
         ${stampBtn(d.id)}
+        ${halfBanner(d.id)}
         <span class="meta">관광지 ${d.spots.length}곳${hotCount ? ` · 요즘 뜨는 곳 ${hotCount}곳` : ""} · 추천 코스 ${d.courses.length}개${vidCount ? ` · 영상 ${vidCount}편` : ""} · ${esc((d.updatedAt || "").slice(0, 10))} 기준</span>
         ${d.sample ? `<div class="notice">샘플 데이터예요. 좌표는 근사치이고, 사진·영상·식당은 API를 연결하면 자동으로 채워져요. 지금은 사진을 누르면 유튜브 검색으로 연결돼요.</div>` : ""}
       </section>
@@ -1081,7 +1114,7 @@ img { max-width: 100%; }
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go]");
     if (!t) return;
     if (t.dataset.stamp) {
       const id = t.dataset.stamp;
@@ -1092,6 +1125,7 @@ img { max-width: 100%; }
       return;
     }
     if ("shareStamps" in t.dataset) { shareStamps(); return; }
+    if ("halfGo" in t.dataset) { state.prov = "반값여행"; state.q = ""; go("cities"); return; }
     if (t.dataset.view) { e.preventDefault(); go(t.dataset.view === "home" ? null : t.dataset.view); }
     else if (t.dataset.city) { e.preventDefault(); go(t.dataset.city); }
     else if ("home" in t.dataset) { e.preventDefault(); go(null); }
