@@ -96,7 +96,53 @@ def entry_of(p: dict, city: dict, score: dict, kind: str) -> dict:
     }
 
 
+def refresh_steady():
+    """매일 수집 뒤: 유튜브를 새로 부르지 않고 도시 파일의 6개월 점수로 '꾸준한 인기'·'숨은 핫플'만 다시 계산."""
+    cur = collect.load_json(DATA / "weekly.json", None)
+    if not cur:
+        return
+    index = collect.load_json(DATA / "cities.json", {"cities": []})
+    with_data = [c for c in index["cities"] if c.get("hasData")]
+    steady = []
+    for c in with_data:
+        d = collect.load_json(DATA / "cities" / f"{c['id']}.json", None)
+        for s in (d or {}).get("spots", []):
+            if s.get("yt"):
+                steady.append(entry_of(s, c, s["yt"], "kakao" if s.get("type") == "kakao" else "spot"))
+    weekly_kakao = [e for e in cur["lists"].get("youtube", []) if is_hidden(e)]
+    cur["lists"]["steady"] = top(steady, lambda e: -e["score"])
+    cur["lists"]["hidden"] = top([e for e in steady if is_hidden(e)] + weekly_kakao, lambda e: -e["score"])
+    cur["citiesWithData"] = len(with_data)
+    cur["updatedAt"] = dt.datetime.now(KST).isoformat(timespec="seconds")
+    collect.save_json(DATA / "weekly.json", cur)
+    print("꾸준한 인기·숨은 핫플 갱신:", len(steady), "곳 중 상위 10")
+
+
+HIDDEN_WORDS = re.compile(r"(길|거리|골목|마을|공방|서점|책방|갤러리|전시|팝업|스튜디오|아트|시장)")
+
+
+def is_hidden(e: dict) -> bool:
+    """숨은 핫플: 카카오에서 찾은 카페, 또는 골목·거리·공방·전시 같은 곳 (궁궐·타워 같은 유명 명소는 제외)"""
+    return e["kind"] == "kakao" and (e.get("cat") == "카페" or bool(HIDDEN_WORDS.search(e["name"])))
+
+
+def top(items, key, n=10):
+    out, seen = [], []
+    for e in sorted(items, key=key):
+        k = buzz.norm(e["name"])
+        # 같은 도시에서 이름이 겹치는 곳(태화강/태화강 국가정원)은 하나만
+        if any(c == e["city"] and (k == m or (len(min(k, m, key=len)) >= 2 and (k in m or m in k))) for c, m in seen):
+            continue
+        seen.append((e["city"], k))
+        out.append(e)
+        if len(out) >= n:
+            break
+    return out
+
+
 def main():
+    if "--steady-only" in sys.argv:
+        return refresh_steady()
     yt_key = os.environ.get("YOUTUBE_API_KEY", "").strip()
     kakao_key = os.environ.get("KAKAO_REST_KEY", "").strip()
     if not yt_key:
@@ -163,18 +209,6 @@ def main():
                     known.add((c["name"], buzz.norm(p["name"])))
                 break
 
-    def top(items, key, n=10):
-        out, seen = [], set()
-        for e in sorted(items, key=key):
-            k = (e["city"], buzz.norm(e["name"]))
-            if k in seen:
-                continue
-            seen.add(k)
-            out.append(e)
-            if len(out) >= n:
-                break
-        return out
-
     # 급상승은 6개월 기준치가 있는 도시(유튜브 점수를 이미 매긴 도시)만 비교한다
     has_base = {e["city"] for e in steady}
     rising = [dict(e, ratio=round(e["n"] / (e["base_n"] / 26 + 0.5), 1)) for e in weekly
@@ -184,8 +218,7 @@ def main():
         "videos": len(pool), "citiesWithData": len(with_data),
         "lists": {
             "youtube": top(weekly, lambda e: -e["score"]),
-            "hidden": top([e for e in steady if e["kind"] == "kakao"]
-                          + [e for e in weekly if e["kind"] == "kakao"], lambda e: -e["score"]),
+            "hidden": top([e for e in steady if is_hidden(e)] + [e for e in weekly if is_hidden(e)], lambda e: -e["score"]),
             "steady": top(steady, lambda e: -e["score"]),
             "rising": top([e for e in rising if e["ratio"] >= 2], lambda e: -e["ratio"]),
         },

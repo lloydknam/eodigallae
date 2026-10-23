@@ -1,6 +1,6 @@
 {
  "week": "2026-W43",
- "updatedAt": "2026-10-23T12:06:50+09:00",
+ "updatedAt": "2026-10-23T14:00:50+09:00",
  "videos": 426,
  "citiesWithData": 22,
  "lists": {
@@ -256,8 +256,7 @@
      "title": "벌써 가을이니까 〰️ 혼자서 전주맛집 여행 vlog☕️🥮🍚  | 전주한옥마을,왱이,평화와평화,풍년제과,길거리야,백일홍,수정관,디드커피,경기전,,",
      "channel": "강쥐G",
      "views": 98858
-    },
-    "change": null
+    }
    },
    {
     "name": "나그네의 주머니",
@@ -278,8 +277,7 @@
      "title": "힐링 남원에서 도파민 풀 충전해버린 혼자 남원여행 브이로그",
      "channel": "쨔링 zzaling",
      "views": 121369
-    },
-    "change": null
+    }
    },
    {
     "name": "빈타이 남원점",
@@ -300,8 +298,28 @@
      "title": "남원 실패없는 여행코스🌿 | 2일차, 너무 알차서 1박으로 부족할지도 몰라요 @.@",
      "channel": "또빵BBBANG",
      "views": 12316
-    },
-    "change": null
+    }
+   },
+   {
+    "name": "서문빙수",
+    "city": "대구",
+    "province": "대구",
+    "cityId": "a4",
+    "spotId": "k653742153",
+    "kakao": "653742153",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 3,
+    "views": 15127,
+    "score": 13.14,
+    "thumb": "https://i.ytimg.com/vi/wMRsCa-0v80/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/wMRsCa-0v80/hqdefault.jpg",
+    "video": {
+     "id": "wMRsCa-0v80",
+     "title": "대구 여행 브이로그🥐 맛집 • 빵집 • 빈티지샵 투어를 곁들인..❤︎ 생망고빙수, 찬앤찬막창, 서문시장, 에덴김밥, 군위식당, 오가닉모가, 소베, 따끈따끈베이커리",
+     "channel": "레코 reco",
+     "views": 8228
+    }
    },
    {
     "name": "플랫메이트",
@@ -322,8 +340,28 @@
      "title": "나 혼자 전주 여행 Vlog 🚃 | 1박 2일 여유롭고 예쁜 거 가득한 힐링 여행 🧡 (맛집·카페·혼술·사진 명소)",
      "channel": "은미방Eunmibang",
      "views": 13203
-    },
-    "change": null
+    }
+   },
+   {
+    "name": "로더우드",
+    "city": "고양시",
+    "province": "경기도",
+    "cityId": "a31-s2",
+    "spotId": "k411233339",
+    "kakao": "411233339",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 2,
+    "views": 6043,
+    "score": 10.17,
+    "thumb": "https://i.ytimg.com/vi/gO9UNO1Y8S8/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/gO9UNO1Y8S8/hqdefault.jpg",
+    "video": {
+     "id": "gO9UNO1Y8S8",
+     "title": "고양에서 만나는 작은 유럽 감성 카페",
+     "channel": "마뷰로그 mavuelog",
+     "views": 4682
+    }
    },
    {
     "name": "스톤크릭",
@@ -344,77 +382,94 @@
      "title": "원주핫플 다양한 즐길 거리가 근처에 있는 오크밸리리조트💛",
      "channel": "강원특별자치도관광협회",
      "views": 40891
-    },
-    "change": null
+    }
    },
    {
-    "name": "전주드림랜드",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "k10729547",
-    "kakao": "10729547",
+    "name": "잔걸음",
+    "city": "대구",
+    "province": "대구",
+    "cityId": "a4",
+    "spotId": "k972240699",
+    "kakao": "972240699",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 2,
+    "views": 173823,
+    "score": 7.59,
+    "thumb": "https://i.ytimg.com/vi/86jo3PZrncc/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/86jo3PZrncc/hqdefault.jpg",
+    "video": {
+     "id": "86jo3PZrncc",
+     "title": "먹고 또 먹는 대구 1박 2일 브이로그🍉",
+     "channel": "하씨",
+     "views": 156821
+    }
+   },
+   {
+    "name": "조치원테마거리",
+    "city": "세종특별자치시",
+    "province": "세종특별자치시",
+    "cityId": "a8",
+    "spotId": "k1786639512",
+    "kakao": "1786639512",
     "cat": "관광명소",
     "kind": "kakao",
     "n": 1,
-    "views": 1956,
-    "score": 3.29,
-    "thumb": "https://i.ytimg.com/vi/Olo30UNBf_A/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/Olo30UNBf_A/hqdefault.jpg",
+    "views": 15603,
+    "score": 4.19,
+    "thumb": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
     "video": {
-     "id": "Olo30UNBf_A",
-     "title": "10월에 전주에 간다면 🍃",
-     "channel": "서리저리",
-     "views": 1956
-    },
-    "change": null
+     "id": "H-5wqCcbFnc",
+     "title": "숨겨뒀던 서울 근교 감성 당일치기 🚆 세종에 이런 곳이 있었어? 조치원 기차 여행 코스, 맛집, 카페, 가볼만한곳 싹다 알려드림",
+     "channel": "여행작가 봄비",
+     "views": 15603
+    }
    },
    {
-    "name": "전주영화의거리",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "k12576857",
-    "kakao": "12576857",
-    "cat": "관광명소",
+    "name": "갤러리 실",
+    "city": "세종특별자치시",
+    "province": "세종특별자치시",
+    "cityId": "a8",
+    "spotId": "k552217485",
+    "kakao": "552217485",
+    "cat": "문화시설",
     "kind": "kakao",
     "n": 1,
-    "views": 16295,
-    "score": 2.95,
-    "thumb": "https://i.ytimg.com/vi/WA8HeBjmsZs/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/WA8HeBjmsZs/hqdefault.jpg",
+    "views": 15603,
+    "score": 4.19,
+    "thumb": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
     "video": {
-     "id": "WA8HeBjmsZs",
-     "title": "전라북도에 단, 하나밖에없는 원시구이지금가면 딱좋은 도쿄갬성 야외테라스가 끝장나는",
-     "channel": "루비아 전주맛집💕 전국맛집💕",
-     "views": 16295
-    },
-    "change": null
-   },
-   {
-    "name": "객사길",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "k19357207",
-    "kakao": "19357207",
-    "cat": "관광명소",
-    "kind": "kakao",
-    "n": 1,
-    "views": 1146,
-    "score": 2.14,
-    "thumb": "https://i.ytimg.com/vi/es1GI0k4AVU/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/es1GI0k4AVU/hqdefault.jpg",
-    "video": {
-     "id": "es1GI0k4AVU",
-     "title": "밤 9시 넘어도 줄 서있는 전주 객사 야식 맛집 (타코야끼·파르페 웨이팅 직접 확인).#전주타코야끼 #전주객사 #전주야식 #전주핫플 #쇼츠 #전주야간 #전주여행 #전주가볼만한곳",
-     "channel": "나우웨이브",
-     "views": 1146
-    },
-    "change": null
+     "id": "H-5wqCcbFnc",
+     "title": "숨겨뒀던 서울 근교 감성 당일치기 🚆 세종에 이런 곳이 있었어? 조치원 기차 여행 코스, 맛집, 카페, 가볼만한곳 싹다 알려드림",
+     "channel": "여행작가 봄비",
+     "views": 15603
+    }
    }
   ],
   "steady": [
+   {
+    "name": "광명동굴",
+    "city": "광명시",
+    "province": "경기도",
+    "cityId": "a31-s4",
+    "spotId": "2649975",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 51,
+    "views": 471204,
+    "score": 2103.01,
+    "thumb": "https://i.ytimg.com/vi/WteyDHtDu2w/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/27/4095727_image2_1.jpg",
+    "video": {
+     "id": "WteyDHtDu2w",
+     "title": "여름에 아이랑 갈만한 곳 #여름방학 에 갈만한곳 #실내 #광명동굴",
+     "channel": "챔별 Ho-LoL-LoG",
+     "views": 184837
+    }
+   },
    {
     "name": "전북 전주 한옥마을",
     "city": "전주시",
@@ -434,8 +489,7 @@
      "title": "10년 전에는 몰랐던 요즘 전주에서 노는법",
      "channel": "방곡방곡",
      "views": 2505962
-    },
-    "change": null
+    }
    },
    {
     "name": "광한루원",
@@ -456,8 +510,28 @@
      "title": "[실시간] 남원 지금 난리났습니다✨ 5월 국내 여행지 추천 가볼만한곳: 2026 춘향제 여행 코스 Top 7 (구 서도역, 광한루원, 요천 음악분수 등)",
      "channel": "여행작가 봄비",
      "views": 49717
-    },
-    "change": null
+    }
+   },
+   {
+    "name": "인천 차이나타운",
+    "city": "인천",
+    "province": "인천",
+    "cityId": "a2",
+    "spotId": "264512",
+    "kakao": "12706268",
+    "cat": "",
+    "kind": "spot",
+    "n": 24,
+    "views": 633521,
+    "score": 582.23,
+    "thumb": "https://i.ytimg.com/vi/qie3v7gAk1c/hqdefault.jpg",
+    "image": "",
+    "video": {
+     "id": "qie3v7gAk1c",
+     "title": "대한민국에서 가장 극과극인 도시",
+     "channel": "한챌",
+     "views": 197729
+    }
    },
    {
     "name": "소금산",
@@ -478,8 +552,28 @@
      "title": "2000억들여서 만든 한때는 사람이 많았다는 관광지 근황 ㄷㄷ 미쳤다",
      "channel": "찰스알레 Charles Allez",
      "views": 287279
-    },
-    "change": null
+    }
+   },
+   {
+    "name": "구리한강시민공원(코스모스공원)",
+    "city": "구리시",
+    "province": "경기도",
+    "cityId": "a31-s6",
+    "spotId": "228874",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 26,
+    "views": 487918,
+    "score": 437.11,
+    "thumb": "https://i.ytimg.com/vi/XlPRNaF-044/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/23/4066023_image2_1.jpg",
+    "video": {
+     "id": "XlPRNaF-044",
+     "title": "코스모스축제!!",
+     "channel": "달려가히",
+     "views": 164776
+    }
    },
    {
     "name": "뮤지엄산",
@@ -500,140 +594,70 @@
      "title": "알차게 즐기고 온 1박2일 정선 힐링 솧투어🌿파크로쉬 리조트, 민둥산, 원주 뮤지엄산, 웰니스 프로그램",
      "channel": "안소희",
      "views": 171121
-    },
-    "change": null
+    }
    },
    {
-    "name": "소금산그랜드밸리",
-    "city": "원주시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s9",
-    "spotId": "2800692",
-    "kakao": null,
+    "name": "태화강 국가정원",
+    "city": "울산",
+    "province": "울산",
+    "cityId": "a7",
+    "spotId": "128202",
+    "kakao": "134270524",
+    "cat": "",
+    "kind": "spot",
+    "n": 24,
+    "views": 235148,
+    "score": 351.77,
+    "thumb": "https://i.ytimg.com/vi/21z8iP8VAB0/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/31/3079831_image2_1.JPG",
+    "video": {
+     "id": "21z8iP8VAB0",
+     "title": "수없이 다녀와도 좋은 도시, 울산",
+     "channel": "벰버",
+     "views": 105372
+    }
+   },
+   {
+    "name": "월미도",
+    "city": "인천",
+    "province": "인천",
+    "cityId": "a2",
+    "spotId": "127585",
+    "kakao": "12461589",
     "cat": "",
     "kind": "spot",
     "n": 20,
-    "views": 835225,
-    "score": 318.08,
-    "thumb": "https://i.ytimg.com/vi/GaG3HDuvOCs/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/27/4059827_image2_1.png",
+    "views": 2379939,
+    "score": 320.84,
+    "thumb": "https://i.ytimg.com/vi/zNlPBR5K8iM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/94/3518594_image2_1.jpg",
     "video": {
-     "id": "GaG3HDuvOCs",
-     "title": "2000억들여서 만든 한때는 사람이 많았다는 관광지 근황 ㄷㄷ 미쳤다",
-     "channel": "찰스알레 Charles Allez",
-     "views": 287279
-    },
-    "change": null
+     "id": "zNlPBR5K8iM",
+     "title": "연착된 김에 인천 5시간 뽕뽑기 여행 I 곽범 I 연차없이 어떡행2 특별편",
+     "channel": "때때때 TTT",
+     "views": 2112914
+    }
    },
    {
-    "name": "전주 경기전",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "147656",
+    "name": "대왕암공원",
+    "city": "울산",
+    "province": "울산",
+    "cityId": "a7",
+    "spotId": "127515",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 15,
-    "views": 293859,
-    "score": 221.84,
-    "thumb": "https://i.ytimg.com/vi/jcxFs90LSyQ/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/45/3365745_image2_1.jpg",
+    "n": 22,
+    "views": 145224,
+    "score": 292.73,
+    "thumb": "https://i.ytimg.com/vi/wRfFhtMke1k/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/16/3583516_image2_1.jpg",
     "video": {
-     "id": "jcxFs90LSyQ",
-     "title": "전주1박2일 여행이 6만원으로 된다고??",
-     "channel": "투밥스",
-     "views": 113022
-    },
-    "change": null
-   },
-   {
-    "name": "덕진공원",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "126320",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 13,
-    "views": 2982418,
-    "score": 138.79,
-    "thumb": "https://i.ytimg.com/vi/70BHopOO35M/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/40/4095540_image2_1.jpg",
-    "video": {
-     "id": "70BHopOO35M",
-     "title": "10년 전에는 몰랐던 요즘 전주에서 노는법",
-     "channel": "방곡방곡",
-     "views": 2505962
-    },
-    "change": null
-   },
-   {
-    "name": "평화와평화",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "k1851904708",
-    "kakao": "1851904708",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 11,
-    "views": 253572,
-    "score": 122.17,
-    "thumb": "https://i.ytimg.com/vi/pF0sFbnkavo/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/pF0sFbnkavo/hqdefault.jpg",
-    "video": {
-     "id": "pF0sFbnkavo",
-     "title": "벌써 가을이니까 〰️ 혼자서 전주맛집 여행 vlog☕️🥮🍚  | 전주한옥마을,왱이,평화와평화,풍년제과,길거리야,백일홍,수정관,디드커피,경기전,,",
-     "channel": "강쥐G",
-     "views": 98858
-    },
-    "change": null
-   },
-   {
-    "name": "원주 반계리 은행나무",
-    "city": "원주시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s9",
-    "spotId": "2613436",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 9,
-    "views": 217870,
-    "score": 94.78,
-    "thumb": "https://i.ytimg.com/vi/A-k7E0NxBlw/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/67/3474967_image2_1.jpg",
-    "video": {
-     "id": "A-k7E0NxBlw",
-     "title": "강원도에서 가장 잘 사는 도시",
-     "channel": "한챌",
-     "views": 120387
-    },
-    "change": null
-   },
-   {
-    "name": "남원시립김병종미술관",
-    "city": "남원시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s4",
-    "spotId": "2559504",
-    "kakao": "1248137601",
-    "cat": "",
-    "kind": "spot",
-    "n": 12,
-    "views": 89298,
-    "score": 80.76,
-    "thumb": "https://i.ytimg.com/vi/g0lPaj0W6A4/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/77/4054777_image2_1.jpg",
-    "video": {
-     "id": "g0lPaj0W6A4",
-     "title": "기차표 공짜로 다녀온 남원 당일치기 여행🌿🌳 #남원여행 #남원맛집",
-     "channel": "펭이",
-     "views": 29870
-    },
-    "change": null
+     "id": "wRfFhtMke1k",
+     "title": "공업도시? 반전 매력 울산! 현지인 맛집·볼거리 23곳 여행",
+     "channel": "하라고",
+     "views": 87869
+    }
    }
   ],
   "rising": [
