@@ -573,7 +573,7 @@ img { max-width: 100%; }
     } catch { /* 저장 불가 환경은 세지 않음 */ }
   }
   async function showStatsPage() {
-    setTabbar("about"); homeTopbar();
+    setTabbar("me"); homeTopbar();
     app.innerHTML = `<section class="page-head"><h1><img src="icons/mascot-160.png" alt="">방문 통계</h1>
       <p>하루에 몇 대의 기기가 어디갈래를 열었는지 보여줘요. 개인정보 없이 숫자만 세요.</p></section>
       <p class="loading"><img src="icons/mascot-160.png" alt="">숫자를 세는 중…</p>`;
@@ -915,7 +915,8 @@ img { max-width: 100%; }
             ${visited.has(c.id) ? `<img src="icons/mascot-160.png" alt="">` : ""}<span>${esc(baseCity(c.name) || c.name)}</span></button>`).join("")}</div>
         </section>`;
       }).join("")}
-      <div class="home-more"><button class="btn-ghost" data-view="about">앱 정보 · 데이터 출처</button></div>`;
+      <div class="home-more" style="gap:10px;flex-wrap:wrap"><a class="btn-ghost" href="#stats" style="text-decoration:none">📊 방문 통계</a>
+        <button class="btn-ghost" data-view="about">앱 정보 · 데이터 출처</button></div>`;
   }
 
   // 도장판 공유 이미지 (1080×1350, 인스타 세로)
