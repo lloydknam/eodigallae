@@ -19,7 +19,7 @@
   "군포시: 유튜브 영상 90편 · 화제 장소 7곳 · 카카오 후보 0곳 중 기존 장소 연결 0·새 장소 0곳",
   "김포시: 유튜브 영상 109편 · 화제 장소 8곳 · 카카오 후보 0곳 중 기존 장소 연결 0·새 장소 0곳",
   "남양주시: 유튜브 영상 87편 · 화제 장소 13곳 · 카카오 후보 0곳 중 기존 장소 연결 0·새 장소 0곳",
-  "동두천시: 유튜브 오류 429 Client Error: Too Many Requests for url: https://www.googleapis.com/youtube/v3/search?key=AIzaSyAhXivNV7T9Z-xuPjdUnIaw70Ctmq74vUY&part=id&q=%EB%8F%99%EB%91%90%EC%B2%9C+%EA%B0%80%EB%B3%BC%EB%A7%8C%",
+  "동두천시: 유튜브 오류 429 Client Error: Too Many Requests for url: https://www.googleapis.com/youtube/v3/search?key=***&part=id&q=%EB%8F%99%EB%91%90%EC%B2%9C+%EA%B0%80%EB%B3%BC%EB%A7%8C%",
   "부천시: 유튜브 영상 95편 · 화제 장소 8곳 · 카카오 후보 0곳 중 기존 장소 연결 0·새 장소 0곳"
  ],
  "lines": []

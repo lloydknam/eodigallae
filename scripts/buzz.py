@@ -75,7 +75,10 @@ class YouTube:
         if r.status_code == 403:
             self.units = 0
             raise RuntimeError("유튜브 할당량 초과 또는 키 오류: " + r.text[:150])
-        r.raise_for_status()
+        if r.status_code >= 400:   # 주소(키 포함)는 오류 메시지에 남기지 않는다
+            if r.status_code == 429:
+                self.units = 0
+            raise RuntimeError(f"유튜브 HTTP {r.status_code}")
         return r.json()
 
     def city_pool(self, city: dict, months: int = 6) -> list[dict]:
@@ -183,7 +186,7 @@ def extract_names(pool: list[dict], city: dict) -> list[tuple[str, int, int]]:
 # ───────────────────────── 카카오 ─────────────────────────
 
 class Kakao:
-    def __init__(self, session, key: str, max_calls: int = 300):
+    def __init__(self, session, key: str, max_calls: int = 5000):
         self.s, self.key, self.left = session, key, max_calls
 
     def search(self, query: str, x: float | None, y: float | None, page: int = 1) -> list[dict]:
@@ -197,7 +200,10 @@ class Kakao:
         if r.status_code in (401, 403):
             self.left = 0
             raise RuntimeError("카카오 키 오류 또는 권한 없음: " + r.text[:150])
-        r.raise_for_status()
+        if r.status_code >= 400:
+            if r.status_code == 429:
+                self.left = 0
+            raise RuntimeError(f"카카오 HTTP {r.status_code}")
         return r.json().get("documents", [])
 
 

@@ -353,7 +353,12 @@ TOURISM_CAT = re.compile(r"문화관광|역사관광|자연관광|체험관광|�
 
 
 DIAG: list[str] = []  # 이름 검색 진단 기록 → data/cache/diag.json
-RUNLOG: list[str] = []  # 실행 요약(오류·한도) → data/cache/diag.json
+RUNLOG: list[str] = []  # 실행 요약(오류·한도) → data/cache/diag.json (공개 저장소이므로 키는 지워서 기록)
+KEY_RE = re.compile(r"((?:service)?[Kk]ey=)[^&\s'\"]+")
+
+
+def redact(text: str) -> str:
+    return KEY_RE.sub(r"\1***", str(text))
 
 
 def resolve_hub_spot(api: TourAPI, city: dict, h: dict, regn: str | None) -> dict:
@@ -967,7 +972,8 @@ def main():
         index["updatedAt"] = now_iso()
         save_json(index_path, index)
 
-    save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "run": RUNLOG[-100:], "lines": DIAG[:300]})
+    save_json(CACHE_DIR / "diag.json", {"at": now_iso(), "run": [redact(x) for x in RUNLOG[-100:]],
+                                        "lines": [redact(x) for x in DIAG[:300]]})
     log(f"완료 · 인기순위 호출 {api.hub_calls}회 · TourAPI 호출 {api.calls}회 · 남은 유튜브 unit {budget['yt'].units if budget['yt'] else '-'}")
 
 
