@@ -1,8 +1,8 @@
 {
  "week": "2026-W43",
- "updatedAt": "2026-10-23T14:46:14+09:00",
+ "updatedAt": "2026-10-24T01:59:47+09:00",
  "videos": 426,
- "citiesWithData": 22,
+ "citiesWithData": 68,
  "lists": {
   "youtube": [
    {
@@ -238,6 +238,27 @@
   ],
   "hidden": [
    {
+    "name": "황금해안길",
+    "city": "화성시",
+    "province": "경기도",
+    "cityId": "a31-s31",
+    "spotId": "k838616894",
+    "kakao": "838616894",
+    "cat": "관광명소",
+    "kind": "kakao",
+    "n": 13,
+    "views": 1008276,
+    "score": 257.16,
+    "thumb": "https://i.ytimg.com/vi/tkEm4HEYeeM/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/tkEm4HEYeeM/hqdefault.jpg",
+    "video": {
+     "id": "tkEm4HEYeeM",
+     "title": "요즘 다들 여기 간다는데 - 수도권에서 가장 아름다운 바닷길 -황금해안길",
+     "channel": "곰슨의바깥세상",
+     "views": 289421
+    }
+   },
+   {
     "name": "평화와평화",
     "city": "전주시",
     "province": "전북특별자치도",
@@ -256,6 +277,27 @@
      "title": "벌써 가을이니까 〰️ 혼자서 전주맛집 여행 vlog☕️🥮🍚  | 전주한옥마을,왱이,평화와평화,풍년제과,길거리야,백일홍,수정관,디드커피,경기전,,",
      "channel": "강쥐G",
      "views": 98858
+    }
+   },
+   {
+    "name": "티하우스에덴",
+    "city": "이천시",
+    "province": "경기도",
+    "cityId": "a31-s26",
+    "spotId": "k1373543489",
+    "kakao": "1373543489",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 8,
+    "views": 141349,
+    "score": 59.73,
+    "thumb": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
+    "video": {
+     "id": "OKp_QKvZoH0",
+     "title": "이천에서 쌀밥과 도자기만 보고 오면 아쉬운 이유｜이천 하루코스",
+     "channel": "가희드 gahiiide",
+     "views": 64502
     }
    },
    {
@@ -280,6 +322,69 @@
     }
    },
    {
+    "name": "이진상회",
+    "city": "이천시",
+    "province": "경기도",
+    "cityId": "a31-s26",
+    "spotId": "k2090519049",
+    "kakao": "2090519049",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 7,
+    "views": 131932,
+    "score": 49.79,
+    "thumb": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
+    "video": {
+     "id": "OKp_QKvZoH0",
+     "title": "이천에서 쌀밥과 도자기만 보고 오면 아쉬운 이유｜이천 하루코스",
+     "channel": "가희드 gahiiide",
+     "views": 64502
+    }
+   },
+   {
+    "name": "카페보리",
+    "city": "영광군",
+    "province": "전라남도",
+    "cityId": "a38-s16",
+    "spotId": "k2134034914",
+    "kakao": "2134034914",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 5,
+    "views": 4236,
+    "score": 28.76,
+    "thumb": "https://i.ytimg.com/vi/C8E0lADhazw/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/C8E0lADhazw/hqdefault.jpg",
+    "video": {
+     "id": "C8E0lADhazw",
+     "title": "[영광여행3🇰🇷] 굴비만 먹고오면 손해일걸요!? | 반값여행 경비 대공개💸 | 백수해안도로, 카페보리, 영광시내 | 26.5월 1박2일 국내여행",
+     "channel": "어쩌다, 둘",
+     "views": 2469
+    }
+   },
+   {
+    "name": "흰다정",
+    "city": "속초시",
+    "province": "강원특별자치도",
+    "cityId": "a32-s5",
+    "spotId": "k1420541725",
+    "kakao": "1420541725",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 3,
+    "views": 214702,
+    "score": 25.55,
+    "thumb": "https://i.ytimg.com/vi/dOrwsJHEXBk/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/dOrwsJHEXBk/hqdefault.jpg",
+    "video": {
+     "id": "dOrwsJHEXBk",
+     "title": "속초 얏호! 속초에서 유명한 거는 다 먹은 나 혼자 속초 여행🍦 (육구방앗간 찹쌀떡, 강릉막걸리술빵, 북청닭강정, 흰다정, 속초옥수수소금빵, 타이그랜파, 속초맛집)",
+     "channel": "나나 Nanasserie",
+     "views": 138265
+    }
+   },
+   {
     "name": "빈타이 남원점",
     "city": "남원시",
     "province": "전북특별자치도",
@@ -301,150 +406,45 @@
     }
    },
    {
-    "name": "서문빙수",
-    "city": "대구",
-    "province": "대구",
-    "cityId": "a4",
-    "spotId": "k653742153",
-    "kakao": "653742153",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 3,
-    "views": 15127,
-    "score": 13.14,
-    "thumb": "https://i.ytimg.com/vi/wMRsCa-0v80/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/wMRsCa-0v80/hqdefault.jpg",
-    "video": {
-     "id": "wMRsCa-0v80",
-     "title": "대구 여행 브이로그🥐 맛집 • 빵집 • 빈티지샵 투어를 곁들인..❤︎ 생망고빙수, 찬앤찬막창, 서문시장, 에덴김밥, 군위식당, 오가닉모가, 소베, 따끈따끈베이커리",
-     "channel": "레코 reco",
-     "views": 8228
-    }
-   },
-   {
-    "name": "플랫메이트",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "k1579740221",
-    "kakao": "1579740221",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 3,
-    "views": 37233,
-    "score": 11.3,
-    "thumb": "https://i.ytimg.com/vi/ViyZ_ghY8YI/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/ViyZ_ghY8YI/hqdefault.jpg",
-    "video": {
-     "id": "ViyZ_ghY8YI",
-     "title": "나 혼자 전주 여행 Vlog 🚃 | 1박 2일 여유롭고 예쁜 거 가득한 힐링 여행 🧡 (맛집·카페·혼술·사진 명소)",
-     "channel": "은미방Eunmibang",
-     "views": 13203
-    }
-   },
-   {
-    "name": "로더우드",
-    "city": "고양시",
+    "name": "댕리단길",
+    "city": "안양시",
     "province": "경기도",
-    "cityId": "a31-s2",
-    "spotId": "k411233339",
-    "kakao": "411233339",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 2,
-    "views": 6043,
-    "score": 10.17,
-    "thumb": "https://i.ytimg.com/vi/gO9UNO1Y8S8/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/gO9UNO1Y8S8/hqdefault.jpg",
-    "video": {
-     "id": "gO9UNO1Y8S8",
-     "title": "고양에서 만나는 작은 유럽 감성 카페",
-     "channel": "마뷰로그 mavuelog",
-     "views": 4682
-    }
-   },
-   {
-    "name": "스톤크릭",
-    "city": "원주시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s9",
-    "spotId": "k1419028519",
-    "kakao": "1419028519",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 2,
-    "views": 41145,
-    "score": 9.28,
-    "thumb": "https://i.ytimg.com/vi/Z2GOIPUUyT8/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/Z2GOIPUUyT8/hqdefault.jpg",
-    "video": {
-     "id": "Z2GOIPUUyT8",
-     "title": "원주핫플 다양한 즐길 거리가 근처에 있는 오크밸리리조트💛",
-     "channel": "강원특별자치도관광협회",
-     "views": 40891
-    }
-   },
-   {
-    "name": "잔걸음",
-    "city": "대구",
-    "province": "대구",
-    "cityId": "a4",
-    "spotId": "k972240699",
-    "kakao": "972240699",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 2,
-    "views": 173823,
-    "score": 7.59,
-    "thumb": "https://i.ytimg.com/vi/86jo3PZrncc/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/86jo3PZrncc/hqdefault.jpg",
-    "video": {
-     "id": "86jo3PZrncc",
-     "title": "먹고 또 먹는 대구 1박 2일 브이로그🍉",
-     "channel": "하씨",
-     "views": 156821
-    }
-   },
-   {
-    "name": "조치원테마거리",
-    "city": "세종특별자치시",
-    "province": "세종특별자치시",
-    "cityId": "a8",
-    "spotId": "k1786639512",
-    "kakao": "1786639512",
+    "cityId": "a31-s17",
+    "spotId": "k1753331132",
+    "kakao": "1753331132",
     "cat": "관광명소",
     "kind": "kakao",
-    "n": 1,
-    "views": 15603,
-    "score": 4.19,
-    "thumb": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
+    "n": 3,
+    "views": 5316,
+    "score": 22.38,
+    "thumb": "https://i.ytimg.com/vi/e_BRTEPuL_U/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/e_BRTEPuL_U/hqdefault.jpg",
     "video": {
-     "id": "H-5wqCcbFnc",
-     "title": "숨겨뒀던 서울 근교 감성 당일치기 🚆 세종에 이런 곳이 있었어? 조치원 기차 여행 코스, 맛집, 카페, 가볼만한곳 싹다 알려드림",
-     "channel": "여행작가 봄비",
-     "views": 15603
+     "id": "e_BRTEPuL_U",
+     "title": "★찐안양인 추천코스★ 안양역 New빈티지샵👚 댕리단길 이자카야 투어. 안양 핫플. 저스트 에즈 아이엠",
+     "channel": "꼴로레colore",
+     "views": 2844
     }
    },
    {
-    "name": "갤러리 실",
-    "city": "세종특별자치시",
-    "province": "세종특별자치시",
-    "cityId": "a8",
-    "spotId": "k552217485",
-    "kakao": "552217485",
-    "cat": "문화시설",
+    "name": "세심다원",
+    "city": "영월군",
+    "province": "강원특별자치도",
+    "cityId": "a32-s8",
+    "spotId": "k807809637",
+    "kakao": "807809637",
+    "cat": "카페",
     "kind": "kakao",
-    "n": 1,
-    "views": 15603,
-    "score": 4.19,
-    "thumb": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/H-5wqCcbFnc/hqdefault.jpg",
+    "n": 4,
+    "views": 45955,
+    "score": 19.01,
+    "thumb": "https://i.ytimg.com/vi/cTkrx9ywlIY/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/cTkrx9ywlIY/hqdefault.jpg",
     "video": {
-     "id": "H-5wqCcbFnc",
-     "title": "숨겨뒀던 서울 근교 감성 당일치기 🚆 세종에 이런 곳이 있었어? 조치원 기차 여행 코스, 맛집, 카페, 가볼만한곳 싹다 알려드림",
-     "channel": "여행작가 봄비",
-     "views": 15603
+     "id": "cTkrx9ywlIY",
+     "title": "초여름의 녹음이 가득한 영월 당일치기🌱 | 맛집 털고 카페도 털고 힐링까지",
+     "channel": "여느날 YEONNAL",
+     "views": 33246
     }
    }
   ],
@@ -513,6 +513,90 @@
     }
    },
    {
+    "name": "감악산(거창)",
+    "city": "거창군",
+    "province": "경상남도",
+    "cityId": "a36-s2",
+    "spotId": "1576464",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 32,
+    "views": 492221,
+    "score": 1023.42,
+    "thumb": "https://i.ytimg.com/vi/2DHFozZvxVA/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/93/4007893_image2_1.jpg",
+    "video": {
+     "id": "2DHFozZvxVA",
+     "title": "★제6회 감악산 꽃별여행과 함께 하는 2026 거창방문의 해★",
+     "channel": "거창군",
+     "views": 164842
+    }
+   },
+   {
+    "name": "영월 청령포",
+    "city": "영월군",
+    "province": "강원특별자치도",
+    "cityId": "a32-s8",
+    "spotId": "125785",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 38,
+    "views": 4269546,
+    "score": 1017.5,
+    "thumb": "https://i.ytimg.com/vi/7f_BAjPTGaQ/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/65/4041365_image2_1.jpg",
+    "video": {
+     "id": "7f_BAjPTGaQ",
+     "title": "사랑이다vs아니다, 여러분의 생각은? #shorts #윤택TV #오지객 #어디고 #나는자연인이다 #자연인 #영월 #왕과사는남자 #왕사남 #영월여행 #고씨동굴 #강원도여행 #반려견",
+     "channel": "윤택TV",
+     "views": 2087664
+    }
+   },
+   {
+    "name": "수원 화성",
+    "city": "수원시",
+    "province": "경기도",
+    "cityId": "a31-s13",
+    "spotId": "125555",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 28,
+    "views": 526981,
+    "score": 691.26,
+    "thumb": "https://i.ytimg.com/vi/w6K7JtUxQ2Y/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/97/3478597_image2_1.jpg",
+    "video": {
+     "id": "w6K7JtUxQ2Y",
+     "title": "수원화성 행궁동 보기만 해도 스트레스 해소🌈 맛집 카페 볼거리 코스 완벽 정리 | 서울근교 국내여행",
+     "channel": "너도 가봤으면 해",
+     "views": 183781
+    }
+   },
+   {
+    "name": "양평 두물머리",
+    "city": "양평군",
+    "province": "경기도",
+    "cityId": "a31-s19",
+    "spotId": "128918",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 27,
+    "views": 676491,
+    "score": 606.67,
+    "thumb": "https://i.ytimg.com/vi/PeggyCBfh3k/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/60/4122260_image2_1.jpg",
+    "video": {
+     "id": "PeggyCBfh3k",
+     "title": "서울 근교 전원도시 양평 하루 뽕 뽑는 법🌈",
+     "channel": "방곡방곡",
+     "views": 426084
+    }
+   },
+   {
     "name": "인천 차이나타운",
     "city": "인천",
     "province": "인천",
@@ -534,129 +618,45 @@
     }
    },
    {
-    "name": "소금산",
-    "city": "원주시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s9",
-    "spotId": "hc6cbe1a53f66c7f94ee88d0bcafc53ac",
+    "name": "안동 하회마을",
+    "city": "안동시",
+    "province": "경상북도",
+    "cityId": "a35-s11",
+    "spotId": "894027",
     "kakao": null,
     "cat": "",
     "kind": "spot",
     "n": 24,
-    "views": 887967,
-    "score": 466.35,
-    "thumb": "https://i.ytimg.com/vi/GaG3HDuvOCs/hqdefault.jpg",
-    "image": "",
+    "views": 531903,
+    "score": 506.88,
+    "thumb": "https://i.ytimg.com/vi/GSUBt1MylGc/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/62/4059762_image2_1.jpg",
     "video": {
-     "id": "GaG3HDuvOCs",
-     "title": "2000억들여서 만든 한때는 사람이 많았다는 관광지 근황 ㄷㄷ 미쳤다",
-     "channel": "찰스알레 Charles Allez",
-     "views": 287279
+     "id": "GSUBt1MylGc",
+     "title": "부모님 모시고 안동여행, 탈춤도 보고 간고등어 뜯고~[2026 안동탈춤페스티벌]",
+     "channel": "흥삶이네 Heungsam's Life",
+     "views": 178825
     }
    },
    {
-    "name": "구리한강시민공원(코스모스공원)",
-    "city": "구리시",
-    "province": "경기도",
-    "cityId": "a31-s6",
-    "spotId": "228874",
+    "name": "월영교",
+    "city": "안동시",
+    "province": "경상북도",
+    "cityId": "a35-s11",
+    "spotId": "988449",
     "kakao": null,
     "cat": "",
     "kind": "spot",
     "n": 26,
-    "views": 487918,
-    "score": 437.11,
-    "thumb": "https://i.ytimg.com/vi/XlPRNaF-044/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/23/4066023_image2_1.jpg",
+    "views": 179189,
+    "score": 479.51,
+    "thumb": "https://i.ytimg.com/vi/c4_HRBfzpho/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/85/4062785_image2_1.jpg",
     "video": {
-     "id": "XlPRNaF-044",
-     "title": "코스모스축제!!",
-     "channel": "달려가히",
-     "views": 164776
-    }
-   },
-   {
-    "name": "뮤지엄산",
-    "city": "원주시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s9",
-    "spotId": "2633832",
-    "kakao": "21674777",
-    "cat": "",
-    "kind": "spot",
-    "n": 22,
-    "views": 252459,
-    "score": 376.59,
-    "thumb": "https://i.ytimg.com/vi/5jXNPK38LLg/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/08/3584408_image2_1.jpg",
-    "video": {
-     "id": "5jXNPK38LLg",
-     "title": "알차게 즐기고 온 1박2일 정선 힐링 솧투어🌿파크로쉬 리조트, 민둥산, 원주 뮤지엄산, 웰니스 프로그램",
-     "channel": "안소희",
-     "views": 171121
-    }
-   },
-   {
-    "name": "태화강 국가정원",
-    "city": "울산",
-    "province": "울산",
-    "cityId": "a7",
-    "spotId": "128202",
-    "kakao": "134270524",
-    "cat": "",
-    "kind": "spot",
-    "n": 24,
-    "views": 235148,
-    "score": 351.77,
-    "thumb": "https://i.ytimg.com/vi/21z8iP8VAB0/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/31/3079831_image2_1.JPG",
-    "video": {
-     "id": "21z8iP8VAB0",
-     "title": "수없이 다녀와도 좋은 도시, 울산",
-     "channel": "벰버",
-     "views": 105372
-    }
-   },
-   {
-    "name": "월미도",
-    "city": "인천",
-    "province": "인천",
-    "cityId": "a2",
-    "spotId": "127585",
-    "kakao": "12461589",
-    "cat": "",
-    "kind": "spot",
-    "n": 20,
-    "views": 2379939,
-    "score": 320.84,
-    "thumb": "https://i.ytimg.com/vi/zNlPBR5K8iM/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/94/3518594_image2_1.jpg",
-    "video": {
-     "id": "zNlPBR5K8iM",
-     "title": "연착된 김에 인천 5시간 뽕뽑기 여행 I 곽범 I 연차없이 어떡행2 특별편",
-     "channel": "때때때 TTT",
-     "views": 2112914
-    }
-   },
-   {
-    "name": "대왕암공원",
-    "city": "울산",
-    "province": "울산",
-    "cityId": "a7",
-    "spotId": "127515",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 22,
-    "views": 145224,
-    "score": 292.73,
-    "thumb": "https://i.ytimg.com/vi/wRfFhtMke1k/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/16/3583516_image2_1.jpg",
-    "video": {
-     "id": "wRfFhtMke1k",
-     "title": "공업도시? 반전 매력 울산! 현지인 맛집·볼거리 23곳 여행",
-     "channel": "하라고",
-     "views": 87869
+     "id": "c4_HRBfzpho",
+     "title": "안동여행 여긴꼭가‼️🇰🇷절대 후회없을 안동 최고 여행지&맛집 제대로 말아옴💚",
+     "channel": "초마드 CHOMAD",
+     "views": 61288
     }
    }
   ],
@@ -686,6 +686,217 @@
     "change": null
    }
   ],
-  "halfprice": []
+  "halfprice": [
+   {
+    "name": "감악산(거창)",
+    "city": "거창군",
+    "province": "경상남도",
+    "cityId": "a36-s2",
+    "spotId": "1576464",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 32,
+    "views": 492221,
+    "score": 1023.42,
+    "thumb": "https://i.ytimg.com/vi/2DHFozZvxVA/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/93/4007893_image2_1.jpg",
+    "video": {
+     "id": "2DHFozZvxVA",
+     "title": "★제6회 감악산 꽃별여행과 함께 하는 2026 거창방문의 해★",
+     "channel": "거창군",
+     "views": 164842
+    }
+   },
+   {
+    "name": "안동 하회마을",
+    "city": "안동시",
+    "province": "경상북도",
+    "cityId": "a35-s11",
+    "spotId": "894027",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 24,
+    "views": 531903,
+    "score": 506.88,
+    "thumb": "https://i.ytimg.com/vi/GSUBt1MylGc/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/62/4059762_image2_1.jpg",
+    "video": {
+     "id": "GSUBt1MylGc",
+     "title": "부모님 모시고 안동여행, 탈춤도 보고 간고등어 뜯고~[2026 안동탈춤페스티벌]",
+     "channel": "흥삶이네 Heungsam's Life",
+     "views": 178825
+    }
+   },
+   {
+    "name": "월영교",
+    "city": "안동시",
+    "province": "경상북도",
+    "cityId": "a35-s11",
+    "spotId": "988449",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 26,
+    "views": 179189,
+    "score": 479.51,
+    "thumb": "https://i.ytimg.com/vi/c4_HRBfzpho/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/85/4062785_image2_1.jpg",
+    "video": {
+     "id": "c4_HRBfzpho",
+     "title": "안동여행 여긴꼭가‼️🇰🇷절대 후회없을 안동 최고 여행지&맛집 제대로 말아옴💚",
+     "channel": "초마드 CHOMAD",
+     "views": 61288
+    }
+   },
+   {
+    "name": "수선사",
+    "city": "산청군",
+    "province": "경상남도",
+    "cityId": "a36-s9",
+    "spotId": "2661541",
+    "kakao": "1882623780",
+    "cat": "",
+    "kind": "spot",
+    "n": 23,
+    "views": 62429,
+    "score": 472.65,
+    "thumb": "https://i.ytimg.com/vi/vMHAClEKpXM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/41/3491141_image2_1.jpg",
+    "video": {
+     "id": "vMHAClEKpXM",
+     "title": "지금 당장 가봐야 할 가장 아름다운 사찰 /8월 국내여행지 추천 /사찰여행 /국내여행 추천 /산청여행 /경남여행 #8월국내여행지추천 #국내여행 #아름다운사찰",
+     "channel": "Jay쌤여행TV",
+     "views": 15116
+    }
+   },
+   {
+    "name": "거창 별바람언덕",
+    "city": "거창군",
+    "province": "경상남도",
+    "cityId": "a36-s2",
+    "spotId": "2796956",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 20,
+    "views": 248665,
+    "score": 390.24,
+    "thumb": "https://i.ytimg.com/vi/SITadEPPB_U/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/69/4007869_image2_1.jpg",
+    "video": {
+     "id": "SITadEPPB_U",
+     "title": "🌿 거창 가볼만한곳 BEST 5경남 거창 여행 꼭 가봐야 할 곳GEOCHANG TRAVEL",
+     "channel": "발자국 한스푼",
+     "views": 108099
+    }
+   },
+   {
+    "name": "불갑사(영광)",
+    "city": "영광군",
+    "province": "전라남도",
+    "cityId": "a38-s16",
+    "spotId": "126349",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 18,
+    "views": 371361,
+    "score": 313.02,
+    "thumb": "https://i.ytimg.com/vi/mNH3J5wulqY/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/34/4057234_image2_1.jpg",
+    "video": {
+     "id": "mNH3J5wulqY",
+     "title": "🍁 2026 해외보다 멋진 국내 가을 여행지 BEST 8 | 9월 10월 여기 안가면 후회합니다! 60대 시니어 여행",
+     "channel": "길따라힐링TV",
+     "views": 176589
+    }
+   },
+   {
+    "name": "밀양 영남루",
+    "city": "밀양시",
+    "province": "경상남도",
+    "cityId": "a36-s7",
+    "spotId": "126206",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 19,
+    "views": 205454,
+    "score": 287.41,
+    "thumb": "https://i.ytimg.com/vi/EQ3DMLB4B4Q/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/77/4069277_image2_1.jpg",
+    "video": {
+     "id": "EQ3DMLB4B4Q",
+     "title": "당일치기로 혼술하러 갔다가 국밥먹고 감동해버린 밀양여행 브이로그",
+     "channel": "쨔링 zzaling",
+     "views": 83992
+    }
+   },
+   {
+    "name": "국립생태원(서천)",
+    "city": "서천군",
+    "province": "충청남도",
+    "cityId": "a34-s8",
+    "spotId": "1922640",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 20,
+    "views": 108186,
+    "score": 277.02,
+    "thumb": "https://i.ytimg.com/vi/-hbi3N7X3oE/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/86/4088586_image2_1.jpg",
+    "video": {
+     "id": "-hbi3N7X3oE",
+     "title": "찾다가 진짜 소름 돋았습니다! 충남 가볼만한곳 5곳 알려드림 (여름에도 가기 좋은 곳 여행 코스) 서산 간월암, 대천 스카이웤, 부여 미디어아트와 황포돛배, 서천 씨큐리움",
+     "channel": "여행작가 봄비",
+     "views": 60828
+    }
+   },
+   {
+    "name": "거창창포원",
+    "city": "거창군",
+    "province": "경상남도",
+    "cityId": "a36-s2",
+    "spotId": "2755874",
+    "kakao": "2023584048",
+    "cat": "",
+    "kind": "spot",
+    "n": 18,
+    "views": 319362,
+    "score": 276.35,
+    "thumb": "https://i.ytimg.com/vi/SITadEPPB_U/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/48/4111648_image2_1.jpg",
+    "video": {
+     "id": "SITadEPPB_U",
+     "title": "🌿 거창 가볼만한곳 BEST 5경남 거창 여행 꼭 가봐야 할 곳GEOCHANG TRAVEL",
+     "channel": "발자국 한스푼",
+     "views": 108099
+    }
+   },
+   {
+    "name": "상림공원",
+    "city": "함양군",
+    "province": "경상남도",
+    "cityId": "a36-s20",
+    "spotId": "126861",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 18,
+    "views": 177380,
+    "score": 247.95,
+    "thumb": "https://i.ytimg.com/vi/xKwW80QgbvM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/08/3522408_image2_1.jpg",
+    "video": {
+     "id": "xKwW80QgbvM",
+     "title": "반값으로 갈 수 있는 함양여행?! 해발 1,915m 지리산이 보이는 “산 속에 있는 한옥호텔”에서 하룻밤",
+     "channel": "찬고리 Changori",
+     "views": 94563
+    }
+   }
+  ]
  }
 }
