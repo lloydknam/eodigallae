@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -19,10 +21,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle saved) {
         super.onCreate(saved);
-        getWindow().setStatusBarColor(Color.parseColor("#12907A"));
-        getWindow().setNavigationBarColor(Color.parseColor("#F1F8F5"));
+        // 밝은 화면: 흰 상단·하단 바에 어두운 아이콘
+        getWindow().setStatusBarColor(Color.WHITE);
+        getWindow().setNavigationBarColor(Color.WHITE);
+        int flags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        if (Build.VERSION.SDK_INT >= 26) flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        getWindow().getDecorView().setSystemUiVisibility(flags);
         web = new WebView(this);
-        web.setBackgroundColor(Color.parseColor("#F1F8F5"));
+        web.setBackgroundColor(Color.parseColor("#F2F4F6"));
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);      // 내 코스·도장 저장

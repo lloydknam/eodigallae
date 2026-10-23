@@ -6,7 +6,7 @@
 <title>어디갈래</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="전국 시·군별 관광지, 추천 코스, 이동시간, 주변 맛집과 최신 여행 영상을 한곳에서.">
-<meta name="theme-color" content="#12907A">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-48.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -17,11 +17,11 @@
 /* Layout: 한 손으로 쓰는 세로 앱. 마스코트 '어디냥'(위치 핀을 꽂은 크림색 고양이)이 브랜드.
    색은 아이콘에서: 청록 바탕, 크림 얼굴, 핀 코럴, 볼터치 핑크. 둥글고 말랑한 카드. */
 :root {
-  --paper: #F1F8F5;
+  --paper: #F2F4F6;
   --surface: #FFFFFF;
-  --ink: #1C2422;
-  --muted: #5B6B67;
-  --line: #DCE8E3;
+  --ink: #191F28;
+  --muted: #6B7684;
+  --line: #E5E8EB;
   --celadon: #12907A;
   --celadon-deep: #0B6E61;
   --celadon-ink: #FFFFFF;
@@ -32,24 +32,9 @@
   --ochre: #B7791F;
   --font-display: "Jua", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
-  --radius: 20px;
-  --shadow: 0 1px 2px rgba(11, 110, 97, .08), 0 8px 24px rgba(11, 110, 97, .10);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0E1715; --surface: #16211F; --ink: #E7EFEC; --muted: #9AABA7; --line: #26332F;
-    --celadon: #3CC4A6; --celadon-deep: #1C8C77; --celadon-ink: #0E1715; --celadon-soft: #18302A; --cream: #2B261D;
-    --vermilion: #F07A62; --blush: #E58D84; --ochre: #E0AE52;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #0E1715; --surface: #16211F; --ink: #E7EFEC; --muted: #9AABA7; --line: #26332F;
-  --celadon: #3CC4A6; --celadon-deep: #1C8C77; --celadon-ink: #0E1715; --celadon-soft: #18302A; --cream: #2B261D;
-  --vermilion: #F07A62; --blush: #E58D84; --ochre: #E0AE52;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
-  color-scheme: dark;
+  --radius: 22px;
+  --shadow: 0 1px 3px rgba(25, 31, 40, .04);
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -58,7 +43,7 @@ body {
   font: 16px/1.6 var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--celadon); outline-offset: 2px; border-radius: 6px; }
@@ -73,9 +58,7 @@ img { max-width: 100%; }
 }
 .topbar {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--line);
+  background: var(--surface);
 }
 .topbar .inner {
   max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 12px; min-height: 58px;
@@ -92,12 +75,13 @@ img { max-width: 100%; }
 .intro { padding-block: 28px 8px; }
 .hero-card {
   position: relative; margin-top: 18px; padding: 24px 22px 26px; padding-right: 150px; border-radius: 28px; overflow: hidden;
-  background: linear-gradient(160deg, #22B79A 0%, #12907A 55%, #0B6E61 100%); color: #fff; box-shadow: var(--shadow);
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow);
 }
-.hero-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 80% at 10% 0%, rgba(255,255,255,.22), transparent 55%); pointer-events: none; }
+.hero-card::before { content: ""; position: absolute; right: -40px; bottom: -60px; width: 220px; height: 220px; border-radius: 50%; background: var(--celadon-soft); pointer-events: none; }
+.hero-card h1 em { font-style: normal; color: var(--celadon); }
 .hero-card h1 { position: relative; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 8.4vw, 40px); line-height: 1.2; margin: 0 0 8px; text-wrap: balance; }
-.hero-card p { position: relative; margin: 0; font-size: 15px; line-height: 1.55; opacity: .92; }
-.hero-card .mascot { position: absolute; right: 10px; bottom: -14px; width: 138px; height: auto; filter: drop-shadow(0 8px 14px rgba(0,0,0,.18)); transform-origin: 50% 90%; }
+.hero-card p { position: relative; margin: 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.hero-card .mascot { position: absolute; right: 10px; bottom: -14px; width: 138px; height: auto; filter: drop-shadow(0 6px 10px rgba(25,31,40,.12)); transform-origin: 50% 90%; }
 @media (prefers-reduced-motion: no-preference) {
   .hero-card .mascot { animation: bob 3.2s ease-in-out infinite; }
   @keyframes bob { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(3deg) translateY(-4px); } }
@@ -162,7 +146,7 @@ img { max-width: 100%; }
 .city-top { margin: 18px 0 8px; }
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr);
-  background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(10px);
+  background: var(--surface);
   border-top: 1px solid var(--line); box-shadow: 0 -2px 10px rgba(11, 110, 97, .06);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px));
@@ -215,7 +199,7 @@ img { max-width: 100%; }
 .half-card span:not(.half-tag) { color: var(--muted); font-size: 14px; }
 .half-card a { color: var(--vermilion); font-weight: 700; text-decoration: none; font-size: 14.5px; }
 .half-home { width: 100%; margin-top: 14px; padding: 14px 16px; border-radius: 18px; text-align: left; cursor: pointer; display: grid; gap: 4px;
-  background: color-mix(in srgb, var(--vermilion) 9%, var(--surface)); border: 1.5px solid color-mix(in srgb, var(--vermilion) 35%, transparent); color: var(--ink); }
+  background: var(--surface); border: 0; box-shadow: var(--shadow); color: var(--ink); }
 .half-home b { font-size: 16.5px; }
 .half-home span:not(.half-tag) { color: var(--muted); font-size: 14px; }
 .half-dot { margin-left: 5px; font-size: 11px; font-weight: 700; color: #fff; background: var(--vermilion); border-radius: 999px; padding: 1px 6px; vertical-align: 1px; }
@@ -264,8 +248,6 @@ img { max-width: 100%; }
 .stat-tile span { color: var(--muted); font-size: 13px; }
 .stat-tile b { font-size: 26px; font-variant-numeric: tabular-nums; }
 .stat-tile small { color: var(--muted); font-size: 12px; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chart-card { --bar: #25A68C; } }
-:root[data-theme="dark"] .chart-card { --bar: #25A68C; }
 .chart-card { position: relative; margin: 14px 0 0; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 12px 10px; --bar: #12907A; }
 .chart-card h3 { margin: 0 4px 8px; font-size: 16px; }
 .chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
@@ -279,7 +261,7 @@ img { max-width: 100%; }
 .chart-table table { width: 100%; border-collapse: collapse; margin-top: 6px; font-variant-numeric: tabular-nums; }
 .chart-table td, .chart-table th { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: right; }
 .chart-table td:first-child, .chart-table th:first-child { text-align: left; }
-.wx { margin-top: 12px; padding: 10px 12px 9px; border-radius: 18px; background: linear-gradient(160deg, color-mix(in srgb, #7EC8F0 18%, var(--surface)), var(--surface) 70%); box-shadow: var(--shadow); }
+.wx { margin-top: 12px; padding: 10px 12px 9px; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
 .wx-head { display: flex; align-items: center; gap: 8px; margin: 0 0 7px; }
 .wx-head h2 { margin: 0; font-size: 15px; font-weight: 700; white-space: nowrap; }
 .wx-head a { margin-left: auto; color: var(--celadon); font-size: 12.5px; font-weight: 700; text-decoration: none; white-space: nowrap; }
@@ -288,7 +270,7 @@ img { max-width: 100%; }
 .wx-regions button { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 3px 10px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
 .wx-regions button[aria-pressed="true"] { background: var(--celadon); border-color: var(--celadon); color: var(--celadon-ink); }
 .wx-days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
-.wx-day { display: grid; justify-items: center; gap: 0; padding: 4px 0 5px; border-radius: 12px; background: color-mix(in srgb, var(--surface) 75%, transparent); border: 1px solid var(--line); }
+.wx-day { display: grid; justify-items: center; gap: 0; padding: 4px 0 5px; border-radius: 12px; background: var(--paper); border: 1px solid transparent; }
 .wx-day.we { border-color: color-mix(in srgb, var(--vermilion) 40%, transparent); }
 .wx-day .dw { font-size: 11.5px; font-weight: 700; color: var(--muted); }
 .wx-day.we .dw { color: var(--vermilion); }
@@ -922,7 +904,7 @@ img { max-width: 100%; }
     if (view === "me") return showMePage();
     app.innerHTML = `
       <section class="hero-card">
-        <h1>이번 주말,<br>어디 갈래?</h1>
+        <h1>이번 주말,<br><em>어디 갈래?</em></h1>
         <p>어디냥이 유튜브·카카오맵·T맵 빅데이터로 요즘 뜨는 곳을 골라왔어요.</p>
         <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
@@ -1125,8 +1107,7 @@ img { max-width: 100%; }
     if (!document.body.contains(box)) return;
     document.getElementById("map-at").textContent = (mapData.updatedAt || "").slice(5, 10).replace("-", ".") + " 업데이트";
     box.innerHTML = "";
-    const dark = matchMedia("(prefers-color-scheme: dark)").matches && document.documentElement.dataset.theme !== "light"
-      || document.documentElement.dataset.theme === "dark";
+    const dark = false;   // 앱은 항상 밝은 화면
     // 휴대폰: 한 손가락은 화면 스크롤로 넘기고, 지도는 두 손가락(확대·축소)이나 +/− 버튼으로만 움직인다
     const touch = matchMedia("(pointer: coarse)").matches;
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15,
