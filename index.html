@@ -279,6 +279,36 @@ img { max-width: 100%; }
 .chart-table table { width: 100%; border-collapse: collapse; margin-top: 6px; font-variant-numeric: tabular-nums; }
 .chart-table td, .chart-table th { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: right; }
 .chart-table td:first-child, .chart-table th:first-child { text-align: left; }
+.wx { margin-top: 14px; padding: 14px 14px 12px; border-radius: 22px; background: linear-gradient(160deg, color-mix(in srgb, #7EC8F0 22%, var(--surface)), var(--surface) 70%); box-shadow: var(--shadow); }
+.wx-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 2px 8px; }
+.wx-head h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
+.wx-head a { color: var(--celadon); font-size: 13.5px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.wx-regions { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -14px 10px; padding: 0 14px 2px; }
+.wx-regions::-webkit-scrollbar { display: none; }
+.wx-regions button { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.wx-regions button[aria-pressed="true"] { background: var(--celadon); border-color: var(--celadon); color: var(--celadon-ink); }
+.wx-days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.wx-day { display: grid; justify-items: center; gap: 1px; padding: 8px 2px 9px; border-radius: 16px; background: color-mix(in srgb, var(--surface) 75%, transparent); border: 1px solid var(--line); }
+.wx-day.we { border-color: color-mix(in srgb, var(--vermilion) 40%, transparent); }
+.wx-day .dw { font-size: 13px; font-weight: 700; color: var(--muted); }
+.wx-day.we .dw { color: var(--vermilion); }
+.wx-day .ic { font-size: 30px; line-height: 1.25; }
+.wx-days.many { gap: 4px; }
+.wx-days.many .wx-day { padding-inline: 0; border-radius: 12px; }
+.wx-days.many .tx, .wx-days.many .pp i { display: none; }
+.wx-day .pp i { font-style: normal; }
+.wx-days.many .ic { font-size: 24px; }
+.wx-days.many .tp { font-size: 12.5px; }
+.wx-day .tx { font-size: 12px; color: var(--muted); }
+.wx-day .tp { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wx-day .tp small { color: var(--muted); font-weight: 500; }
+.wx-day .pp { font-size: 11.5px; color: #2F7FC1; font-weight: 700; }
+.wx-say { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 14.5px; font-weight: 600; }
+.wx-say img { width: 34px; height: auto; flex: none; }
+.wx-say span { background: var(--surface); border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; padding: 7px 11px; }
+.wx-note { margin: 8px 2px 0; font-size: 11.5px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .wx-day .ic { animation: wxbob 3s ease-in-out infinite; } .wx-day:nth-child(2) .ic { animation-delay: .4s; } .wx-day:nth-child(3) .ic { animation-delay: .8s; } }
+@keyframes wxbob { 50% { transform: translateY(-3px); } }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -625,6 +655,76 @@ img { max-width: 100%; }
     svg.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { tip.hidden = true; card.querySelectorAll(".bar.on").forEach((b) => b.classList.remove("on")); } });
   }
 
+  // ── 이번 주 날씨 (Open-Meteo, 무료·키 없음). 정해 둔 지역 좌표만 보내고 사용자 위치는 쓰지 않는다 ──
+  const WX_REGIONS = [["서울", 37.5665, 126.978, "서울"], ["인천", 37.4563, 126.7052, "인천"], ["춘천", 37.8813, 127.7298, "춘천시"],
+    ["강릉", 37.7519, 128.8761, "강릉시"], ["대전", 36.3504, 127.3845, "대전"], ["청주", 36.6424, 127.489, "청주시"],
+    ["전주", 35.8242, 127.148, "전주시"], ["광주", 35.1595, 126.8526, "광주"], ["여수", 34.7604, 127.6622, "여수시"],
+    ["대구", 35.8714, 128.6014, "대구"], ["경주", 35.8562, 129.2247, "경주시"], ["부산", 35.1796, 129.0756, "부산"],
+    ["통영", 34.8544, 128.4331, "통영시"], ["제주", 33.4996, 126.5312, "제주시"]];
+  function wxIcon(c) {
+    if (c === 0) return ["☀️", "맑음"]; if (c <= 2) return ["🌤️", "구름 조금"]; if (c === 3) return ["☁️", "흐림"];
+    if (c <= 48) return ["🌫️", "안개"]; if (c <= 57) return ["🌦️", "이슬비"]; if (c <= 67) return ["🌧️", "비"];
+    if (c <= 77) return ["❄️", "눈"]; if (c <= 82) return ["🌦️", "소나기"]; if (c <= 86) return ["🌨️", "눈"]; return ["⛈️", "뇌우"];
+  }
+  async function loadWeather() {
+    try { const c = JSON.parse(localStorage.getItem("wx") || "null"); if (c && Date.now() - c.at < 3600e3) return c.data; } catch { /* 없음 */ }
+    const q = new URLSearchParams({ latitude: WX_REGIONS.map((r) => r[1]).join(","), longitude: WX_REGIONS.map((r) => r[2]).join(","),
+      daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max", timezone: "Asia/Seoul", forecast_days: "8" });
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
+    if (!res.ok) throw new Error("weather");
+    let data = await res.json(); if (!Array.isArray(data)) data = [data];
+    data = data.map((x) => x.daily);
+    try { localStorage.setItem("wx", JSON.stringify({ at: Date.now(), data })); } catch { /* 저장 불가 */ }
+    return data;
+  }
+  async function renderWeather() {
+    const box = document.getElementById("wx");
+    if (!box) return;
+    let data;
+    try { data = await loadWeather(); } catch { box.remove(); return; }
+    if (!document.body.contains(box)) return;
+    let ri = Math.max(0, WX_REGIONS.findIndex((r) => r[0] === store.get("wxRegion")));
+    const draw = () => {
+      const d = data[ri], [name, , , cityName] = WX_REGIONS[ri];
+      const today = d.time[0], dows = d.time.map((t) => new Date(t + "T12:00:00+09:00").getDay());
+      let end = dows.indexOf(0); if (end < 2) end = Math.max(2, dows.indexOf(0, 1));   // 오늘~이번 일요일(최소 3일, 최대 7일)
+      end = Math.min(end, 6);
+      const idx = [...Array(end + 1).keys()];
+      const days = idx.map((i) => {
+        const [ic, tx] = wxIcon(d.weather_code[i]), we = dows[i] === 0 || dows[i] === 6;
+        const label = i === 0 ? "오늘" : DOW[dows[i]] + (idx.length > 4 ? "" : "요일");
+        const pp = d.precipitation_probability_max?.[i];
+        return `<div class="wx-day${we ? " we" : ""}"><span class="dw">${label}</span><span class="ic" role="img" aria-label="${tx}">${ic}</span>
+          <span class="tx">${tx}</span><span class="tp">${Math.round(d.temperature_2m_max[i])}° <small>${Math.round(d.temperature_2m_min[i])}°</small></span>
+          ${pp >= 30 ? `<span class="pp"><i>☔ </i>${pp}%</span>` : ""}</div>`;
+      }).join("");
+      const wk = idx.filter((i) => dows[i] === 0 || dows[i] === 6);
+      const look = wk.length ? wk : idx;
+      const rain = Math.max(...look.map((i) => d.precipitation_probability_max?.[i] || 0));
+      const hi = Math.max(...look.map((i) => d.temperature_2m_max[i])), lo = Math.min(...look.map((i) => d.temperature_2m_min[i]));
+      const when = wk.length ? "주말" : "이번 주";
+      const say = rain >= 60 ? `${when}에 비 소식이 있어요. 우산 챙기고 실내 코스 어때냥? ☔`
+        : rain >= 30 ? `${when}에 비가 올 수도 있어요. 작은 우산 하나 챙기라냥 🌂`
+        : lo <= 3 ? `${when} 아침은 꽤 추워요. 목도리 단단히 하고 가자냥 🧣`
+        : hi >= 30 ? `${when} 엄청 더워요! 물 꼭 챙기라냥 🧊`
+        : `${when} 날씨 최고! ${name} 어디든 떠나자냥 🐾`;
+      const city = state.index.cities.find((c) => c.name === cityName && c.hasData);
+      box.innerHTML = `<div class="wx-head"><h2>이번 주 날씨</h2>${city ? `<a href="#${enc(city.id)}" data-city="${esc(city.id)}">${esc(name)} 여행지 →</a>` : ""}</div>
+        <div class="wx-regions" role="group" aria-label="지역">${WX_REGIONS.map((r, i) => `<button data-wx="${i}" aria-pressed="${i === ri}">${r[0]}</button>`).join("")}</div>
+        <div class="wx-days${idx.length > 4 ? " many" : ""}">${days}</div>
+        <div class="wx-say"><img src="icons/mascot-160.png" alt=""><span>${say}</span></div>
+        <p class="wx-note">날씨: Open-Meteo · ${+today.slice(5, 7)}/${+today.slice(8, 10)} 기준 예보</p>`;
+    };
+    draw();
+    const sel = box.querySelector(".wx-regions [aria-pressed=true]"), bar = box.querySelector(".wx-regions");
+    if (sel && ri > 3) bar.scrollLeft = sel.offsetLeft - bar.clientWidth / 2 + sel.clientWidth / 2;
+    box.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-wx]"); if (!b) return;
+      ri = +b.dataset.wx; store.set("wxRegion", WX_REGIONS[ri][0]);
+      const x = box.querySelector(".wx-regions").scrollLeft; draw(); box.querySelector(".wx-regions").scrollLeft = x;
+    });
+  }
+
   // ── 영상 링크로 코스 만들기 ──
   const ytIdOf = (u) => { const m = String(u).match(/(?:youtu\.be\/|v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : (/^[A-Za-z0-9_-]{11}$/.test(u) ? u : ""); };
   function showVideoPage(vid) {
@@ -831,6 +931,7 @@ img { max-width: 100%; }
         <p>어디냥이 유튜브·카카오맵·T맵 빅데이터로 요즘 뜨는 곳을 골라왔어요.</p>
         <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
+      <section class="wx" id="wx" aria-label="이번 주 날씨"><p class="wx-note">날씨를 불러오는 중…</p></section>
       ${state.half?.regions?.some((r) => r.active) ? `<button class="half-home" data-half-go>
         <span class="half-tag">반값여행</span>
         <b>${esc(state.half.season)} ${state.half.regions.filter((r) => r.active).length}개 지역, 여행경비 절반 돌려받기</b>
@@ -843,6 +944,7 @@ img { max-width: 100%; }
       <section id="weekly" class="weekly"></section>
       <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
     renderWeekly();
+    renderWeather();
   }
   function showMapPage() {
     app.innerHTML = `
