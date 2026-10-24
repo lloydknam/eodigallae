@@ -7,7 +7,7 @@ from pathlib import Path
 
 import requests
 
-BASE = "https://abacus.jasoncameron.dev/get/eodigallae.lloydknam"
+BASE = "https://abacus.jasoncameron.dev/get/eodigallae.lloydknam.v2"   # 2026-10-24 공개 시점부터 새로 셈
 OUT = Path(__file__).resolve().parent.parent / "data" / "stats.json"
 KST = dt.timezone(dt.timedelta(hours=9))
 

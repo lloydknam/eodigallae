@@ -591,14 +591,14 @@ img { max-width: 100%; }
   }
   // ── 방문 통계: 가입 없는 무료 카운터(Abacus)에 하루 숫자만 올린다. 개인정보·쿠키 없음 ──
   const COUNTER = "https://abacus.jasoncameron.dev";
-  const COUNTER_NS = "eodigallae.lloydknam";
+  const COUNTER_NS = "eodigallae.lloydknam.v2";   // 2026-10-24 페북 공개 시점부터 새로 셈
   const kstDay = (offset = 0) => new Date(Date.now() + 9 * 3600e3 - offset * 86400e3).toISOString().slice(0, 10).replace(/-/g, "");
   function countVisit() {
     if (location.hostname !== "lloydknam.github.io") return;   // 개발·테스트 화면은 세지 않음
     const d = kstDay(), hit = (k) => fetch(`${COUNTER}/hit/${COUNTER_NS}/${k}-${d}`, { keepalive: true }).catch(() => {});
     try {
-      if (!sessionStorage.getItem("opened")) { sessionStorage.setItem("opened", "1"); hit("p"); }   // 앱 열기
-      if (localStorage.getItem("seenDay") !== d) { localStorage.setItem("seenDay", d); hit("v"); }  // 그날 처음 온 기기
+      if (!sessionStorage.getItem("opened2")) { sessionStorage.setItem("opened2", "1"); hit("p"); }   // 앱 열기
+      if (localStorage.getItem("seenDay2") !== d) { localStorage.setItem("seenDay2", d); hit("v"); }  // 그날 처음 온 기기
     } catch { /* 저장 불가 환경은 세지 않음 */ }
   }
   async function renderStats(host) {
