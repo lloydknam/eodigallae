@@ -289,6 +289,8 @@ img { max-width: 100%; }
 .wx-src { font-size: 10.5px; color: var(--muted); }
 @media (prefers-reduced-motion: no-preference) { .wx-day .ic { animation: wxbob 3s ease-in-out infinite; } .wx-day:nth-child(2) .ic { animation-delay: .4s; } .wx-day:nth-child(3) .ic { animation-delay: .8s; } }
 @keyframes wxbob { 50% { transform: translateY(-3px); } }
+.maker { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 26px 0 6px; font-size: 13px; color: var(--muted); }
+.maker img { width: 22px; height: auto; opacity: .9; }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -1090,7 +1092,8 @@ img { max-width: 100%; }
         </ul></div>
         <div class="about-card"><h3>데이터 출처</h3><p>한국관광공사 TourAPI(공공누리)·지자체 중심 관광지 정보, YouTube API 서비스, 카카오맵, OpenStreetMap</p></div>
         <div class="about-card"><h3>개인정보</h3><p>회원가입이 없고 개인정보를 수집하지 않아요. <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침 ↗</a></p></div>
-      </div>`;
+      </div>
+      <p class="maker"><img src="icons/mascot-160.png" alt="">어디갈래 · @lloydknam · with Claude</p>`;
     renderStats(document.getElementById("stats-box"));
   }
 
