@@ -1,6 +1,6 @@
 // 어디갈래 서비스워커: 항상 네트워크에서 최신을 먼저 받고, 오프라인일 때만 저장해 둔 것을 보여준다.
 // (예전 버전은 화면 파일을 캐시에서 먼저 꺼내 새 기능이 늦게 보이는 문제가 있었음)
-const CACHE = "eodigallae-v2";
+const CACHE = "eodigallae-v3";
 
 self.addEventListener("install", () => self.skipWaiting());
 

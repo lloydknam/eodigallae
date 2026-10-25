@@ -293,7 +293,9 @@ img { max-width: 100%; }
 .maker { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.5; color: var(--muted); }
 .maker p { margin: 0; }
 .maker a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
-.maker img { width: 22px; height: auto; opacity: .9; }
+.maker .lab { display: inline-block; line-height: 0; }
+.maker .lab img { display: block; height: 40px; width: auto; max-width: 100%; }
+.maker .lab:hover { opacity: .85; }
 .home-more { display: flex; justify-content: center; margin: 18px 0 4px; }
 .btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 11px 20px; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); }
 .map-sec { margin-top: 22px; }
@@ -458,8 +460,7 @@ img { max-width: 100%; }
 <body>
 <header class="topbar"><div class="inner" id="topbar"></div></header>
 <main class="wrap" id="app"><p class="loading"><img src="icons/mascot-160.png" alt="">어디냥이 길을 찾는 중이에요…</p></main>
-<footer class="wrap site-foot"><div class="maker"><img src="icons/mascot-160.png" alt="">
-  <p>Lloyd’s Balcony Lab · with Claude<br><a href="https://github.com/lloydknam" target="_blank" rel="noopener">GitHub(@lloydknam)</a></p></div></footer>
+<footer class="wrap site-foot"><div class="maker"><a class="lab" href="https://github.com/lloydknam" target="_blank" rel="noopener" title="GitHub(@lloydknam)"><img src="icons/brand/lockup-light.svg" alt="Lloyd's balcony lab · with claude · GitHub(@lloydknam)"></a></div></footer>
 <nav class="tabbar" id="tabbar" aria-label="메뉴">
   <button data-view="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z" fill="currentColor"/></svg><span>홈</span></button>
   <button data-view="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg><span>핫플 지도</span></button>
