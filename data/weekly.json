@@ -1,8 +1,8 @@
 {
  "week": "2026-W43",
- "updatedAt": "2026-10-25T03:21:30+09:00",
+ "updatedAt": "2026-10-26T03:34:40+09:00",
  "videos": 426,
- "citiesWithData": 118,
+ "citiesWithData": 161,
  "lists": {
   "youtube": [
    {
@@ -301,6 +301,48 @@
     }
    },
    {
+    "name": "군산과자조합",
+    "city": "군산시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s2",
+    "spotId": "k912106998",
+    "kakao": "912106998",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 10,
+    "views": 562947,
+    "score": 76.12,
+    "thumb": "https://i.ytimg.com/vi/lmOC-6qKNB8/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/lmOC-6qKNB8/hqdefault.jpg",
+    "video": {
+     "id": "lmOC-6qKNB8",
+     "title": "📍군산 당일치기 여행",
+     "channel": "니즈남",
+     "views": 458767
+    }
+   },
+   {
+    "name": "어스언더파크 익산",
+    "city": "익산시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s9",
+    "spotId": "k930090313",
+    "kakao": "930090313",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 8,
+    "views": 391471,
+    "score": 69.37,
+    "thumb": "https://i.ytimg.com/vi/ehfvB9cN2Us/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/ehfvB9cN2Us/hqdefault.jpg",
+    "video": {
+     "id": "ehfvB9cN2Us",
+     "title": "익산 현지인이 끝까지 숨기고 싶은 맛집 4곳 다녀왔습니다",
+     "channel": "둘시네아 dulcinea",
+     "views": 322028
+    }
+   },
+   {
     "name": "해어름",
     "city": "당진시",
     "province": "충청남도",
@@ -343,6 +385,48 @@
     }
    },
    {
+    "name": "무우루",
+    "city": "구례군",
+    "province": "전라남도",
+    "cityId": "a38-s5",
+    "spotId": "k1547531940",
+    "kakao": "1547531940",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 7,
+    "views": 100271,
+    "score": 58.38,
+    "thumb": "https://i.ytimg.com/vi/XcKp9R7z22g/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/XcKp9R7z22g/hqdefault.jpg",
+    "video": {
+     "id": "XcKp9R7z22g",
+     "title": "나혼자 구례여행🌲✨조용하게 혼자 쉬기 딱 좋았던 구례 느좋카페 • 구례 3만원 숙소 • 부부식당 • 평화식당",
+     "channel": "김소보",
+     "views": 40810
+    }
+   },
+   {
+    "name": "도심다원",
+    "city": "하동군",
+    "province": "경상남도",
+    "cityId": "a36-s18",
+    "spotId": "k15750128",
+    "kakao": "15750128",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 7,
+    "views": 344100,
+    "score": 56.56,
+    "thumb": "https://i.ytimg.com/vi/AGHAhVAPVyM/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/AGHAhVAPVyM/hqdefault.jpg",
+    "video": {
+     "id": "AGHAhVAPVyM",
+     "title": "[Vlog] 구례, 하동에서 혼자 보낸 여름휴가🍋‍🟩 | 뚜벅이 1박2일 코스 | 인생 프토 발견 | 구례 책방 | 하동 산속 소품샵",
+     "channel": "두조람 DuJoram",
+     "views": 298537
+    }
+   },
+   {
     "name": "나그네의 주머니",
     "city": "남원시",
     "province": "전북특별자치도",
@@ -361,90 +445,6 @@
      "title": "힐링 남원에서 도파민 풀 충전해버린 혼자 남원여행 브이로그",
      "channel": "쨔링 zzaling",
      "views": 121369
-    }
-   },
-   {
-    "name": "이진상회",
-    "city": "이천시",
-    "province": "경기도",
-    "cityId": "a31-s26",
-    "spotId": "k2090519049",
-    "kakao": "2090519049",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 7,
-    "views": 131932,
-    "score": 49.79,
-    "thumb": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
-    "video": {
-     "id": "OKp_QKvZoH0",
-     "title": "이천에서 쌀밥과 도자기만 보고 오면 아쉬운 이유｜이천 하루코스",
-     "channel": "가희드 gahiiide",
-     "views": 64502
-    }
-   },
-   {
-    "name": "카페보리",
-    "city": "영광군",
-    "province": "전라남도",
-    "cityId": "a38-s16",
-    "spotId": "k2134034914",
-    "kakao": "2134034914",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 5,
-    "views": 4236,
-    "score": 28.76,
-    "thumb": "https://i.ytimg.com/vi/C8E0lADhazw/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/C8E0lADhazw/hqdefault.jpg",
-    "video": {
-     "id": "C8E0lADhazw",
-     "title": "[영광여행3🇰🇷] 굴비만 먹고오면 손해일걸요!? | 반값여행 경비 대공개💸 | 백수해안도로, 카페보리, 영광시내 | 26.5월 1박2일 국내여행",
-     "channel": "어쩌다, 둘",
-     "views": 2469
-    }
-   },
-   {
-    "name": "카페피어라",
-    "city": "당진시",
-    "province": "충청남도",
-    "cityId": "a34-s4",
-    "spotId": "k587310721",
-    "kakao": "587310721",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 5,
-    "views": 112422,
-    "score": 26.37,
-    "thumb": "https://i.ytimg.com/vi/lOMIawshQ5Y/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/lOMIawshQ5Y/hqdefault.jpg",
-    "video": {
-     "id": "lOMIawshQ5Y",
-     "title": "서울에서 1시간 반, 당진 주민이 말아주는 루트🗺️ 당진 당일치기 먹방 브이로그😋 ｜ 뼈국밥집 왜목마을 수덕호 삽교곱창 카페 피어라",
-     "channel": "세라는 술말려",
-     "views": 110553
-    }
-   },
-   {
-    "name": "흰다정",
-    "city": "속초시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s5",
-    "spotId": "k1420541725",
-    "kakao": "1420541725",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 3,
-    "views": 214702,
-    "score": 25.55,
-    "thumb": "https://i.ytimg.com/vi/dOrwsJHEXBk/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/dOrwsJHEXBk/hqdefault.jpg",
-    "video": {
-     "id": "dOrwsJHEXBk",
-     "title": "속초 얏호! 속초에서 유명한 거는 다 먹은 나 혼자 속초 여행🍦 (육구방앗간 찹쌀떡, 강릉막걸리술빵, 북청닭강정, 흰다정, 속초옥수수소금빵, 타이그랜파, 속초맛집)",
-     "channel": "나나 Nanasserie",
-     "views": 138265
     }
    }
   ],
@@ -618,6 +618,27 @@
     }
    },
    {
+    "name": "임실치즈테마파크",
+    "city": "임실군",
+    "province": "전북특별자치도",
+    "cityId": "a37-s10",
+    "spotId": "2718832",
+    "kakao": "2056903639",
+    "cat": "",
+    "kind": "spot",
+    "n": 33,
+    "views": 738813,
+    "score": 764.1,
+    "thumb": "https://i.ytimg.com/vi/xXXYPqzDlwE/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/56/4098456_image2_1.jpg",
+    "video": {
+     "id": "xXXYPqzDlwE",
+     "title": "가짜 종중 대표와 땅거래.. 임실치즈테마파크 '날벼락' | 전주MBC 260922 방송",
+     "channel": "전주MBC News",
+     "views": 489850
+    }
+   },
+   {
     "name": "부석사",
     "city": "영주시",
     "province": "경상북도",
@@ -636,27 +657,6 @@
      "title": "쯔양님의 '인생 맛집' 떡볶이를 먹어봤습니다. (경상북도 영주시)",
      "channel": "잡식맨 JOBXICMAN",
      "views": 336640
-    }
-   },
-   {
-    "name": "수원 화성",
-    "city": "수원시",
-    "province": "경기도",
-    "cityId": "a31-s13",
-    "spotId": "125555",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 28,
-    "views": 526981,
-    "score": 691.26,
-    "thumb": "https://i.ytimg.com/vi/w6K7JtUxQ2Y/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/97/3478597_image2_1.jpg",
-    "video": {
-     "id": "w6K7JtUxQ2Y",
-     "title": "수원화성 행궁동 보기만 해도 스트레스 해소🌈 맛집 카페 볼거리 코스 완벽 정리 | 서울근교 국내여행",
-     "channel": "너도 가봤으면 해",
-     "views": 183781
     }
    }
   ],
