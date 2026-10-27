@@ -1,6 +1,6 @@
 {
  "week": "2026-W44",
- "updatedAt": "2026-10-27T05:39:10+09:00",
+ "updatedAt": "2026-10-28T05:13:04+09:00",
  "videos": 430,
  "citiesWithData": 161,
  "lists": {
@@ -280,6 +280,27 @@
     }
    },
    {
+    "name": "돌창고",
+    "city": "남해군",
+    "province": "경상남도",
+    "cityId": "a36-s5",
+    "spotId": "k609534539",
+    "kakao": "609534539",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 9,
+    "views": 66028,
+    "score": 77.66,
+    "thumb": "https://i.ytimg.com/vi/0i9AzusoIBY/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/0i9AzusoIBY/hqdefault.jpg",
+    "video": {
+     "id": "0i9AzusoIBY",
+     "title": "혼자 남해 펜션에서 바베큐 해먹고 🍺 독일 소세지에 맥주 마시기 │ 유즈노모레, 돌창고, 바래온, 흙기와,  너티버터",
+     "channel": "오귤오귤",
+     "views": 24779
+    }
+   },
+   {
     "name": "군산과자조합",
     "city": "군산시",
     "province": "전북특별자치도",
@@ -424,27 +445,6 @@
      "title": "힐링 남원에서 도파민 풀 충전해버린 혼자 남원여행 브이로그",
      "channel": "쨔링 zzaling",
      "views": 121369
-    }
-   },
-   {
-    "name": "이진상회",
-    "city": "이천시",
-    "province": "경기도",
-    "cityId": "a31-s26",
-    "spotId": "k2090519049",
-    "kakao": "2090519049",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 7,
-    "views": 131932,
-    "score": 49.79,
-    "thumb": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
-    "video": {
-     "id": "OKp_QKvZoH0",
-     "title": "이천에서 쌀밥과 도자기만 보고 오면 아쉬운 이유｜이천 하루코스",
-     "channel": "가희드 gahiiide",
-     "views": 64502
     }
    }
   ],
@@ -639,24 +639,24 @@
     }
    },
    {
-    "name": "임실치즈테마파크",
-    "city": "임실군",
-    "province": "전북특별자치도",
-    "cityId": "a37-s10",
-    "spotId": "2718832",
-    "kakao": "2056903639",
+    "name": "다랭이마을",
+    "city": "남해군",
+    "province": "경상남도",
+    "cityId": "a36-s5",
+    "spotId": "127778",
+    "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 33,
-    "views": 738813,
-    "score": 764.1,
-    "thumb": "https://i.ytimg.com/vi/xXXYPqzDlwE/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/56/4098456_image2_1.jpg",
+    "n": 35,
+    "views": 279670,
+    "score": 805.53,
+    "thumb": "https://i.ytimg.com/vi/cLLRIjlSzXs/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/88/3302988_image2_1.jpg",
     "video": {
-     "id": "xXXYPqzDlwE",
-     "title": "가짜 종중 대표와 땅거래.. 임실치즈테마파크 '날벼락' | 전주MBC 260922 방송",
-     "channel": "전주MBC News",
-     "views": 489850
+     "id": "cLLRIjlSzXs",
+     "title": "vlog. 휴가 맞죠..…? | 워커홀릭 22살, 강아지와 첫 남해여행",
+     "channel": "히써니데이 Heesunny Day",
+     "views": 80542
     }
    }
   ],
