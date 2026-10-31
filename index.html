@@ -324,7 +324,7 @@ img { max-width: 100%; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
 .mpop b { font-size: 15.5px; }
 .mpop span { color: #5B6B67; font-size: 13px; }
-.leaflet-tooltip.lv-label { padding: 1px 6px; border: 0; border-radius: 6px; background: rgba(255,255,255,.88); color: #191F28;
+.leaflet-tooltip.lv-label { padding: 3px 8px; border: 1px solid rgba(255,255,255,.8); border-radius: 999px; background: rgba(20,54,49,.92); color: #fff;
   font: 600 11.5px/1.4 var(--font-body); box-shadow: 0 1px 3px rgba(25,31,40,.18); }
 .leaflet-tooltip.lv-label::before { display: none; }
 .crowd-map.far .leaflet-tooltip.lv-label { padding: 0 4px; font-size: 10.5px; border-radius: 5px; background: rgba(255,255,255,.8); }
@@ -1268,6 +1268,17 @@ img { max-width: 100%; }
   const lvColor = (l) => (LIVE_LV.find(([k]) => k === l) || [, "#9AA4AE"])[1];
   const fmtPpl = (n) => n == null ? "" : n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}만` : n.toLocaleString();
   const pplRange = (a, b) => a == null ? "" : `약 ${fmtPpl(a)}~${fmtPpl(b)}명`;
+  // 데이터의 공식 장소명을 지도에서 읽기 쉬운 짧은 지역명으로 표시
+  const liveLabel = (p) => {
+    const raw = p.name.replace("(2호선)", "").replace(/ 관광특구$/, "").replace(/역$/, "").trim();
+    const aliases = {
+      "서울 암사동 유적": "암사동",
+      "광화문·덕수궁": "광화문",
+      "서울식물원·마곡나루": "마곡나루",
+      "서울식물원·마곡나루역": "마곡나루"
+    };
+    return aliases[raw] || raw;
+  };
   let liveData = null;
   async function renderLiveMap() {
     const box = document.getElementById("hotmap");
@@ -1314,7 +1325,7 @@ img { max-width: 100%; }
         const re = ring.getElement(); if (re && el) re.style.animationDelay = el.style.animationDelay;
         m._ring = ring; ring.bringToBack();
       }
-      m.bindTooltip(esc(p.name.replace(/\(2호선\)/, "")), { permanent: true, direction: "right", offset: [6, 0], className: "lv-label", interactive: false });
+      m.bindTooltip(esc(liveLabel(p)), { permanent: true, direction: "right", offset: [7, 0], className: "lv-label", interactive: false });
       marks.set(p.cd, m);
     }
     // 멀리서 보면 작게, 확대할수록 크게 (121곳이 서로 덮지 않게)
