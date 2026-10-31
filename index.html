@@ -1032,7 +1032,7 @@ img { max-width: 100%; }
     app.innerHTML = `
       <section class="page-head">
         <h1>${mz("👀", "flip left")}인파지도</h1>
-        <p>서울 121곳 실시간 인파 · 30분마다 갱신 <small class="src">(출처: <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>)</small></p>
+        <p>서울 121곳 실시간 인파 · 30분마다 갱신</p>
       </section>
       <section class="weekly map-sec" style="margin-top:14px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
@@ -1287,7 +1287,7 @@ img { max-width: 100%; }
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true })
       .fitBounds([[37.45, 126.82], [37.67, 127.15]]);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · 서울시 실시간 인구데이터',
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · 출처: <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>',
     }).addTo(map);
     const ps = liveData.places.filter((p) => p.lat != null);
     const maxP = Math.max(...ps.map((p) => p.max || 0), 1);
