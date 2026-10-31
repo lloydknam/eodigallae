@@ -1402,26 +1402,12 @@ img { max-width: 100%; }
     };
     genderSelect?.addEventListener("change", () => { window.__liveGenderFilter = genderSelect.value; applyDemoFilters(); });
     ageSelect?.addEventListener("change", () => { window.__liveAgeFilter = ageSelect.value; applyDemoFilters(); });
+    applyDemoFilters();
     if (list) {
       renderLiveList();
       list.onclick = (e) => {
         const b = e.target.closest("[data-live]"); if (!b) return;
         const m = marks.get(b.dataset.live); if (!m || !map.hasLayer(m)) return;
-        box.scrollIntoView({ behavior: "smooth", block: "center" });
-        map.setView(m.getLatLng(), 14); m.openPopup();
-      };
-    }
-      const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
-      const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
-      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i>
-        <b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
-      list.innerHTML = `<h3 class="live-h">지금 가장 붐비는 곳</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>
-        ${calm.length ? `<h3 class="live-h">지금 한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}
-        ${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 지금은 시험용으로 광화문 한 곳만 보여요. 곧 서울 주요 121곳으로 늘어나요.</p>` : ""}
-        <p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
-      list.onclick = (e) => {
-        const b = e.target.closest("[data-live]"); if (!b) return;
-        const m = marks.get(b.dataset.live); if (!m) return;
         box.scrollIntoView({ behavior: "smooth", block: "center" });
         map.setView(m.getLatLng(), 14); m.openPopup();
       };
