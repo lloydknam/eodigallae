@@ -1268,6 +1268,17 @@ img { max-width: 100%; }
   const lvColor = (l) => (LIVE_LV.find(([k]) => k === l) || [, "#9AA4AE"])[1];
   const fmtPpl = (n) => n == null ? "" : n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}만` : n.toLocaleString();
   const pplRange = (a, b) => a == null ? "" : `약 ${fmtPpl(a)}~${fmtPpl(b)}명`;
+  // 데이터의 공식 장소명을 지도에서 읽기 쉬운 짧은 지역명으로 표시
+  const liveLabel = (p) => {
+    const raw = p.name.replace(/\\(2호선\\)/g, "").replace(/ 관광특구$/, "").replace(/역$/, "").trim();
+    const aliases = {
+      "서울 암사동 유적": "암사동",
+      "광화문·덕수궁": "광화문",
+      "서울식물원·마곡나루": "마곡나루",
+      "서울식물원·마곡나루역": "마곡나루"
+    };
+    return aliases[raw] || raw;
+  };
   let liveData = null;
   async function renderLiveMap() {
     const box = document.getElementById("hotmap");
