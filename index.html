@@ -327,6 +327,7 @@ img { max-width: 100%; }
 .leaflet-tooltip.lv-label { padding: 1px 6px; border: 0; border-radius: 6px; background: rgba(255,255,255,.88); color: #191F28;
   font: 600 11.5px/1.4 var(--font-body); box-shadow: 0 1px 3px rgba(25,31,40,.18); }
 .leaflet-tooltip.lv-label::before { display: none; }
+.crowd-map.far .leaflet-tooltip.lv-label { padding: 0 4px; font-size: 10.5px; border-radius: 5px; background: rgba(255,255,255,.8); }
 .lv-pulse { animation: lvpulse 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 .lv-busy { animation-duration: 2.4s; }
 .lv-warm { animation-duration: 3s; }
@@ -1296,10 +1297,8 @@ img { max-width: 100%; }
       ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
       ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
       <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
-    // 처음부터 도심이 크게 보이게 (예전 시작 화면에서 + 두 번 누른 축척) — 이 축척부터 장소 이름이 보인다
-    const baseZoom = 11;   // 화면 크기와 상관없이 같은 축척 (휴대폰·PC 모두 13단계로 시작)
-    map.setView([37.5465, 126.986], baseZoom + 2, { animate: false });
-    const startZoom = baseZoom;
+    // 서울 전체가 한눈에 보이는 축척(11)으로 시작 — 휴대폰·PC 모두 같은 축척
+    map.setView([37.553, 126.99], 11, { animate: false });
     window.__crowdMap = map;   // 홍보 영상 녹화용
     const marks = new Map();
     ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
@@ -1321,13 +1320,15 @@ img { max-width: 100%; }
     // 멀리서 보면 작게, 확대할수록 크게 (121곳이 서로 덮지 않게)
     const resize = () => { const k = Math.min(1.8, Math.max(0.7, 0.7 + 0.35 * (map.getZoom() - 11)));
       marks.forEach((m) => { m.setRadius(m._base * k); m._ring?.setRadius(m._base * k); }); };
-    // 처음보다 두 번 이상 확대하면 장소 이름을 띄운다
+    // 장소 이름: 서울 전체 화면(11)에선 붐빔·약간 붐빔만, 한 단계 확대(12)부터는 모두.
     // 겹치면 붐비는 곳·사람 많은 곳 이름을 먼저 보여주고 나머지는 숨긴다
     const order = [...ps].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0)).map((p) => marks.get(p.cd));
     const labels = () => {
-      const on = map.getZoom() >= startZoom + 2, kept = [];
+      const z = map.getZoom(), kept = [];
+      box.classList.toggle("far", z < 13);
       for (const m of order) {
-        if (!on) { m.closeTooltip(); continue; }
+        const busy = m._ring != null;
+        if (z < 11 || (z < 12 && !busy)) { m.closeTooltip(); continue; }
         m.openTooltip();
         const el = m.getTooltip()?.getElement(); if (!el) continue;
         const r = el.getBoundingClientRect();
