@@ -10,7 +10,7 @@ const CENTER = [37.5255, 126.9895], ZOOM = 13;
 const dir = "promo/frames"; fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
 
 const b = await chromium.launch();
-const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, timezoneId: "Asia/Seoul", locale: "ko-KR" });
 await p.goto(URL, { waitUntil: "networkidle" });
 await p.waitForFunction(() => window.__crowdMap && document.querySelectorAll(".lv-pulse").length > 50, null, { timeout: 60000 });
 await p.evaluate(([c, z]) => window.__crowdMap.setView(c, z, { animate: false }), [CENTER, ZOOM]);
