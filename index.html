@@ -337,7 +337,7 @@ img { max-width: 100%; }
 .lv-ring.lv-warm { animation-duration: 3.2s; }
 @keyframes lvring { 0% { transform: scale(1); stroke-opacity: .85; } 100% { transform: scale(2.6); stroke-opacity: 0; } }
 /* 인파지도는 바탕지도를 흐리게 해서 버블이 도드라지게 */
-.hotmap.crowd-map .leaflet-tile-pane { filter: grayscale(.85) brightness(1.06) contrast(.9); }
+.hotmap.crowd-map .leaflet-tile-pane { filter: saturate(.55) brightness(1.12) contrast(.88); }
 @media (prefers-reduced-motion: reduce) { .lv-pulse { animation: none; } .lv-ring { display: none; } }
 .lvchip { font-style: normal; color: #191F28; font-weight: 700; font-size: 12.5px; padding: 1px 8px; border-radius: 999px; margin-right: 4px; }
 .mfc { color: #191F28 !important; }
