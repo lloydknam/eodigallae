@@ -14,7 +14,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: live
+  group: live-refresh
   cancel-in-progress: false
 
 jobs:
