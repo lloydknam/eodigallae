@@ -3,48 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#F2F4F6">
 <title>열차정보 | 어디갈래</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--paper:#F2F4F6;--surface:#fff;--ink:#191F28;--muted:#6B7684;--line:#E5E8EB;--green:#12907A;--soft:#DFF2EB;--font-display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;--font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--font-body);-webkit-font-smoothing:antialiased}
-header{height:58px;background:#fff;display:flex;align-items:center;padding:0 max(16px,calc((100% - 560px)/2));border-bottom:1px solid var(--line)}
-header a{color:var(--green);text-decoration:none;font:26px var(--font-display)}
-main{max-width:560px;margin:auto;padding:26px 14px 60px}
-.kicker{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--green)}
-h1{font:38px/1.2 var(--font-display);font-weight:400;margin:6px 0}
-.lead{margin:0;color:var(--muted);font-size:15px}
-.cards{display:grid;gap:14px;margin-top:24px}
-.card{display:flex;align-items:center;gap:16px;padding:20px;border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 1px 4px #191f280a;border:1px solid transparent;transition:.18s}
-.card:hover{border-color:#b8dfd3;transform:translateY(-2px)}
-.icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:var(--soft);font-size:34px;flex:none}
-.card:nth-child(2) .icon{background:#E8EEF9}
-.card h2{font:25px var(--font-display);font-weight:400;margin:0 0 3px}
-.card p{font-size:13.5px;color:var(--muted);margin:0}
-.arrow{margin-left:auto;color:var(--muted);font-size:24px}
-.note{margin-top:20px;padding:14px 16px;border-radius:16px;background:#fff;font-size:13px;color:var(--muted)}
-.back{display:inline-flex;margin-top:24px;color:var(--green);font-weight:700;text-decoration:none}
+:root{--paper:#F2F4F6;--surface:#fff;--ink:#191F28;--muted:#6B7684;--line:#E5E8EB;--green:#12907A;--soft:#DFF2EB;--display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;--body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+header{height:58px;background:#fff;display:flex;align-items:center;padding:0 max(16px,calc((100% - 980px)/2));border-bottom:1px solid var(--line)}
+header a{color:var(--green);text-decoration:none;font:26px var(--display)}
+main{max-width:980px;margin:auto;padding:22px 14px 48px}.kicker{font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--green)}
+h1{font:36px/1.2 var(--display);font-weight:400;margin:4px 0}.lead{margin:0;color:var(--muted);font-size:14px}
+.switch{display:flex;gap:8px;margin:20px 0 12px}.switch button{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:13px;padding:11px 17px;font:600 14px var(--body);cursor:pointer}.switch button.active{background:var(--green);border-color:var(--green);color:white}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 2px 10px #172b2410}
+.map-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line)}.map-head strong{font:21px var(--display);font-weight:400}.map-head small{color:var(--muted);font-size:12px}
+#map{height:min(62vh,570px);min-height:360px;background:#e9eef0}
+.below{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.info{background:#fff;border:1px solid var(--line);border-radius:17px;padding:15px}.info h2{font:19px var(--display);font-weight:400;margin:0 0 8px}.legend{display:flex;flex-wrap:wrap;gap:7px}.chip{display:inline-flex;align-items:center;gap:6px;background:#f5f7f8;border-radius:20px;padding:5px 9px;font-size:12px;color:#47515d}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.searchrow{display:flex;gap:8px;margin-top:9px}.searchrow input{min-width:0;flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font:14px var(--body);outline-color:var(--green)}.searchrow button{border:0;border-radius:11px;background:var(--soft);color:#08745f;font:600 13px var(--body);padding:0 13px;cursor:pointer}
+.notice{margin-top:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:12px}.back{display:inline-flex;margin-top:20px;color:var(--green);font-weight:700;text-decoration:none}
+.leaflet-popup-content{font-family:var(--body);font-size:13px}.leaflet-control-attribution{font-size:9px!important}
+@media(max-width:620px){main{padding:19px 12px 36px}h1{font-size:33px}.below{grid-template-columns:1fr}#map{height:58vh;min-height:340px}.map-head{align-items:flex-start;flex-direction:column;gap:2px}}
 </style>
 </head>
 <body>
 <header><a href="./">어디갈래</a></header>
 <main>
-<div class="kicker">TRAIN & TRANSIT</div>
-<h1>열차정보</h1>
-<p class="lead">이동수단을 선택하세요. 지하철과 전국 철도 정보를 한곳에서 확인할 수 있도록 구성하고 있습니다.</p>
-<section class="cards" aria-label="열차 종류 선택">
-<a class="card" href="https://www.seoulmetro.co.kr/" target="_blank" rel="noopener">
-<div class="icon" aria-hidden="true">🚇</div><div><h2>지하철</h2><p>서울교통공사 · 수도권 지하철 정보</p></div><span class="arrow" aria-hidden="true">›</span>
-</a>
-<a class="card" href="https://www.letskorail.com/" target="_blank" rel="noopener">
-<div class="icon" aria-hidden="true">🚄</div><div><h2>국철</h2><p>KTX · 일반열차 · 전국 철도 운행 정보</p></div><span class="arrow" aria-hidden="true">›</span>
-</a>
+<div class="kicker">TRAIN & TRANSIT</div><h1>열차정보</h1>
+<p class="lead">전국 철도와 수도권 지하철의 주요 노선·역을 지도에서 살펴보세요.</p>
+<div class="switch" role="tablist" aria-label="교통수단 선택">
+<button id="nationalBtn" class="active" type="button" role="tab" aria-selected="true">🚄 전국 철도</button>
+<button id="metroBtn" type="button" role="tab" aria-selected="false">🚇 수도권 지하철</button>
+</div>
+<section class="panel">
+<div class="map-head"><strong id="mapTitle">전국 주요 철도 노선</strong><small id="mapSub">KTX · 주요 간선 · 주요 정차역</small></div>
+<div id="map" aria-label="철도 노선 지도"></div>
 </section>
-<div class="note">현재는 운영기관의 공식 정보 페이지로 연결됩니다. 실시간 열차 위치와 노선 지도는 공공데이터 연계를 통해 이 화면 안에 통합할 예정입니다.</div>
+<div class="below">
+<section class="info"><h2>노선 안내</h2><div id="legend" class="legend"></div></section>
+<section class="info"><h2>역 찾기</h2><div style="font-size:12px;color:#6B7684">역 이름을 입력하면 지도에서 위치를 확인합니다.</div><div class="searchrow"><input id="stationSearch" type="search" placeholder="예: 대전역, 서울역" aria-label="역 이름"><button id="searchBtn" type="button">찾기</button></div><div id="searchMsg" style="font-size:12px;color:#6B7684;margin-top:7px" aria-live="polite"></div></section>
+</div>
+<div class="notice" id="notice">지도는 주요 역을 연결한 노선 개요입니다. 열차의 실시간 위치나 운행 상태를 표시하지 않습니다. 실제 운행·시간표는 코레일 및 각 운영기관의 공지를 확인하세요.</div>
 <a class="back" href="./">← 어디갈래 홈으로</a>
 </main>
-</body>
-</html>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{zoomControl:true,scrollWheelZoom:false}).setView([36.2,127.8],7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
+const colors={gyeongbu:'#2878D0',honam:'#159B72',gangneung:'#8B62C8',jeolla:'#E28A27',jungang:'#C64C72',gyeongjeon:'#6D7C36',m1:'#3157A4',m2:'#159B72',m3:'#E28A27',m4:'#2996C8',m5:'#8B62C8',m6:'#A67B42',m7:'#68747F',m9:'#D4A51C'};
+const rail={
+'경부선 KTX':{c:colors.gyeongbu,p:[[37.5547,126.9707],[36.3504,127.3845],[35.8714,128.6014],[35.1796,129.0756]],n:['서울역','대전역','동대구역','부산역']},
+'호남선 KTX':{c:colors.honam,p:[[37.5547,126.9707],[36.3504,127.3845],[35.1595,126.8526],[35.8242,127.1480],[34.8118,126.3922]],n:['서울역','대전역','광주송정역','전주역(연결축)','목포역']},
+'강릉선 KTX':{c:colors.gangneung,p:[[37.5547,126.9707],[37.3705,128.3903],[37.7519,128.8761]],n:['서울역','평창역 권역','강릉역']},
+'전라선':{c:colors.jeolla,p:[[36.3504,127.3845],[35.8242,127.1480],[35.0159,126.7108],[34.7604,127.6622]],n:['대전역(연계)','전주역','익산역 권역','여수엑스포역']},
+'중앙선':{c:colors.jungang,p:[[37.5547,126.9707],[37.4918,127.4875],[37.5665,128.7294],[37.8813,127.7298]],n:['청량리역','양평역','원주역','춘천역(별도 노선 연결)']},
+'경전선':{c:colors.gyeongjeon,p:[[35.1796,129.0756],[35.2281,128.8894],[35.2279,128.6811],[35.1595,126.8526]],n:['부산역','진영역 권역','창원중앙역','광주송정역(연결축)']}
+};
+const metro={
+'1호선':{c:colors.m1,p:[[37.5547,126.9707],[37.5663,126.9779],[37.5701,126.9921],[37.5714,127.0095],[37.5753,127.0250],[37.5802,127.0465],[37.5885,127.0870],[37.5949,127.1000]],n:['서울역','종각역','종로3가역','동대문역','청량리역','회기역','석계역','광운대역']},
+'2호선':{c:colors.m2,p:[[37.5569,126.9723],[37.5573,126.9237],[37.5551,126.9368],[37.5567,126.9436],[37.5663,126.9779],[37.5701,126.9921],[37.5665,127.0077],[37.5636,127.0369],[37.5048,127.0049],[37.4979,127.0276],[37.5006,127.0366],[37.5088,127.0632],[37.5142,127.0602],[37.5446,127.0559]],n:['시청역','홍대입구역','신촌역','이대역','을지로입구역','을지로3가역','동대문역사문화공원역','왕십리역','교대역','강남역','역삼역','잠실새내역','잠실역','건대입구역']},
+'3호선':{c:colors.m3,p:[[37.5701,126.9921],[37.5760,126.9855],[37.5823,126.9727],[37.6027,126.9291],[37.6346,126.9180],[37.6511,126.9350]],n:['종로3가역','안국역','경복궁역','불광역','연신내역','대화 방면']},
+'4호선':{c:colors.m4,p:[[37.5547,126.9707],[37.5663,126.9827],[37.5759,126.9849],[37.5796,127.0152],[37.5885,127.0870],[37.6560,127.0636]],n:['서울역','명동역','충무로역','동대문역','미아사거리역','당고개 방면']},
+'5호선':{c:colors.m5,p:[[37.5658,126.9669],[37.5701,126.9921],[37.5663,127.0090],[37.5509,127.0403],[37.5129,127.1006]],n:['광화문역','을지로4가역','동대문역사문화공원역','군자역','올림픽공원역']},
+'6호선':{c:colors.m6,p:[[37.5567,126.9237],[37.5477,126.9220],[37.5396,126.9468],[37.5546,126.9726],[37.5663,127.0090],[37.6133,127.0301]],n:['합정역','망원역','공덕역','삼각지역','동묘앞역','돌곶이역']},
+'7호선':{c:colors.m7,p:[[37.5407,126.8397],[37.5265,126.8646],[37.5133,126.8910],[37.5048,127.0049],[37.5006,127.0366],[37.5404,127.0692]],n:['온수역','철산역','가산디지털단지역','고속터미널역','학동역','건대입구역']},
+'9호선':{c:colors.m9,p:[[37.5347,126.9028],[37.5172,126.9294],[37.5129,127.1006],[37.5142,127.0602],[37.5111,127.0860]],n:['여의도역','노량진역','올림픽공원역','잠실역','석촌역']}
+};
+let active='rail',layers=[],markers=[];
+function clearMap(){layers.forEach(x=>map.removeLayer(x));markers.forEach(x=>map.removeLayer(x));layers=[];markers=[]}
+function render(type){active=type;clearMap();const data=type==='rail'?rail:metro;document.getElementById('mapTitle').textContent=type==='rail'?'전국 주요 철도 노선':'수도권 지하철 주요 구간';document.getElementById('mapSub').textContent=type==='rail'?'KTX · 주요 간선 · 주요 정차역':'1~9호선 · 서울 주요 구간 개요';document.getElementById('legend').innerHTML='';
+const bounds=[];Object.entries(data).forEach(([name,line])=>{const poly=L.polyline(line.p,{color:line.c,weight:5,opacity:.86,lineCap:'round'}).addTo(map);layers.push(poly);line.p.forEach((pt,i)=>{bounds.push(pt);const marker=L.circleMarker(pt,{radius:5,color:'#fff',weight:2,fillColor:line.c,fillOpacity:1}).addTo(map).bindPopup('<b>'+line.n[i]+'</b><br>'+name);markers.push(marker)});const chip=document.createElement('span');chip.className='chip';chip.innerHTML='<i class="dot" style="background:'+line.c+'"></i>'+name;document.getElementById('legend').appendChild(chip)});map.fitBounds(bounds,{padding:[24,24]});setTimeout(()=>map.invalidateSize(),100);document.getElementById('searchMsg').textContent=type==='rail'?'주요 역과 간선 연결을 간략히 표시합니다.':'수도권 주요 구간을 간략히 표시합니다.'}
+document.getElementById('nationalBtn').addEventListener('click',()=>{document.getElementById('nationalBtn').classList.add('active');document.getElementById('metroBtn').classList.remove('active');document.getElementById('nationalBtn').setAttribute('aria-selected','true');document.getElementById('metroBtn').setAttribute('aria-selected','false');render('rail')});
+document.getElementById('metroBtn').addEventListener('click',()=>{document.getElementById('metroBtn').classList.add('active');document.getElementById('nationalBtn').classList.remove('active');document.getElementById('metroBtn').setAttribute('aria-selected','true');document.getElementById('nationalBtn').setAttribute('aria-selected','false');render('metro')});
+function findStation(){const q=document.getElementById('stationSearch').value.trim().replace(/역$/,'');if(!q)return;const data=active==='rail'?rail:metro;let found=null;Object.entries(data).some(([line,v])=>{const i=v.n.findIndex(n=>n.replace(/역.*$/,'').includes(q));if(i>=0){found={p:v.p[i],name:v.n[i],line};return true}return false});if(found){map.setView(found.p,13);const m=L.circleMarker(found.p,{radius:9,color:'#fff',weight:3,fillColor:'#12907A',fillOpacity:1}).addTo(map).bindPopup('<b>'+found.name+'</b><br>'+found.line).openPopup();markers.push(m);document.getElementById('searchMsg').textContent=found.name+' 위치로 이동했습니다.'}else document.getElementById('searchMsg').textContent='현재 표시된 주요 구간에서 역을 찾지 못했습니다.'}
+document.getElementById('searchBtn').addEventListener('click',findStation);document.getElementById('stationSearch').addEventListener('keydown',e=>{if(e.key==='Enter')findStation()});
+render('rail');
+</script>
+</body></html>
