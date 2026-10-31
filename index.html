@@ -1328,6 +1328,7 @@ img { max-width: 100%; }
     document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 40 ? " · 데이터 갱신 지연" : " · 약 10분 간격 갱신"}`;
     box.innerHTML = "";
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true });
+    map.on("zoomstart", () => map.closePopup()); // 확대·축소 버튼을 누르면 열린 장소 팝업 닫기
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>',
     }).addTo(map);
