@@ -1239,7 +1239,7 @@ img { max-width: 100%; }
     const pop = (p) => `<div class="mpop"><b>${esc(p.name)}</b>
       <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
       ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
-      ${p.fc?.length ? `<span class="mfc">${p.fc.filter((_, i) => i % 2 === 1).slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
+      ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
       <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
     if (ps.length > 3) map.fitBounds(L.latLngBounds(ps.map((p) => [p.lat, p.lng])), { padding: [18, 18] });
     const marks = new Map();
@@ -1257,6 +1257,7 @@ img { max-width: 100%; }
         <b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
       list.innerHTML = `<h3 class="live-h">지금 가장 붐비는 곳</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>
         ${calm.length ? `<h3 class="live-h">지금 한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}
+        ${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 지금은 시험용으로 광화문 한 곳만 보여요. 곧 서울 주요 121곳으로 늘어나요.</p>` : ""}
         <p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
       list.onclick = (e) => {
         const b = e.target.closest("[data-live]"); if (!b) return;
