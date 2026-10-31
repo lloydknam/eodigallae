@@ -176,6 +176,22 @@ img { max-width: 100%; }
 .page-head h1 img { width: 52px; height: auto; }
 .page-head h1 { gap: 12px !important; }
 .page-head p { margin: 0; color: var(--muted); }
+/* 인파지도 전용 컴팩트 헤더 */
+.crowd-page-head { padding-block: 4px 0; }
+.crowd-title-row { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; }
+.crowd-title-row h1 { flex:none; margin:0; font-size:26px; line-height:1.05; gap:7px !important; }
+.crowd-title-row h1 img { width:32px; height:auto; }
+.crowd-title-row .mz .prop { font-size:.52em; }
+.crowd-map-at { display:grid; justify-items:end; gap:2px; margin-left:auto; color:var(--muted); font-size:11px; line-height:1.25; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.crowd-map-at .crowd-next { color:var(--celadon); font-weight:700; }
+.crowd-intro { margin-top:4px !important; font-size:13.5px; line-height:1.3; color:var(--muted); }
+@media (max-width:600px) {
+  .crowd-page-head { padding-block:3px 0; }
+  .crowd-title-row h1 { font-size:24px; gap:6px !important; }
+  .crowd-title-row h1 img { width:30px; }
+  .crowd-map-at { font-size:10px; gap:2px; }
+  .crowd-intro { margin-top:4px !important; font-size:13px; line-height:1.3; }
+}
 .about { display: grid; gap: 14px; margin-top: 16px; }
 .about-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; }
 .about-card h3 { margin: 0 0 6px; font-size: 17px; }
@@ -1093,15 +1109,15 @@ img { max-width: 100%; }
   }
   function showCrowdPage() {
     app.innerHTML = `
-      <section class="page-head">
-        <h1>${mz("👀", "flip left")}인파지도</h1>
-
+      <section class="page-head crowd-page-head">
+        <div class="crowd-title-row">
+          <h1>${mz("👀", "flip left")}인파지도</h1>
+          <span class="crowd-map-at" id="map-at" aria-live="polite"></span>
+        </div>
+        <p class="crowd-intro">서울시 실시간 추정 인구의 성별·연령별 비율을 기준으로 표시합니다.</p>
       </section>
-      <section class="weekly map-sec" style="margin-top:14px">
-        <div class="weekly-head"><span class="wk" id="map-at"></span></div>
-
-<p class="demo-note">서울시 실시간 추정 인구의 성별·연령별 비율을 기준으로 표시합니다.</p>
-<div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      <section class="weekly map-sec crowd-map-sec" style="margin-top:7px">
+        <div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
         <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
         <section id="live-compare" class="live-compare" aria-label="지역별 실시간 인구 비교">
           <div class="live-compare-head"><b>혼잡도 상위 7곳 비교</b><small>추정 인구 중간값</small></div>
@@ -1390,7 +1406,20 @@ img { max-width: 100%; }
       return;
     }
     const at = new Date(liveData.at), age = (Date.now() - at) / 60000;
-    document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 40 ? " · 데이터 갱신 지연" : " · 약 10분 간격 갱신"}`;
+    const kstHeaderParts = (date) => Object.fromEntries(
+      new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Seoul", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+      }).formatToParts(date).map((part) => [part.type, part.value])
+    );
+    const updateMapAt = (dataTime, stale) => {
+      const saved = kstHeaderParts(new Date(dataTime));
+      const next = kstHeaderParts(new Date((Math.floor(Date.now() / 600000) + 1) * 600000));
+      const status = document.getElementById("map-at");
+      if (status) status.innerHTML =
+        `<span>${saved.month}/${saved.day} ${saved.hour}:${saved.minute} 기준${stale ? " · 지연" : ""}</span><span class="crowd-next">다음 갱신 ${next.hour}:${next.minute} 예정</span>`;
+    };
+    updateMapAt(liveData.at, age > 40);
     box.innerHTML = "";
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true });
     map.on("zoomstart", () => map.closePopup()); // 확대·축소 버튼을 누르면 열린 장소 팝업 닫기
@@ -1629,8 +1658,7 @@ img { max-width: 100%; }
         const latest = await check.json();
         if (!latest.at) return;
         const stamp = new Date(latest.at), mins = (Date.now() - stamp) / 60000;
-        const status = document.getElementById("map-at");
-        if (status) status.textContent = `${stamp.getMonth() + 1}/${stamp.getDate()} ${String(stamp.getHours()).padStart(2, "0")}:${String(stamp.getMinutes()).padStart(2, "0")} 기준${mins > 40 ? " · 데이터 갱신 지연" : " · 약 10분 간격 갱신"}`;
+        updateMapAt(latest.at, mins > 40);
         if (latest.at === liveData?.at) return;
         const oldMap = window.__crowdMap;
         const center = oldMap.getCenter();
