@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>열차정보 | 어디갈래</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2F4F6;--surface:#fff;--ink:#191F28;--muted:#6B7684;--line:#E5E8EB;--green:#12907A;--soft:#DFF2EB;--font-display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;--font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--font-body);-webkit-font-smoothing:antialiased}
+header{height:58px;background:#fff;display:flex;align-items:center;padding:0 max(16px,calc((100% - 560px)/2));border-bottom:1px solid var(--line)}
+header a{color:var(--green);text-decoration:none;font:26px var(--font-display)}
+main{max-width:560px;margin:auto;padding:26px 14px 60px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--green)}
+h1{font:38px/1.2 var(--font-display);font-weight:400;margin:6px 0}
+.lead{margin:0;color:var(--muted);font-size:15px}
+.cards{display:grid;gap:14px;margin-top:24px}
+.card{display:flex;align-items:center;gap:16px;padding:20px;border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 1px 4px #191f280a;border:1px solid transparent;transition:.18s}
+.card:hover{border-color:#b8dfd3;transform:translateY(-2px)}
+.icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:var(--soft);font-size:34px;flex:none}
+.card:nth-child(2) .icon{background:#E8EEF9}
+.card h2{font:25px var(--font-display);font-weight:400;margin:0 0 3px}
+.card p{font-size:13.5px;color:var(--muted);margin:0}
+.arrow{margin-left:auto;color:var(--muted);font-size:24px}
+.note{margin-top:20px;padding:14px 16px;border-radius:16px;background:#fff;font-size:13px;color:var(--muted)}
+.back{display:inline-flex;margin-top:24px;color:var(--green);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<header><a href="./">어디갈래</a></header>
+<main>
+<div class="kicker">TRAIN & TRANSIT</div>
+<h1>열차정보</h1>
+<p class="lead">이동수단을 선택하세요. 지하철과 전국 철도 정보를 한곳에서 확인할 수 있도록 구성하고 있습니다.</p>
+<section class="cards" aria-label="열차 종류 선택">
+<a class="card" href="https://www.seoulmetro.co.kr/" target="_blank" rel="noopener">
+<div class="icon" aria-hidden="true">🚇</div><div><h2>지하철</h2><p>서울교통공사 · 수도권 지하철 정보</p></div><span class="arrow" aria-hidden="true">›</span>
+</a>
+<a class="card" href="https://www.letskorail.com/" target="_blank" rel="noopener">
+<div class="icon" aria-hidden="true">🚄</div><div><h2>국철</h2><p>KTX · 일반열차 · 전국 철도 운행 정보</p></div><span class="arrow" aria-hidden="true">›</span>
+</a>
+</section>
+<div class="note">현재는 운영기관의 공식 정보 페이지로 연결됩니다. 실시간 열차 위치와 노선 지도는 공공데이터 연계를 통해 이 화면 안에 통합할 예정입니다.</div>
+<a class="back" href="./">← 어디갈래 홈으로</a>
+</main>
+</body>
+</html>
