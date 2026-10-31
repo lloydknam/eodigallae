@@ -1324,11 +1324,11 @@ img { max-width: 100%; }
     const pop = (p) => {
       const gender = demoRows(p, [["male", "남성"], ["female", "여성"]]);
       const ages = demoRows(p, [["age0", "0~10세"], ["age10", "10대"], ["age20", "20대"], ["age30", "30대"], ["age40", "40대"], ["age50", "50대"], ["age60", "60대"], ["age70", "70대+"]]);
-      return `<div class="mpop"><b>${esc(p.name)}</b>
+      return `<div class="mpop"><b>${esc(liveLabel(p))}</b>
         <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
         ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
         ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l, a, b]) => `${esc(t)} ${esc(l)}${a != null ? ` · ${pplRange(a, b)}` : ""}`).join(" → ")}</span>` : ""}
-        ${gender || ages ? `<div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>${gender ? `<b class="demo-title">성별</b>${gender}` : ""}${ages ? `<b class="demo-title">연령대</b>${ages}` : ""}</div>` : `<span class="demo-note">성별·연령별 통계 자료 없음</span>`}
+        ${gender || ages ? `<div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>${gender ? `<b class="demo-title">전체 성별 비율</b>${gender}` : ""}${ages ? `<b class="demo-title">연령대별 전체 비율</b>${ages}` : ""}<span class="demo-note">공개 실시간 데이터는 성별 전체 비율과 연령대 전체 비율을 각각 제공합니다. 20대 남녀처럼 연령×성별 교차 비율은 제공하지 않습니다.</span></div>` : `<span class="demo-note">성별·연령별 통계 자료 없음</span>`}
         <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
     };
     // 서울 전체가 한눈에 보이는 축척(11)으로 시작 — 휴대폰·PC 모두 같은 축척
