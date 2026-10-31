@@ -3,7 +3,7 @@ name: 인파지도(서울)
 # GitHub Actions가 10분마다 한 번 실행되어 서울시 실시간 인구를 수집하고 JSON을 갱신한다.
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "3,13,23,33,43,53 * * * *"
   workflow_dispatch:
   push:
     branches: [main]
