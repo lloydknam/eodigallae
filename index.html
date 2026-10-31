@@ -67,6 +67,7 @@ img { max-width: 100%; }
 }
 .brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 26px; text-decoration: none; color: var(--celadon); }
 .brand img { width: 36px; height: auto; display: block; }
+.brand img.clerk { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--celadon-soft); box-shadow: 0 1px 4px rgba(25,31,40,.15); }
 .topbar .sub { color: var(--muted); font-size: 14px; margin-left: auto; white-space: nowrap; }
 .topbar .inner { position: relative; }
 .tb-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
@@ -982,7 +983,7 @@ img { max-width: 100%; }
   }
   function homeTopbar() {
     const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
-    topbar.innerHTML = `<a class="brand" href="#" data-home><img src="icons/mascot-160.png" alt="">어디갈래</a><span class="sub">전국 ${total}개 시·군</span>`;
+    topbar.innerHTML = `<a class="brand" href="#" data-home><img class="clerk" src="icons/clerk.jpg" alt="클사무관" width="36" height="36">어디갈래</a><span class="sub">전국 ${total}개 시·군</span>`;
   }
   function showHome(view = "home") {
     state.city = null;
