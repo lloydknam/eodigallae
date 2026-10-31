@@ -382,19 +382,16 @@ img { max-width: 100%; }
 .live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
 .live-legend span { display: inline-flex; align-items: center; gap: 4px; }
 .live-legend i, .live-row i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
-.live-trend { margin: 18px 0 8px; padding: 14px; border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
-.live-trend-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:8px; }
-.live-trend-head b { font-size:15px; }
-.live-trend-head small { color:var(--muted); font-size:10.5px; }
-.live-trend-select { width:100%; margin-bottom:7px; padding:9px 10px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:var(--surface); font:inherit; font-size:12.5px; }
-.live-trend-chart { width:100%; overflow:hidden; }
-.live-trend-chart svg { display:block; width:100%; height:auto; }
-.live-trend-note { margin:5px 0 0; color:var(--muted); font-size:10px; line-height:1.4; }
+.mpop-trend { display:grid; gap:2px; margin-top:5px; padding-top:5px; border-top:1px solid #E5EAE8; }
+.mpop-trend-head { display:flex; justify-content:space-between; align-items:baseline; gap:5px; }
+.mpop-trend-head b { font-size:11px; }
+.mpop-trend-head span { color:#78847F; font-size:9px; }
+.mpop-trend svg { display:block; width:100%; height:auto; overflow:visible; }
+.mpop-trend-note { color:#78847F; font-size:9px; line-height:1.2; }
 @media (max-width:600px) {
-  .live-trend { padding:11px; }
-  .live-trend-head b { font-size:14px; }
-  .live-trend-head small { font-size:9.5px; }
-  .live-trend-select { font-size:12px; }
+  .mpop-trend { gap:1px; margin-top:3px; padding-top:4px; }
+  .mpop-trend-head b { font-size:10px; }
+  .mpop-trend-head span, .mpop-trend-note { font-size:8.5px; }
 }
 .live-compare { margin: 18px 0 8px; padding: 14px; border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
 .live-compare-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:9px; }
@@ -1103,12 +1100,6 @@ img { max-width: 100%; }
 <p class="demo-note">서울시 실시간 추정 인구의 성별·연령별 비율을 기준으로 표시합니다.</p>
 <div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
         <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
-        <section id="live-trend" class="live-trend" aria-label="오늘의 인파 추이">
-          <div class="live-trend-head"><b>인파추이</b><small id="live-trend-period">오늘 00:00 ~ 현재</small></div>
-          <select id="live-trend-place" class="live-trend-select" aria-label="인파 추이를 볼 지역 선택"><option value="">지역 선택</option></select>
-          <div id="live-trend-chart" class="live-trend-chart" role="img" aria-label="오늘 0시부터 현재까지 시간별 추정 인파 그래프"></div>
-          <p id="live-trend-note" class="live-trend-note">Y축은 추정 인파(명), X축은 오늘 00:00부터 현재까지의 시간입니다.</p>
-        </section>
         <section id="live-compare" class="live-compare" aria-label="지역별 실시간 인구 비교">
           <div class="live-compare-head"><b>혼잡도 상위 7곳 비교</b><small>추정 인구 중간값</small></div>
           <select id="live-compare-add" class="live-compare-add" aria-label="비교할 지역 추가"><option value="">비교할 지역 추가</option></select>
@@ -1405,6 +1396,82 @@ img { max-width: 100%; }
     }).addTo(map);
     const ps = liveData.places.filter((p) => p.lat != null);
     const maxP = Math.max(...ps.map((p) => p.max || 0), 1);
+    const kstParts = (options) => Object.fromEntries(
+      new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Seoul", ...options })
+        .formatToParts(new Date()).map((x) => [x.type, x.value])
+    );
+    const todayParts = kstParts({ year: "numeric", month: "2-digit", day: "2-digit" });
+    const todayKey = `${todayParts.year}-${todayParts.month}-${todayParts.day}`;
+    const nowParts = kstParts({ hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+    const nowMinutes = Math.max(1, Math.min(1439, Number(nowParts.hour) * 60 + Number(nowParts.minute)));
+    let todayHistory = [];
+    try {
+      const historyResponse = await fetch(`data/live/history/${todayKey}.json?ts=${Date.now()}`, { cache: "no-store" });
+      if (historyResponse.ok) {
+        const history = await historyResponse.json();
+        todayHistory = Array.isArray(history.samples) ? history.samples : [];
+      }
+    } catch { /* 오늘의 이력이 아직 없으면 팝업에 수집 대기 문구를 표시한다. */ }
+
+    const popupTrend = (place) => {
+      const startMs = Date.parse(`${todayKey}T00:00:00+09:00`);
+      const samples = todayHistory.map((sample) => {
+        const minute = (Date.parse(sample.at) - startMs) / 60000;
+        const row = (sample.places || []).find((item) => item.cd === place.cd);
+        if (!row || !Number.isFinite(minute) || minute < 0 || minute > nowMinutes + 2) return null;
+        const low = row.min == null ? Number(row.max) : Number(row.min);
+        const high = row.max == null ? Number(row.min) : Number(row.max);
+        if (!Number.isFinite(low) || !Number.isFinite(high)) return null;
+        return { minute, low: Math.max(0, low), high: Math.max(0, high), mid: (low + high) / 2 };
+      }).filter(Boolean).sort((a, b) => a.minute - b.minute);
+
+      const width = 300, height = 112, left = 39, right = 5, top = 5, bottom = 21;
+      const plotW = width - left - right, plotH = height - top - bottom;
+      const xMax = nowMinutes;
+      const latestMax = Math.max(1000, ...samples.map((item) => item.high));
+      const yStep = Math.max(1000, Math.ceil((latestMax * 1.08 / 3) / 1000) * 1000);
+      const yMax = yStep * 3;
+      const x = (minute) => left + (minute / xMax) * plotW;
+      const y = (value) => top + plotH - (value / yMax) * plotH;
+      const fmtY = (value) => value >= 10000
+        ? `${Number((value / 10000).toFixed(1))}만`
+        : Math.round(value).toLocaleString("ko-KR");
+      const fmtTime = (minute) => `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
+
+      const yGrid = [0, 1, 2, 3].map((n) => {
+        const value = yStep * n, yy = y(value);
+        return `<line x1="${left}" y1="${yy}" x2="${width-right}" y2="${yy}" stroke="#E6ECE9" stroke-width="1"/>
+          <text x="${left-5}" y="${yy+3}" text-anchor="end" fill="#75827D" font-size="9">${fmtY(value)}</text>`;
+      }).join("");
+      const xTicks = [0, ...[360, 720, 1080].filter((v) => v < nowMinutes), nowMinutes]
+        .filter((v, i, arr) => arr.indexOf(v) === i);
+      const xGrid = xTicks.map((minute) => {
+        const xx = x(minute);
+        return `<line x1="${xx}" y1="${top}" x2="${xx}" y2="${top+plotH}" stroke="#EEF1EF" stroke-width="1"/>
+          <text x="${xx}" y="${height-6}" text-anchor="${minute===0?"start":minute===nowMinutes?"end":"middle"}" fill="#75827D" font-size="9">${fmtTime(minute)}</text>`;
+      }).join("");
+      const points = samples.map((item) => `${x(item.minute).toFixed(1)},${y(item.mid).toFixed(1)}`).join(" ");
+      const band = samples.length ? [
+        ...samples.map((item) => `${x(item.minute).toFixed(1)},${y(item.high).toFixed(1)}`),
+        ...[...samples].reverse().map((item) => `${x(item.minute).toFixed(1)},${y(item.low).toFixed(1)}`)
+      ].join(" ") : "";
+      const plot = samples.length > 1
+        ? `<polygon points="${band}" fill="#279B80" opacity=".13"/>
+           <polyline points="${points}" fill="none" stroke="#279B80" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>`
+        : samples.length === 1
+          ? `<circle cx="${x(samples[0].minute)}" cy="${y(samples[0].mid)}" r="3.5" fill="#279B80"/>`
+          : `<text x="${left+plotW/2}" y="${top+plotH/2}" text-anchor="middle" fill="#7B8782" font-size="10">오늘 데이터 수집 중</text>`;
+      const last = samples.at(-1);
+      return `<div class="mpop-trend">
+        <div class="mpop-trend-head"><b>오늘 인파추이</b><span>00:00 ~ ${fmtTime(nowMinutes)}</span></div>
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(place.name)} 오늘 시간대별 추정 인파 그래프">
+          ${yGrid}${xGrid}${plot}
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${top+plotH}" stroke="#9AA7A1" stroke-width="1"/>
+          <line x1="${left}" y1="${top+plotH}" x2="${width-right}" y2="${top+plotH}" stroke="#9AA7A1" stroke-width="1"/>
+        </svg>
+        <span class="mpop-trend-note">${samples.length ? `실측 ${samples.length}회${last ? ` · 최근 ${fmtTime(last.minute)}` : ""} · 음영은 추정 범위` : "오늘 수집 데이터가 쌓이면 그래프가 표시됩니다."}</span>
+      </div>`;
+    };
     const demoValue = (p, key) => p.demo?.[key] == null || !Number.isFinite(Number(p.demo[key]))
       ? null : Math.max(0, Math.min(100, Number(p.demo[key])));
     const genderChart = (p) => {
@@ -1442,6 +1509,7 @@ img { max-width: 100%; }
         <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
         ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
         ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l, a, b]) => `${esc(t)} ${esc(l)}${a != null ? ` · ${pplRange(a, b)}` : ""}`).join(" → ")}</span>` : ""}
+        ${popupTrend(p)}
         <div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>
           ${gender || `<span class="demo-note">성별 통계 자료 없음</span>`}
           ${ages || `<span class="demo-note">연령대 통계 자료 없음</span>`}
@@ -1541,105 +1609,6 @@ img { max-width: 100%; }
         renderLiveCompare();
       };
       renderLiveCompare();
-    }
-    const trendSelect = document.getElementById("live-trend-place");
-    const trendChart = document.getElementById("live-trend-chart");
-    const trendNote = document.getElementById("live-trend-note");
-    const trendPeriod = document.getElementById("live-trend-period");
-    if (trendSelect && trendChart && trendNote) {
-      const trendOrder = [...liveData.places].sort(
-        (a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0)
-      );
-      const previousCode = trendSelect.value;
-      const defaultCode = trendOrder[0]?.cd || liveData.places[0]?.cd || "";
-      trendSelect.innerHTML = trendOrder.map((p) =>
-        `<option value="${esc(p.cd)}">${esc(p.name)}</option>`
-      ).join("");
-      trendSelect.value = trendOrder.some((p) => p.cd === previousCode) ? previousCode : defaultCode;
-
-      const kstParts = (options) => Object.fromEntries(
-        new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Seoul", ...options }).formatToParts(new Date()).map((x) => [x.type, x.value])
-      );
-      const todayParts = kstParts({ year: "numeric", month: "2-digit", day: "2-digit" });
-      const todayKey = `${todayParts.year}-${todayParts.month}-${todayParts.day}`;
-      const nowParts = kstParts({ hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-      const nowMinutes = Math.max(0, Math.min(1439, Number(nowParts.hour) * 60 + Number(nowParts.minute)));
-      if (trendPeriod) trendPeriod.textContent = `${Number(todayParts.month)}/${Number(todayParts.day)} 00:00 ~ 현재`;
-
-      const renderTrend = async () => {
-        const code = trendSelect.value;
-        const startMs = Date.parse(`${todayKey}T00:00:00+09:00`);
-        const width = 700, height = 270, left = 58, right = 16, top = 18, bottom = 42;
-        const plotW = width - left - right, plotH = height - top - bottom;
-        let samples = [];
-        try {
-          const response = await fetch(`data/live/history/${todayKey}.json?ts=${Date.now()}`, { cache: "no-store" });
-          if (response.ok) {
-            const history = await response.json();
-            samples = (history.samples || []).map((sample) => {
-              const minute = (Date.parse(sample.at) - startMs) / 60000;
-              const place = (sample.places || []).find((p) => p.cd === code);
-              if (!place || !Number.isFinite(minute) || minute < 0 || minute > nowMinutes + 2) return null;
-              const low = place.min == null ? Number(place.max) : Number(place.min);
-              const high = place.max == null ? Number(place.min) : Number(place.max);
-              if (!Number.isFinite(low) || !Number.isFinite(high)) return null;
-              return { minute, low: Math.max(0, low), high: Math.max(0, high), mid: (low + high) / 2 };
-            }).filter(Boolean);
-          }
-        } catch { /* 이력 파일이 아직 없으면 빈 축을 표시한다. */ }
-        samples.sort((a, b) => a.minute - b.minute);
-
-        const latestMax = Math.max(0, ...samples.map((p) => p.high));
-        const yStep = Math.max(1000, Math.ceil((Math.max(latestMax, 1000) * 1.08 / 4) / 1000) * 1000);
-        const yMax = yStep * 4;
-        const xMax = Math.max(1, nowMinutes);
-        const x = (minute) => left + (minute / xMax) * plotW;
-        const y = (value) => top + plotH - (value / yMax) * plotH;
-        const fmtY = (value) => value >= 10000
-          ? `${Number((value / 10000).toFixed(1))}만`
-          : Math.round(value).toLocaleString("ko-KR");
-        const fmtTime = (minute) => `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
-
-        const ticks = [0];
-        const tickStep = nowMinutes <= 180 ? 30 : nowMinutes <= 360 ? 60 : nowMinutes <= 720 ? 120 : 240;
-        for (let m = tickStep; m < nowMinutes; m += tickStep) ticks.push(m);
-        if (nowMinutes > 0) ticks.push(nowMinutes);
-        const yGrid = [0, 1, 2, 3, 4].map((n) => {
-          const val = yStep * n, yy = y(val);
-          return `<line x1="${left}" y1="${yy}" x2="${width-right}" y2="${yy}" stroke="#E6ECE9" stroke-width="1"/>
-            <text x="${left-9}" y="${yy+4}" text-anchor="end" fill="#75827D" font-size="11">${fmtY(val)}</text>`;
-        }).join("");
-        const xGrid = ticks.map((m) => {
-          const xx = x(m);
-          return `<line x1="${xx}" y1="${top}" x2="${xx}" y2="${top+plotH}" stroke="#EEF1EF" stroke-width="1"/>
-            <text x="${xx}" y="${height-17}" text-anchor="${m===0?"start":m===nowMinutes?"end":"middle"}" fill="#75827D" font-size="11">${fmtTime(m)}</text>`;
-        }).join("");
-        const linePoints = samples.map((p) => `${x(p.minute).toFixed(1)},${y(p.mid).toFixed(1)}`).join(" ");
-        const bandPoints = samples.length ? [
-          ...samples.map((p) => `${x(p.minute).toFixed(1)},${y(p.high).toFixed(1)}`),
-          ...[...samples].reverse().map((p) => `${x(p.minute).toFixed(1)},${y(p.low).toFixed(1)}`)
-        ].join(" ") : "";
-        const line = samples.length > 1
-          ? `<polygon points="${bandPoints}" fill="#279B80" opacity=".13"/>
-             <polyline points="${linePoints}" fill="none" stroke="#279B80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`
-          : samples.length === 1
-            ? `<circle cx="${x(samples[0].minute)}" cy="${y(samples[0].mid)}" r="5" fill="#279B80"/>`
-            : "";
-        trendChart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="오늘 00:00부터 현재까지의 추정 인파 시계열">
-          <text x="13" y="${top+plotH/2}" transform="rotate(-90 13 ${top+plotH/2})" fill="#52645F" font-size="11" text-anchor="middle">추정 인파(명)</text>
-          ${yGrid}${xGrid}
-          ${line}
-          <line x1="${left}" y1="${top}" x2="${left}" y2="${top+plotH}" stroke="#9AA7A1" stroke-width="1.2"/>
-          <line x1="${left}" y1="${top+plotH}" x2="${width-right}" y2="${top+plotH}" stroke="#9AA7A1" stroke-width="1.2"/>
-          <text x="${left+plotW/2}" y="${height-2}" fill="#52645F" font-size="11" text-anchor="middle">시간</text>
-          ${samples.length===0 ? `<text x="${left+plotW/2}" y="${top+plotH/2}" text-anchor="middle" fill="#7B8782" font-size="12">오늘 수집된 인파 이력이 아직 없습니다.</text>` : ""}
-        </svg>`;
-        trendNote.textContent = samples.length < 2
-          ? `오늘 수집된 실측 자료 ${samples.length}건 · 수집될 때마다 10분 단위로 그래프가 이어집니다. 음영은 추정 인파 범위입니다.`
-          : `오늘 00:00 이후 ${samples.length}회 수집 · 마지막 실측 ${fmtTime(samples[samples.length-1].minute)} · 음영은 추정 인파 범위입니다.`;
-      };
-      trendSelect.onchange = renderTrend;
-      renderTrend();
     }
     // 지도를 열어 둔 동안 2분마다 새 데이터를 확인하고, 새 수집분이 오면 지도만 갱신한다.
     if (!window.__liveRefreshTimer) window.__liveRefreshTimer = setInterval(async () => {
