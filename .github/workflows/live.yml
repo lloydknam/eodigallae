@@ -1,7 +1,7 @@
 name: 인파지도(서울)
 
 # 한 번 켜지면 약 2시간 50분 동안 10분마다 서울시 실시간 인구데이터를 받아 바로 올린다.
-# 끝날 때 다음 회차를 스스로 실행해 이어 간다(GitHub 예약 실행이 자주 안 돌아서). 매시 예약은 끊겼을 때 다시 살리는 예비.
+# 시작할 때 다음 회차를 미리 줄 세워(동시에 하나만 실행) 끝나자마자 이어 간다(GitHub 예약 실행이 자주 안 돌아서). 매시 예약은 끊겼을 때 다시 살리는 예비.
 on:
   schedule:
     - cron: "13 * * * *"
@@ -28,6 +28,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r scripts/requirements.txt
+      - name: 다음 회차 미리 예약 (이번 회차가 끝나면 바로 이어서 시작)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run live.yml --ref main --repo ${{ github.repository }}
       - name: 10분마다 서울 실시간 인구 받기
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
@@ -37,8 +42,3 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python scripts/live.py
-      - name: 다음 회차 이어 실행
-        if: always() && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run live.yml --ref main
