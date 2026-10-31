@@ -342,6 +342,8 @@ img { max-width: 100%; }
 .live-dot { width: 10px; height: 10px; border-radius: 50%; background: #E4503A; box-shadow: 0 0 0 0 rgba(228,80,58,.5); flex: none; }
 @media (prefers-reduced-motion: no-preference) { .live-dot { animation: livepulse 1.8s ease-out infinite; } }
 @keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(228,80,58,.55); } 100% { box-shadow: 0 0 0 9px rgba(228,80,58,0); } }
+.page-head .src { font-size: 12.5px; }
+.page-head .src a { color: inherit; }
 .wk-link { margin-left: auto; color: var(--celadon); font-size: 13.5px; font-weight: 700; text-decoration: none; }
 .live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
 .live-legend span { display: inline-flex; align-items: center; gap: 4px; }
@@ -1026,7 +1028,7 @@ img { max-width: 100%; }
     app.innerHTML = `
       <section class="page-head">
         <h1>${mz("👀", "flip left")}인파지도</h1>
-        <p>서울 121곳, 지금 얼마나 붐빌까? 휴대폰 신호 기반 서울시 데이터로 30분마다 갱신해요.</p>
+        <p>서울 121곳 실시간 인파 · 30분마다 갱신<br><small class="src">출처: <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a></small></p>
       </section>
       <section class="weekly map-sec" style="margin-top:14px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
