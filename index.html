@@ -1375,6 +1375,8 @@ img { max-width: 100%; }
     map.on("zoomend", () => { resize(); labels(); }); map.on("moveend", labels); resize(); labels();
     const genderSelect = document.getElementById("live-gender-filter");
     const ageSelect = document.getElementById("live-age-filter");
+    if (genderSelect) genderSelect.value = window.__liveGenderFilter || "all";
+    if (ageSelect) ageSelect.value = window.__liveAgeFilter || "all";
     const ageKeys = ["age0", "age10", "age20", "age30", "age40", "age50", "age60", "age70"];
     const matchesDemo = (p) => {
       const d = p.demo || {};
@@ -1398,8 +1400,8 @@ img { max-width: 100%; }
       });
       labels(); if (list) renderLiveList();
     };
-    genderSelect?.addEventListener("change", applyDemoFilters);
-    ageSelect?.addEventListener("change", applyDemoFilters);
+    genderSelect?.addEventListener("change", () => { window.__liveGenderFilter = genderSelect.value; applyDemoFilters(); });
+    ageSelect?.addEventListener("change", () => { window.__liveAgeFilter = ageSelect.value; applyDemoFilters(); });
     if (list) {
       renderLiveList();
       list.onclick = (e) => {
