@@ -1090,12 +1090,11 @@ img { max-width: 100%; }
 <div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
         <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
         <section id="live-compare" class="live-compare" aria-label="지역별 실시간 인구 비교">
-          <div class="live-compare-head"><b>지역별 실시간 인구 비교</b><small>추정 인구 중간값</small></div>
+          <div class="live-compare-head"><b>혼잡도 상위 7곳 비교</b><small>추정 인구 중간값</small></div>
           <select id="live-compare-add" class="live-compare-add" aria-label="비교할 지역 추가"><option value="">비교할 지역 추가</option></select>
           <div id="live-compare-rows" class="live-compare-rows"></div>
           <p class="live-compare-note">같은 수집 회차의 지역별 추정 인구를 비교합니다. 막대 길이는 각 지역 추정 인구 범위의 중간값 기준입니다.</p>
         </section>
-        <div id="live-list"></div>
       </section>`;
     renderLiveMap();
   }
@@ -1372,7 +1371,6 @@ img { max-width: 100%; }
       await loadLeaflet();
     } catch { liveData = liveData || null; }
     if (!document.body.contains(box)) return;
-    const list = document.getElementById("live-list");
     if (!liveData || !window.L) {
       box.innerHTML = `<p class="map-wait">실시간 인파 자료를 준비하고 있어요. 조금만 기다려 주세요!</p>`;
       return;
@@ -1477,20 +1475,15 @@ img { max-width: 100%; }
       }
     };
     map.on("zoomend", () => { resize(); labels(); }); map.on("moveend", labels); resize(); labels();
-    const renderLiveList = () => {
-      const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
-      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
-      list.innerHTML = `${top.length ? `<h3 class="live-h">실시간 장소 ${top.length}곳 · 붐비는 순</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>` : ""}${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 시험용으로 광화문 한 곳만 보여요.</p>` : ""}<p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
-    };
     const compareBox = document.getElementById("live-compare");
     const compareAdd = document.getElementById("live-compare-add");
     const compareRows = document.getElementById("live-compare-rows");
     if (compareBox && compareAdd && compareRows) {
-      // 인파 목록과 같은 기준으로 현재 혼잡도 상위 3곳을 기본 비교 대상으로 선정
+      // 현재 혼잡도 상위 7곳을 기본 비교 대상으로 선정
       const busiest = [...liveData.places].sort(
         (a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0)
       );
-      let compareCodes = busiest.slice(0, 3).map((p) => p.cd);
+      let compareCodes = busiest.slice(0, 7).map((p) => p.cd);
       const renderLiveCompare = () => {
         const selected = compareCodes.map((cd) => liveData.places.find((p) => p.cd === cd)).filter(Boolean);
         const mid = (p) => p.min == null || p.max == null ? null : (Number(p.min) + Number(p.max)) / 2;
@@ -1498,7 +1491,7 @@ img { max-width: 100%; }
         compareAdd.innerHTML = `<option value="">비교할 지역 추가</option>${liveData.places
           .filter((p) => !compareCodes.includes(p.cd))
           .map((p) => `<option value="${esc(p.cd)}">${esc(p.name)}</option>`).join("")}`;
-        compareAdd.disabled = compareCodes.length >= 5;
+        compareAdd.disabled = compareCodes.length >= 12;
         compareRows.innerHTML = selected.map((p) => {
           const value = mid(p);
           const width = value == null ? 0 : Math.max(2, Math.min(100, value / maxMid * 100));
@@ -1517,7 +1510,7 @@ img { max-width: 100%; }
       };
       compareAdd.onchange = () => {
         const cd = compareAdd.value;
-        if (!cd || compareCodes.includes(cd) || compareCodes.length >= 5) return;
+        if (!cd || compareCodes.includes(cd) || compareCodes.length >= 12) return;
         compareCodes.push(cd);
         renderLiveCompare();
       };
@@ -1528,15 +1521,6 @@ img { max-width: 100%; }
         renderLiveCompare();
       };
       renderLiveCompare();
-    }
-    if (list) {
-      renderLiveList();
-      list.onclick = (e) => {
-        const b = e.target.closest("[data-live]"); if (!b) return;
-        const m = marks.get(b.dataset.live); if (!m || !map.hasLayer(m)) return;
-        box.scrollIntoView({ behavior: "smooth", block: "center" });
-        map.setView(m.getLatLng(), 14); m.openPopup();
-      };
     }
     // 지도를 열어 둔 동안 2분마다 새 데이터를 확인하고, 새 수집분이 오면 지도만 갱신한다.
     if (!window.__liveRefreshTimer) window.__liveRefreshTimer = setInterval(async () => {
