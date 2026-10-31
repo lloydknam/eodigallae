@@ -1287,7 +1287,7 @@ img { max-width: 100%; }
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true })
       .fitBounds([[37.45, 126.82], [37.67, 127.15]]);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · 출처: <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>',
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>',
     }).addTo(map);
     const ps = liveData.places.filter((p) => p.lat != null);
     const maxP = Math.max(...ps.map((p) => p.max || 0), 1);
