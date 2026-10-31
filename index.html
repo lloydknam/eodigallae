@@ -366,6 +366,8 @@ img { max-width: 100%; }
 .demo-note { color:#78847F; font-size:9.5px; line-height:1.25; }
 /* 모바일 인파 팝업: 지도 영역을 가리지 않도록 폭·높이 제한 및 긴 문구 줄바꿈 */
 @media (max-width: 600px) {
+  /* 모바일 인파지도는 기존 실제 높이에서 약 20% 축소 */
+  .hotmap.crowd-map { aspect-ratio: 25 / 28; max-height: 57.6vh; }
   .mpop, .mpop * { box-sizing: border-box; min-width: 0; }
   .mpop { width: 100%; max-width: 100%; gap: 4px; overflow-wrap: anywhere; }
   .mpop b { font-size: 15px; line-height: 1.3; }
