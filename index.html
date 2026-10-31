@@ -1299,7 +1299,7 @@ img { max-width: 100%; }
   const fmtPpl = (n) => n == null ? "" : n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}만` : n.toLocaleString();
   const pplRange = (a, b) => a == null ? "" : `약 ${fmtPpl(a)}~${fmtPpl(b)}명`;
   // 데이터의 공식 장소명을 지도에서 읽기 쉬운 짧은 지역명으로 표시
-  const liveLabel = (p) => {
+  const liveMapLabel = (p) => {
     const raw = p.name.replace("(2호선)", "").replace(/ 관광특구$/, "").replace(/역$/, "").trim();
     // 지도 라벨·팝업 제목·장소 목록에 같은 대표 명칭을 사용한다.
     const aliases = {
@@ -1307,7 +1307,7 @@ img { max-width: 100%; }
       "광화문·덕수궁": "광화문",
       "서울식물원·마곡나루": "마곡나루",
       "서울식물원·마곡나루역": "마곡나루",
-      "이태원 앤틱가구거리": "이태원",
+      "이태원 앤틱가구거리": "앤틱거리",
       "신논현역·논현": "신논현·논현",
       "오목교역·목동운동장": "오목교·목동운동장",
       "신촌·이대": "신촌·이대",
@@ -1327,7 +1327,15 @@ img { max-width: 100%; }
       "신촌 스타광장": "신촌 스타광장",
       "시의회 앞": "시의회"
     };
-    return aliases[raw] || raw;
+    const distinctLabels = {
+      "동대문 관광특구": "동대문",
+      "동대문역": "동대문역",
+      "이태원 관광특구": "이태원",
+      "이태원역": "이태원역",
+      "잠실 관광특구": "잠실",
+      "잠실역": "잠실역"
+    };
+    return distinctLabels[p.name] || aliases[raw] || raw;
   };
   let liveData = null;
   async function renderLiveMap() {
@@ -1387,7 +1395,7 @@ img { max-width: 100%; }
     }).join("");
     const pop = (p) => {
       const gender = genderChart(p), ages = ageChart(p);
-      return `<div class="mpop"><b>${esc(liveLabel(p))}</b>
+      return `<div class="mpop"><b>${esc(p.name)}</b>
         <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
         ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
         ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l, a, b]) => `${esc(t)} ${esc(l)}${a != null ? ` · ${pplRange(a, b)}` : ""}`).join(" → ")}</span>` : ""}
@@ -1420,7 +1428,7 @@ img { max-width: 100%; }
         const re = ring.getElement(); if (re && el) re.style.animationDelay = el.style.animationDelay;
         m._ring = ring; ring.bringToBack();
       }
-      m.bindTooltip(esc(liveLabel(p)), { permanent: true, direction: "right", offset: [7, 0], className: "lv-label", interactive: false });
+      m.bindTooltip(esc(liveMapLabel(p)), { permanent: true, direction: "right", offset: [7, 0], className: "lv-label", interactive: false });
       marks.set(p.cd, m);
     }
     // 멀리서 보면 작게, 확대할수록 크게 (121곳이 서로 덮지 않게)
@@ -1447,7 +1455,7 @@ img { max-width: 100%; }
     const renderLiveList = () => {
       const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
       const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
-      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(liveLabel(p))}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
+      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
       list.innerHTML = `${top.length ? `<h3 class="live-h">실시간 장소 ${top.length}곳 · 붐비는 순</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>` : ""}${calm.length ? `<h3 class="live-h">한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 시험용으로 광화문 한 곳만 보여요.</p>` : ""}<p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
     };
     if (list) {
