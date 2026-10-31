@@ -2,7 +2,7 @@ name: 인파지도(서울)
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # 30분마다 (GitHub 사정으로 늦어질 수 있음)
+    - cron: "13,43 * * * *"   # 30분마다 (정각·30분은 GitHub가 몰려 자주 밀려서 13분·43분)
   workflow_dispatch:
   push:
     branches: [main]
