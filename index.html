@@ -1270,7 +1270,7 @@ img { max-width: 100%; }
   const pplRange = (a, b) => a == null ? "" : `약 ${fmtPpl(a)}~${fmtPpl(b)}명`;
   // 데이터의 공식 장소명을 지도에서 읽기 쉬운 짧은 지역명으로 표시
   const liveLabel = (p) => {
-    const raw = p.name.replace(/\\(2호선\\)/g, "").replace(/ 관광특구$/, "").replace(/역$/, "").trim();
+    const raw = p.name.replace("(2호선)", "").replace(" 관광특구", "").replace("역", "").trim();
     const aliases = {
       "서울 암사동 유적": "암사동",
       "광화문·덕수궁": "광화문",
@@ -1325,7 +1325,7 @@ img { max-width: 100%; }
         const re = ring.getElement(); if (re && el) re.style.animationDelay = el.style.animationDelay;
         m._ring = ring; ring.bringToBack();
       }
-      m.bindTooltip(esc(p.name.replace(/\(2호선\)/, "")), { permanent: true, direction: "right", offset: [6, 0], className: "lv-label", interactive: false });
+      m.bindTooltip(esc(liveLabel(p)), { permanent: true, direction: "right", offset: [7, 0], className: "lv-label", interactive: false });
       marks.set(p.cd, m);
     }
     // 멀리서 보면 작게, 확대할수록 크게 (121곳이 서로 덮지 않게)
