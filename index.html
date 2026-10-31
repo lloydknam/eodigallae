@@ -1362,6 +1362,7 @@ img { max-width: 100%; }
       const z = map.getZoom(), kept = [];
       box.classList.toggle("far", z < 13);
       for (const m of order) {
+        if (!map.hasLayer(m)) { m.closeTooltip(); continue; }
         const busy = m._ring != null;
         if (z < 11 || (z < 12 && !busy)) { m.closeTooltip(); continue; }
         m.openTooltip();
@@ -1372,7 +1373,42 @@ img { max-width: 100%; }
       }
     };
     map.on("zoomend", () => { resize(); labels(); }); map.on("moveend", labels); resize(); labels();
+    const genderSelect = document.getElementById("live-gender-filter");
+    const ageSelect = document.getElementById("live-age-filter");
+    const ageKeys = ["age0", "age10", "age20", "age30", "age40", "age50", "age60", "age70"];
+    const matchesDemo = (p) => {
+      const d = p.demo || {};
+      if (genderSelect?.value !== "all") { const v = d[genderSelect.value]; if (v == null || Number(v) < 50) return false; }
+      if (ageSelect?.value !== "all") { const selected = ageSelect.value, value = d[selected]; const available = ageKeys.map(k => d[k]).filter(v => v != null).map(Number); if (value == null || !available.length || Number(value) < Math.max(...available)) return false; }
+      return true;
+    };
+    const renderLiveList = () => {
+      const top = [...liveData.places].filter(matchesDemo).sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
+      const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
+      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
+      list.innerHTML = `${top.length ? `<h3 class="live-h">조건에 맞는 장소 ${top.length}곳 · 붐비는 순</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>` : `<p class="plan-note">선택한 조건에 맞는 장소가 없거나 통계가 제공되지 않습니다.</p>`}${calm.length ? `<h3 class="live-h">조건에 맞는 한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 시험용으로 광화문 한 곳만 보여요.</p>` : ""}<p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
+    };
+    const applyDemoFilters = () => {
+      const byCode = new Map(ps.map(p => [p.cd, p]));
+      marks.forEach((m, code) => {
+        const show = matchesDemo(byCode.get(code));
+        if (show && !map.hasLayer(m)) m.addTo(map);
+        if (!show && map.hasLayer(m)) { m.closeTooltip(); map.removeLayer(m); }
+        if (m._ring) { if (show && !map.hasLayer(m._ring)) m._ring.addTo(map); if (!show && map.hasLayer(m._ring)) map.removeLayer(m._ring); }
+      });
+      labels(); if (list) renderLiveList();
+    };
+    genderSelect?.addEventListener("change", applyDemoFilters);
+    ageSelect?.addEventListener("change", applyDemoFilters);
     if (list) {
+      renderLiveList();
+      list.onclick = (e) => {
+        const b = e.target.closest("[data-live]"); if (!b) return;
+        const m = marks.get(b.dataset.live); if (!m || !map.hasLayer(m)) return;
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+        map.setView(m.getLatLng(), 14); m.openPopup();
+      };
+    }
       const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
       const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
       const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i>
