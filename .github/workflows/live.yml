@@ -1,7 +1,7 @@
 name: 인파지도(서울)
 
 # 한 번 켜지면 약 2시간 50분 동안 10분마다 서울시 실시간 인구데이터를 받아 바로 올린다.
-# 매시 예약이 다음 회차를 줄 세워 두므로(동시에 하나만 실행) 예약이 몇 번 밀려도 끊기지 않는다.
+# 끝날 때 다음 회차를 스스로 실행해 이어 간다(GitHub 예약 실행이 자주 안 돌아서). 매시 예약은 끊겼을 때 다시 살리는 예비.
 on:
   schedule:
     - cron: "13 * * * *"
@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: live
@@ -36,3 +37,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python scripts/live.py
+      - name: 다음 회차 이어 실행
+        if: always() && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run live.yml --ref main
