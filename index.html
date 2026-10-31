@@ -1356,9 +1356,7 @@ img { max-width: 100%; }
         ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
         ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l, a, b]) => `${esc(t)} ${esc(l)}${a != null ? ` · ${pplRange(a, b)}` : ""}`).join(" → ")}</span>` : ""}
         <div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>
-          <b class="demo-title">남성·여성 전체 비율</b>
           ${gender || `<span class="demo-note">성별 통계 자료 없음</span>`}
-          <b class="demo-title">연령대별 인구 비율</b>
           ${ages || `<span class="demo-note">연령대 통계 자료 없음</span>`}
           <span class="demo-note">남녀 비율과 연령대 비율은 각각 전체 인구를 기준으로 산출한 값입니다.</span>
         </div>
