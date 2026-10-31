@@ -999,6 +999,7 @@ img { max-width: 100%; }
         <p>어디냥이 유튜브·카카오맵·T맵 빅데이터로 요즘 뜨는 곳을 골라왔어요.</p>
         <img class="mascot" src="icons/mascot-360.png" alt="어디냥">
       </section>
+      <button class="live-home" data-view="crowd"><span class="live-dot"></span><b>지금 서울 어디가 붐빌까?</b><span>인파지도 →</span></button>
       <section class="wx" id="wx" aria-label="이번 주 날씨"><p class="wx-note">날씨를 불러오는 중…</p></section>
       ${state.half?.regions?.some((r) => r.active) ? `<button class="half-home" data-half-go>
         <span class="half-tag">반값여행</span>
@@ -1009,7 +1010,6 @@ img { max-width: 100%; }
         <a class="entry" href="#video"><b>🎬 영상 그대로 여행</b><span>유튜브 링크 → 코스 완성</span></a>
         <a class="entry" href="#report"><b>📮 숨은 핫플 제보</b><span>나만 아는 곳 알려주기</span></a>
       </div>
-      <button class="live-home" data-view="crowd"><span class="live-dot"></span><b>지금 서울 어디가 붐빌까?</b><span>인파지도 →</span></button>
       <section id="weekly" class="weekly"></section>
       <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
     renderWeekly();
