@@ -1280,11 +1280,16 @@ img { max-width: 100%; }
     const marks = new Map();
     ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
     for (const p of ps) {
-      const r = 7 + 15 * Math.sqrt((p.max || 0) / maxP), c = lvColor(p.lvl);
-      const m = L.circleMarker([p.lat, p.lng], { radius: r, color: "#fff", weight: 2, fillColor: c, fillOpacity: 0.85 })
+      const c = lvColor(p.lvl);
+      const m = L.circleMarker([p.lat, p.lng], { radius: 6, color: "#fff", weight: 1.5, fillColor: c, fillOpacity: 0.9 })
         .addTo(map).bindPopup(pop(p), { maxWidth: 250 });
+      m._base = 4 + 9 * Math.sqrt((p.max || 0) / maxP);
       marks.set(p.cd, m);
     }
+    // 멀리서 보면 작게, 확대할수록 크게 (121곳이 서로 덮지 않게)
+    const resize = () => { const k = Math.min(1.8, Math.max(0.7, 0.7 + 0.35 * (map.getZoom() - 11)));
+      marks.forEach((m) => m.setRadius(m._base * k)); };
+    map.on("zoomend", resize); resize();
     if (list) {
       const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
       const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
