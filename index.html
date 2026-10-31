@@ -1367,7 +1367,7 @@ img { max-width: 100%; }
     }
     // 지도를 열어 둔 동안 2분마다 새 데이터를 확인하고, 새 수집분이 오면 지도만 갱신한다.
     if (!window.__liveRefreshTimer) window.__liveRefreshTimer = setInterval(async () => {
-      if (!document.getElementById("hotmap") || !window.__crowdMap) return;
+      if (!document.querySelector("#hotmap.crowd-map") || !window.__crowdMap) return;
       try {
         const check = await fetch("data/live/seoul.json", { cache: "no-cache" });
         if (!check.ok) return;
