@@ -1414,7 +1414,8 @@ img { max-width: 100%; }
     );
     const updateMapAt = (dataTime, stale) => {
       const saved = kstHeaderParts(new Date(dataTime));
-      const next = kstHeaderParts(new Date((Math.floor(Date.now() / 600000) + 1) * 600000));
+      const nextRunMinute = (Math.floor((Date.now() / 60000 - 3) / 10) + 1) * 10 + 3;
+      const next = kstHeaderParts(new Date(nextRunMinute * 60000));
       const status = document.getElementById("map-at");
       if (status) status.innerHTML =
         `<span>${saved.month}/${saved.day} ${saved.hour}:${saved.minute} 기준${stale ? " · 지연" : ""}</span><span class="crowd-next">다음 갱신 ${next.hour}:${next.minute} 예정</span>`;
