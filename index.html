@@ -68,6 +68,19 @@ img { max-width: 100%; }
 .brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 26px; text-decoration: none; color: var(--celadon); }
 .brand img { width: 36px; height: auto; display: block; }
 .topbar .sub { color: var(--muted); font-size: 14px; margin-left: auto; white-space: nowrap; }
+.topbar .inner { position: relative; }
+.tb-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
+.menu-btn { flex: none; width: 40px; height: 40px; margin-right: -6px; border: 0; border-radius: 12px; background: none; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.menu-btn svg { width: 24px; height: 24px; }
+.menu-btn[aria-expanded="true"] { background: var(--paper); }
+.menu-drop { position: absolute; right: 8px; top: calc(100% - 4px); z-index: 40; min-width: 230px; padding: 6px; background: var(--surface); border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(25,31,40,.16), 0 1px 3px rgba(25,31,40,.08); display: grid; }
+.menu-drop a { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: var(--ink); font-size: 15.5px; font-weight: 600; }
+.menu-drop a:hover, .menu-drop a:focus-visible { background: var(--paper); }
+.menu-drop a[aria-current="page"] { color: var(--celadon); background: var(--celadon-soft); }
+.menu-drop span { width: 22px; text-align: center; }
+.menu-drop em { margin-left: auto; font-style: normal; font-weight: 500; font-size: 12px; color: var(--muted); }
+.menu-drop hr { border: 0; border-top: 1px solid var(--line); margin: 4px 6px; }
 .back { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 12px 4px; cursor: pointer; color: var(--ink); font-size: 16px; font-weight: 600; }
 .back:hover { color: var(--ink); }
 
@@ -146,7 +159,7 @@ img { max-width: 100%; }
 .rbody { display: grid; gap: 2px; text-decoration: none; min-width: 0; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
 .city-top { margin: 18px 0 8px; }
 .tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr);
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(6, 1fr);
   background: var(--surface);
   border-top: 1px solid var(--line); box-shadow: 0 -2px 10px rgba(11, 110, 97, .06);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -318,6 +331,7 @@ img { max-width: 100%; }
 .live-dot { width: 10px; height: 10px; border-radius: 50%; background: #E4503A; box-shadow: 0 0 0 0 rgba(228,80,58,.5); flex: none; }
 @media (prefers-reduced-motion: no-preference) { .live-dot { animation: livepulse 1.8s ease-out infinite; } }
 @keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(228,80,58,.55); } 100% { box-shadow: 0 0 0 9px rgba(228,80,58,0); } }
+.wk-link { margin-left: auto; color: var(--celadon); font-size: 13.5px; font-weight: 700; text-decoration: none; }
 .live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
 .live-legend span { display: inline-flex; align-items: center; gap: 4px; }
 .live-legend i, .live-row i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
@@ -475,12 +489,26 @@ img { max-width: 100%; }
 </style>
 </head>
 <body>
-<header class="topbar"><div class="inner" id="topbar"></div></header>
+<header class="topbar"><div class="inner"><div class="tb-main" id="topbar"></div>
+  <button class="menu-btn" id="menu-btn" aria-label="전체 메뉴" aria-expanded="false" aria-controls="menu-drop">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+  <nav class="menu-drop" id="menu-drop" aria-label="전체 메뉴" hidden>
+    <a href="#" data-view="home"><span>🏠</span>홈</a>
+    <a href="#map" data-view="map"><span>📍</span>핫플 지도</a>
+    <a href="#crowd" data-view="crowd"><span>👥</span>인파지도 <em>서울 실시간</em></a>
+    <a href="#cities" data-view="cities"><span>🔍</span>도시 찾기</a>
+    <a href="#me" data-view="me"><span>🧳</span>내 여행 <em>코스·도장깨기</em></a>
+    <hr>
+    <a href="#video"><span>🎬</span>영상 그대로 여행</a>
+    <a href="#report"><span>📮</span>숨은 핫플 제보</a>
+    <a href="#about" data-view="about"><span>📋</span>더보기 <em>앱 정보·방문 통계</em></a>
+  </nav></div></header>
 <main class="wrap" id="app"><p class="loading"><img src="icons/mascot-160.png" alt="">어디냥이 길을 찾는 중이에요…</p></main>
 <footer class="wrap site-foot"><div class="maker"><a class="lab" href="https://github.com/lloydknam" target="_blank" rel="noopener" title="GitHub(@lloydknam)"><img src="icons/brand/lockup-light.svg" alt="Lloyd's Balcony Lab · with claude · GitHub(@lloydknam)"></a></div></footer>
 <nav class="tabbar" id="tabbar" aria-label="메뉴">
   <button data-view="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z" fill="currentColor"/></svg><span>홈</span></button>
   <button data-view="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg><span>핫플 지도</span></button>
+  <button data-view="crowd"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2" fill="currentColor"/><path d="M2.8 19.5c.4-3.6 3-5.8 6.2-5.8s5.8 2.2 6.2 5.8z" fill="currentColor"/><circle cx="16.8" cy="9" r="2.6" fill="currentColor" opacity=".7"/><path d="M15.6 13.9c3 .1 5.2 2 5.6 5.6h-4.3c-.2-2.2-.7-4-1.3-5.6z" fill="currentColor" opacity=".7"/></svg><span>인파지도</span></button>
   <button data-view="cities"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>도시 찾기</span></button>
   <button data-view="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m8 12.5 2.6 2.6L16.5 9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>내 여행</span></button>
   <button data-view="about"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2.2" fill="currentColor"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><circle cx="19" cy="12" r="2.2" fill="currentColor"/></svg><span>더보기</span></button>
@@ -490,7 +518,7 @@ img { max-width: 100%; }
 (() => {
   const app = document.getElementById("app");
   const topbar = document.getElementById("topbar");
-  const state = { mapMode: (() => { try { return localStorage.getItem("mapMode") || "hot"; } catch { return "hot"; } })(), index: null, prov: "전체", q: "", city: null, tab: "course", course: 0, day: 0, sort: "hot", weekly: null, list: "youtube" };
+  const state = { index: null, prov: "전체", q: "", city: null, tab: "course", course: 0, day: 0, sort: "hot", weekly: null, list: "youtube" };
   const cityCache = new Map();
 
   // 어디냥 + 소품 (cls: flip=좌우 반전, tilt=기울기, left=소품을 왼손에)
@@ -929,9 +957,9 @@ img { max-width: 100%; }
   }
 
   // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
-  const VIEWS = ["map", "cities", "about", "me"];
+  const VIEWS = ["map", "crowd", "cities", "about", "me"];
   function setTabbar(view) {
-    document.querySelectorAll("#tabbar [data-view]").forEach((b) => {
+    document.querySelectorAll("#tabbar [data-view], #menu-drop [data-view]").forEach((b) => {
       if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
   }
@@ -944,6 +972,7 @@ img { max-width: 100%; }
     homeTopbar();
     setTabbar(view);
     if (view === "map") return showMapPage();
+    if (view === "crowd") return showCrowdPage();
     if (view === "cities") return showCitiesPage();
     if (view === "about") return showAboutPage();
     if (view === "me") return showMePage();
@@ -963,32 +992,38 @@ img { max-width: 100%; }
         <a class="entry" href="#video"><b>🎬 영상 그대로 여행</b><span>유튜브 링크 → 코스 완성</span></a>
         <a class="entry" href="#report"><b>📮 숨은 핫플 제보</b><span>나만 아는 곳 알려주기</span></a>
       </div>
-      <button class="live-home" data-mapmode="live"><span class="live-dot"></span><b>지금 서울 어디가 붐빌까?</b><span>실시간 인파 지도 →</span></button>
+      <button class="live-home" data-view="crowd"><span class="live-dot"></span><b>지금 서울 어디가 붐빌까?</b><span>인파지도 →</span></button>
       <section id="weekly" class="weekly"></section>
       <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
     renderWeekly();
     renderWeather();
   }
   function showMapPage() {
-    const live = state.mapMode === "live";
     app.innerHTML = `
       <section class="page-head">
-        <h1>${live ? mz("👀", "flip left") : mz("🔍", "tilt")}${live ? "지금 붐비는 곳" : "핫플 지도"}</h1>
-        <p>${live ? "서울 주요 장소의 지금 인파예요. 통신사 휴대폰 신호로 추정한 서울시 실시간 인구데이터를 30분마다 받아요."
-          : "동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요."}
-          한 손가락으로 끌어서 옮기고, 두 손가락이나 +버튼으로 확대해요.</p>
+        <h1>${mz("🔍", "tilt")}핫플 지도</h1>
+        <p>동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요. 한 손가락으로 끌어서 옮기고, 두 손가락이나 +버튼으로 확대해요.</p>
       </section>
-      <div class="course-pick" role="group" aria-label="지도 종류" style="margin-top:12px">
-        <button class="chip" data-mapmode="hot" aria-pressed="${!live}">🔥 유튜브 핫플</button>
-        <button class="chip" data-mapmode="live" aria-pressed="${live}">👥 지금 붐비는 곳 · 서울</button>
-      </div>
-      <section class="weekly map-sec" style="margin-top:10px">
-        <div class="weekly-head"><span class="wk" id="map-at"></span></div>
-        <div id="hotmap" class="hotmap" role="region" aria-label="${live ? "서울 실시간 인파 지도" : "전국 핫플 지도"}"><p class="map-wait">지도를 불러오는 중…</p></div>
-        ${live ? `<div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
-          <div id="live-list"></div>` : ""}
+      <section class="weekly map-sec" style="margin-top:14px">
+        <div class="weekly-head"><span class="wk" id="map-at"></span>
+          <a class="wk-link" href="#crowd" data-view="crowd">👥 서울 인파지도 →</a></div>
+        <div id="hotmap" class="hotmap" role="region" aria-label="전국 핫플 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
       </section>`;
-    if (live) renderLiveMap(); else renderMap();
+    renderMap();
+  }
+  function showCrowdPage() {
+    app.innerHTML = `
+      <section class="page-head">
+        <h1>${mz("👀", "flip left")}인파지도</h1>
+        <p>서울 주요 장소에 지금 사람이 얼마나 있는지 보여줘요. 통신사 휴대폰 신호로 추정한 서울시 실시간 인구데이터를 30분마다 받아요. 한 손가락으로 끌어서 옮기고, 두 손가락이나 +버튼으로 확대해요.</p>
+      </section>
+      <section class="weekly map-sec" style="margin-top:14px">
+        <div class="weekly-head"><span class="wk" id="map-at"></span></div>
+        <div id="hotmap" class="hotmap" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+        <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
+        <div id="live-list"></div>
+      </section>`;
+    renderLiveMap();
   }
   function showCitiesPage() {
     const provinces = ["전체", ...(state.half?.regions?.length ? ["반값여행"] : []), ...new Set(state.index.cities.map((c) => c.province))];
@@ -1205,7 +1240,7 @@ img { max-width: 100%; }
     sync();
   }
 
-  // ── 지금 붐비는 곳 (서울시 실시간 인구데이터, 30분마다 수집) ──
+  // ── 인파지도 (서울시 실시간 인구데이터, 30분마다 수집) ──
   const LIVE_LV = [["붐빔", "#E4503A"], ["약간 붐빔", "#F08C2E"], ["보통", "#E3B52A"], ["여유", "#2E9E6B"]];
   const lvRank = (l) => { const i = LIVE_LV.findIndex(([k]) => k === l); return i < 0 ? 9 : i; };
   const lvColor = (l) => (LIVE_LV.find(([k]) => k === l) || [, "#9AA4AE"])[1];
@@ -1640,9 +1675,18 @@ img { max-width: 100%; }
       </article>`).join("")}</div>`;
   }
 
+  // ── 오른쪽 위 전체 메뉴 ──
+  const menuBtn = document.getElementById("menu-btn"), menuDrop = document.getElementById("menu-drop");
+  const setMenu = (open) => { menuDrop.hidden = !open; menuBtn.setAttribute("aria-expanded", open); };
+  menuBtn.addEventListener("click", (e) => { e.stopPropagation(); setMenu(menuDrop.hidden); });
+  document.addEventListener("click", (e) => { if (!menuDrop.hidden && !e.target.closest("#menu-drop, #menu-btn")) setMenu(false); }, true);
+  menuDrop.addEventListener("click", () => setTimeout(() => setMenu(false)));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menuDrop.hidden) { setMenu(false); menuBtn.focus(); } });
+  window.addEventListener("hashchange", () => setMenu(false));
+
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go],[data-heart],[data-unheart],[data-share-plan],[data-clear-plan],[data-take-plan],[data-take-video],[data-share-video],[data-mapmode]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go],[data-heart],[data-unheart],[data-share-plan],[data-clear-plan],[data-take-plan],[data-take-video],[data-share-video]");
     if (!t) return;
     if (t.dataset.stamp) {
       const id = t.dataset.stamp;
@@ -1666,11 +1710,6 @@ img { max-width: 100%; }
     if ("takePlan" in t.dataset) {
       for (const p of state.sharedPlan || []) if (!inPlan(p.id)) plan.push(p);
       savePlan(); toast("내 코스에 담았어요"); go("me"); return;
-    }
-    if (t.dataset.mapmode) {
-      e.preventDefault(); state.mapMode = t.dataset.mapmode; store.set("mapMode", state.mapMode);
-      if (location.hash !== "#map") go("map"); else showMapPage();
-      return;
     }
     if ("takeVideo" in t.dataset) {
       let n = 0;

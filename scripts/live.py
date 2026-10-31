@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""지금 붐비는 곳(서울): 서울시 실시간 인구데이터(주요 121장소, 통신 데이터 기반 추정)를 모아 data/live/seoul.json 에 저장.
+"""인파지도(서울): 서울시 실시간 인구데이터(주요 121장소, 통신 데이터 기반 추정)를 모아 data/live/seoul.json 에 저장.
 
 - 서울시 서버가 https를 지원하지 않아 앱이 직접 부를 수 없으므로 GitHub Actions가 30분마다 모아 둔다.
 - 장소 목록은 코드(POI001~)를 차례로 물어 알아내고 data/live/places.json 에 기억한다(7일마다 다시 확인).
@@ -228,7 +228,7 @@ def main():
     lv = {}
     for r in rows:
         lv[r["lvl"]] = lv.get(r["lvl"], 0) + 1
-    print(f"지금 붐비는 곳: {len(rows)}곳 · 위치 없음 {sum(1 for r in rows if r['lat'] is None)} · {lv}")
+    print(f"인파지도: {len(rows)}곳 · 위치 없음 {sum(1 for r in rows if r['lat'] is None)} · {lv}")
     if sample:
         print("견본 응답:", json.dumps(rows[0], ensure_ascii=False)[:400])
 
