@@ -351,9 +351,6 @@ img { max-width: 100%; }
 .page-head .src { font-size: 12.5px; }
 .page-head .src a { color: inherit; }
 .wk-link { margin-left: auto; color: var(--celadon); font-size: 13.5px; font-weight: 700; text-decoration: none; }
-.crowd-filters { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:12px 0; }
-.crowd-filters label { display:grid; gap:5px; color:var(--muted); font-size:12px; font-weight:700; }
-.crowd-filters select { width:100%; min-width:0; padding:11px 10px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); font:inherit; font-size:13px; }
 .demo-stats { display:grid; gap:8px; margin-top:8px; padding-top:9px; border-top:1px solid #E5EAE8; }
 .demo-title { font-size:12px; color:#52645F; font-weight:800; margin-top:2px; }
 .demo-gender { display:grid; gap:6px; }
@@ -1054,10 +1051,7 @@ img { max-width: 100%; }
       </section>
       <section class="weekly map-sec" style="margin-top:14px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
-<div class="crowd-filters" aria-label="인구 통계 필터">
-  <label>성별 비중<select id="live-gender-filter"><option value="all">전체 성별</option><option value="male">남성 비중 50% 이상</option><option value="female">여성 비중 50% 이상</option></select></label>
-  <label>연령대 비중<select id="live-age-filter"><option value="all">전체 연령</option><option value="age0">0~10세 비중 최다</option><option value="age10">10대 비중 최다</option><option value="age20">20대 비중 최다</option><option value="age30">30대 비중 최다</option><option value="age40">40대 비중 최다</option><option value="age50">50대 비중 최다</option><option value="age60">60대 비중 최다</option><option value="age70">70대 이상 비중 최다</option></select></label>
-</div>
+
 <p class="demo-note">서울시 실시간 추정 인구의 성별·연령별 비율을 기준으로 표시합니다.</p>
 <div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
         <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
@@ -1405,36 +1399,12 @@ img { max-width: 100%; }
       }
     };
     map.on("zoomend", () => { resize(); labels(); }); map.on("moveend", labels); resize(); labels();
-    const genderSelect = document.getElementById("live-gender-filter");
-    const ageSelect = document.getElementById("live-age-filter");
-    if (genderSelect) genderSelect.value = window.__liveGenderFilter || "all";
-    if (ageSelect) ageSelect.value = window.__liveAgeFilter || "all";
-    const ageKeys = ["age0", "age10", "age20", "age30", "age40", "age50", "age60", "age70"];
-    const matchesDemo = (p) => {
-      const d = p.demo || {};
-      if (genderSelect?.value !== "all") { const v = d[genderSelect.value]; if (v == null || Number(v) < 50) return false; }
-      if (ageSelect?.value !== "all") { const selected = ageSelect.value, value = d[selected]; const available = ageKeys.map(k => d[k]).filter(v => v != null).map(Number); if (value == null || !available.length || Number(value) < Math.max(...available)) return false; }
-      return true;
-    };
     const renderLiveList = () => {
-      const top = [...liveData.places].filter(matchesDemo).sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
+      const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
       const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
-      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
-      list.innerHTML = `${top.length ? `<h3 class="live-h">조건에 맞는 장소 ${top.length}곳 · 붐비는 순</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>` : `<p class="plan-note">선택한 조건에 맞는 장소가 없거나 통계가 제공되지 않습니다.</p>`}${calm.length ? `<h3 class="live-h">조건에 맞는 한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 시험용으로 광화문 한 곳만 보여요.</p>` : ""}<p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
+      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(liveLabel(p))}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
+      list.innerHTML = `${top.length ? `<h3 class="live-h">실시간 장소 ${top.length}곳 · 붐비는 순</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>` : ""}${calm.length ? `<h3 class="live-h">한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 시험용으로 광화문 한 곳만 보여요.</p>` : ""}<p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
     };
-    const applyDemoFilters = () => {
-      const byCode = new Map(ps.map(p => [p.cd, p]));
-      marks.forEach((m, code) => {
-        const show = matchesDemo(byCode.get(code));
-        if (show && !map.hasLayer(m)) m.addTo(map);
-        if (!show && map.hasLayer(m)) { m.closeTooltip(); map.removeLayer(m); }
-        if (m._ring) { if (show && !map.hasLayer(m._ring)) m._ring.addTo(map); if (!show && map.hasLayer(m._ring)) map.removeLayer(m._ring); }
-      });
-      labels(); if (list) renderLiveList();
-    };
-    genderSelect?.addEventListener("change", () => { window.__liveGenderFilter = genderSelect.value; applyDemoFilters(); });
-    ageSelect?.addEventListener("change", () => { window.__liveAgeFilter = ageSelect.value; applyDemoFilters(); });
-    applyDemoFilters();
     if (list) {
       renderLiveList();
       list.onclick = (e) => {
