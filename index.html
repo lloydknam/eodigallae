@@ -320,7 +320,7 @@ img { max-width: 100%; }
 .mpin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermilion); color: #fff;
   font: 400 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
 .mpin.top { width: 34px; height: 34px; margin: -2px; font-size: 18px; }
-.mpop { display: grid; gap: 3px; font: 14px/1.45 var(--font-body); color: #1C2422; min-width: 180px; }
+.mpop { display: grid; gap: 2px; font: 13px/1.35 var(--font-body); color: #1C2422; min-width: 250px; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
 .mpop b { font-size: 15.5px; }
 .mpop span { color: #5B6B67; font-size: 13px; }
@@ -351,19 +351,19 @@ img { max-width: 100%; }
 .page-head .src { font-size: 12.5px; }
 .page-head .src a { color: inherit; }
 .wk-link { margin-left: auto; color: var(--celadon); font-size: 13.5px; font-weight: 700; text-decoration: none; }
-.demo-stats { display:grid; gap:8px; margin-top:8px; padding-top:9px; border-top:1px solid #E5EAE8; }
-.demo-title { font-size:12px; color:#52645F; font-weight:800; margin-top:2px; }
-.demo-gender { display:grid; gap:6px; }
-.demo-gender-bar { display:flex; width:100%; height:14px; overflow:hidden; border-radius:99px; background:#E9EFEC; }
+.demo-stats { display:grid; gap:4px; margin-top:5px; padding-top:6px; border-top:1px solid #E5EAE8; }
+.demo-title { font-size:11.5px; line-height:1.2; color:#52645F; font-weight:800; margin-top:1px; }
+.demo-gender { display:grid; gap:3px; }
+.demo-gender-bar { display:flex; width:100%; height:13px; overflow:hidden; border-radius:99px; background:#E9EFEC; }
 .demo-gender-m { background:#4389D5; height:100%; }
 .demo-gender-f { background:#E47BA5; height:100%; }
-.demo-legend { display:flex; justify-content:space-between; gap:10px; font-size:11px; color:#52645F; }
-.demo-legend span { display:inline-flex; align-items:center; gap:4px; }
-.demo-dot { width:8px; height:8px; display:inline-block; border-radius:50%; }
-.demo-row { display:grid; grid-template-columns:43px 1fr 42px; align-items:center; gap:6px; font-size:11px; color:#52645F; }
-.demo-track { height:8px; border-radius:99px; overflow:hidden; background:#E9EFEC; }
+.demo-legend { display:flex; justify-content:space-between; gap:8px; font-size:10.5px; line-height:1.2; color:#52645F; }
+.demo-legend span { display:inline-flex; align-items:center; gap:3px; }
+.demo-dot { width:7px; height:7px; display:inline-block; border-radius:50%; }
+.demo-row { display:grid; grid-template-columns:58px minmax(0,1fr) 40px; align-items:center; gap:4px; font-size:10.5px; line-height:1.15; color:#52645F; }
+.demo-track { height:7px; border-radius:99px; overflow:hidden; background:#E9EFEC; }
 .demo-fill { height:100%; border-radius:inherit; background:#279B80; }
-.demo-note { color:#78847F; font-size:10px; line-height:1.45; }
+.demo-note { color:#78847F; font-size:9.5px; line-height:1.25; }
 .live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
 .live-legend span { display: inline-flex; align-items: center; gap: 4px; }
 .live-legend i, .live-row i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
@@ -1336,12 +1336,19 @@ img { max-width: 100%; }
         </div>
       </div>`;
     };
-    const ageChart = (p) => [["age0", "0~10세"], ["age10", "10대"], ["age20", "20대"], ["age30", "30대"], ["age40", "40대"], ["age50", "50대"], ["age60", "60대"], ["age70", "70대+"]]
-      .filter(([key]) => demoValue(p, key) != null)
-      .map(([key, label]) => {
-        const value = demoValue(p, key);
-        return `<div class="demo-row"><span>${label}</span><div class="demo-track"><div class="demo-fill" style="width:${value}%"></div></div><b>${value.toFixed(1)}%</b></div>`;
-      }).join("");
+    const ageChart = (p) => [
+      ["10대 미만", ["age0", "age10"]],
+      ["20대", ["age20"]],
+      ["30대", ["age30"]],
+      ["40대", ["age40"]],
+      ["50대", ["age50"]],
+      ["60대 이상", ["age60", "age70"]]
+    ].map(([label, keys]) => {
+      const values = keys.map((key) => demoValue(p, key)).filter((value) => value != null);
+      if (!values.length) return "";
+      const value = Math.min(100, values.reduce((sum, item) => sum + item, 0));
+      return `<div class="demo-row"><span>${label}</span><div class="demo-track"><div class="demo-fill" style="width:${value}%"></div></div><b>${value.toFixed(1)}%</b></div>`;
+    }).join("");
     const pop = (p) => {
       const gender = genderChart(p), ages = ageChart(p);
       return `<div class="mpop"><b>${esc(liveLabel(p))}</b>
@@ -1366,7 +1373,7 @@ img { max-width: 100%; }
     for (const p of ps) {
       const c = lvColor(p.lvl);
       const m = L.circleMarker([p.lat, p.lng], { radius: 6, color: lvLine(p.lvl), weight: 1.5, opacity: 1, fillColor: c, fillOpacity: 0.95,
-        className: `lv-pulse lv-${lvKey(p.lvl)}` }).addTo(map).bindPopup(pop(p), { maxWidth: 250 });
+        className: `lv-pulse lv-${lvKey(p.lvl)}` }).addTo(map).bindPopup(pop(p), { maxWidth: 330, minWidth: 280 });
       const el = m.getElement(); if (el) el.style.animationDelay = `${(-Math.random() * 4).toFixed(2)}s`;   // 제각각 깜빡이게
       m._base = 4 + 9 * Math.sqrt((p.max || 0) / maxP);
       if (lvRank(p.lvl) <= 1) {   // 붐빔·약간 붐빔
