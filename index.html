@@ -1486,16 +1486,11 @@ img { max-width: 100%; }
     const compareAdd = document.getElementById("live-compare-add");
     const compareRows = document.getElementById("live-compare-rows");
     if (compareBox && compareAdd && compareRows) {
-      const preferred = ["이태원 관광특구", "홍대 관광특구", "성수카페거리"];
-      let compareCodes = preferred
-        .map((name) => liveData.places.find((p) => p.name === name)?.cd)
-        .filter(Boolean);
-      if (compareCodes.length < 3) {
-        for (const p of liveData.places) {
-          if (compareCodes.length >= 3) break;
-          if (!compareCodes.includes(p.cd)) compareCodes.push(p.cd);
-        }
-      }
+      // 인파 목록과 같은 기준으로 현재 혼잡도 상위 3곳을 기본 비교 대상으로 선정
+      const busiest = [...liveData.places].sort(
+        (a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0)
+      );
+      let compareCodes = busiest.slice(0, 3).map((p) => p.cd);
       const renderLiveCompare = () => {
         const selected = compareCodes.map((cd) => liveData.places.find((p) => p.cd === cd)).filter(Boolean);
         const mid = (p) => p.min == null || p.max == null ? null : (Number(p.min) + Number(p.max)) / 2;
