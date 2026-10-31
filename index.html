@@ -1295,7 +1295,7 @@ img { max-width: 100%; }
       return;
     }
     const at = new Date(liveData.at), age = (Date.now() - at) / 60000;
-    document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 40 ? " · 업데이트가 늦어지고 있어요" : ""}`;
+    document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 40 ? " · 데이터 갱신 지연" : " · 약 10분 간격 갱신"}`;
     box.innerHTML = "";
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -1372,7 +1372,11 @@ img { max-width: 100%; }
         const check = await fetch("data/live/seoul.json", { cache: "no-cache" });
         if (!check.ok) return;
         const latest = await check.json();
-        if (!latest.at || latest.at === liveData?.at) return;
+        if (!latest.at) return;
+        const stamp = new Date(latest.at), mins = (Date.now() - stamp) / 60000;
+        const status = document.getElementById("map-at");
+        if (status) status.textContent = `${stamp.getMonth() + 1}/${stamp.getDate()} ${String(stamp.getHours()).padStart(2, "0")}:${String(stamp.getMinutes()).padStart(2, "0")} 기준${mins > 40 ? " · 데이터 갱신 지연" : " · 약 10분 간격 갱신"}`;
+        if (latest.at === liveData?.at) return;
         const oldMap = window.__crowdMap;
         const center = oldMap.getCenter();
         window.__liveMapView = { center: [center.lat, center.lng], zoom: oldMap.getZoom() };
