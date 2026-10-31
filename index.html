@@ -1286,6 +1286,7 @@ img { max-width: 100%; }
       ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
       <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
     if (ps.length > 3) map.fitBounds(L.latLngBounds(ps.map((p) => [p.lat, p.lng])), { padding: [18, 18] });
+    map.setView([37.552, 126.988], map.getZoom() + 1, { animate: false });   // 수도권 말고 서울 시내가 꽉 차게 한 단계 확대
     const marks = new Map();
     ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
     for (const p of ps) {
