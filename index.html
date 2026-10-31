@@ -1327,7 +1327,7 @@ img { max-width: 100%; }
       return `<div class="mpop"><b>${esc(p.name)}</b>
         <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
         ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
-        ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
+        ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l, a, b]) => `${esc(t)} ${esc(l)}${a != null ? ` · ${pplRange(a, b)}` : ""}`).join(" → ")}</span>` : ""}
         ${gender || ages ? `<div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>${gender ? `<b class="demo-title">성별</b>${gender}` : ""}${ages ? `<b class="demo-title">연령대</b>${ages}` : ""}</div>` : `<span class="demo-note">성별·연령별 통계 자료 없음</span>`}
         <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
     };
