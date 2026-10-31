@@ -1032,7 +1032,7 @@ img { max-width: 100%; }
     app.innerHTML = `
       <section class="page-head">
         <h1>${mz("👀", "flip left")}인파지도</h1>
-        <p>서울 121곳 실시간 인파 · 30분마다 갱신</p>
+        <p>서울 121곳 실시간 인파 · 10분마다 갱신</p>
       </section>
       <section class="weekly map-sec" style="margin-top:14px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
@@ -1282,7 +1282,7 @@ img { max-width: 100%; }
       return;
     }
     const at = new Date(liveData.at), age = (Date.now() - at) / 60000;
-    document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 120 ? " · 업데이트가 늦어지고 있어요" : ""}`;
+    document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 40 ? " · 업데이트가 늦어지고 있어요" : ""}`;
     box.innerHTML = "";
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true })
       .fitBounds([[37.45, 126.82], [37.67, 127.15]]);

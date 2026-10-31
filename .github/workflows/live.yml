@@ -1,8 +1,10 @@
 name: 인파지도(서울)
 
+# 한 번 켜지면 약 2시간 50분 동안 10분마다 서울시 실시간 인구데이터를 받아 바로 올린다.
+# 매시 예약이 다음 회차를 줄 세워 두므로(동시에 하나만 실행) 예약이 몇 번 밀려도 끊기지 않는다.
 on:
   schedule:
-    - cron: "13,43 * * * *"   # 30분마다 (정각·30분은 GitHub가 몰려 자주 밀려서 13분·43분)
+    - cron: "13 * * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -18,22 +20,19 @@ concurrency:
 jobs:
   live:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 190
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install -r scripts/requirements.txt
-      - name: 서울 실시간 인구 받기
+      - name: 10분마다 서울 실시간 인구 받기
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
-        run: python scripts/live.py
-      - name: 변경분 커밋
+          LIVE_LOOP_MIN: "170"
+          LIVE_EVERY_MIN: "10"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/live
-          if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
-          git commit -m "인파지도 $(TZ=Asia/Seoul date +'%m-%d %H:%M')"
-          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 5; done
+          python scripts/live.py

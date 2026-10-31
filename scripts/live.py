@@ -171,7 +171,7 @@ def coords_for(name: str, cache: dict):
     return None
 
 
-def main():
+def collect_once():
     key = os.environ.get("SEOUL_API_KEY", "").strip()
     sample = not key
     if sample:
@@ -203,9 +203,12 @@ def main():
             print(f"장소 {len(found)}곳")
         codes = places["codes"]
 
+    # 121곳을 6개씩 동시에 물어 1분 안에 끝낸다
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(6) as ex:
+        got = list(ex.map(lambda c: (c, fetch(key, c)), codes))
     rows = []
-    for cd in codes:
-        it = fetch(key, cd)
+    for cd, it in got:
         if not it:
             continue
         name = it.get("AREA_NM", "")
@@ -223,11 +226,10 @@ def main():
             "min": num(it.get("AREA_PPLTN_MIN")), "max": num(it.get("AREA_PPLTN_MAX")),
             "time": it.get("PPLTN_TIME", ""), "fc": fc[:6],
         })
-        time.sleep(0.15)
     (OUT / "coords.json").write_text(json.dumps(coords, ensure_ascii=False, separators=(",", ":")))
     if not rows:
         print("받은 장소가 없어요. 이전 자료를 그대로 둬요.")
-        return
+        return False
     data = {"at": dt.datetime.now(KST).isoformat(timespec="minutes"), "sample": sample, "places": rows}
     (OUT / "seoul.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
     lv = {}
@@ -236,6 +238,44 @@ def main():
     print(f"인파지도: {len(rows)}곳 · 위치 없음 {sum(1 for r in rows if r['lat'] is None)} · {lv}")
     if sample:
         print("견본 응답:", json.dumps(rows[0], ensure_ascii=False)[:400])
+    return True
+
+
+def push(msg: str):
+    import subprocess
+    run = lambda *a: subprocess.run(a, cwd=ROOT, capture_output=True, text=True)
+    run("git", "add", "data/live")
+    if run("git", "diff", "--cached", "--quiet").returncode == 0:
+        return
+    run("git", "commit", "-m", msg)
+    for _ in range(3):
+        if run("git", "pull", "--rebase", "origin", "main").returncode == 0 and run("git", "push").returncode == 0:
+            print("  올림:", msg); return
+        time.sleep(5)
+    print("  올리기 실패 (다음 회차에 다시)")
+
+
+def main():
+    """LIVE_LOOP_MIN 동안 LIVE_EVERY_MIN 마다 받아서 바로 올린다 (GitHub 예약 실행이 자주 밀려서 한 번 켜서 오래 돈다)."""
+    loop_min = float(os.environ.get("LIVE_LOOP_MIN", "0"))
+    every = float(os.environ.get("LIVE_EVERY_MIN", "10")) * 60
+    end = time.time() + loop_min * 60
+    while True:
+        t = time.time()
+        try:
+            ok = collect_once()
+        except SystemExit:
+            raise
+        except Exception as e:  # noqa: BLE001
+            print("  이번 회차 실패:", str(e)[:120]); ok = False
+        if loop_min <= 0:
+            return
+        if ok:
+            push(f"인파지도 {dt.datetime.now(KST).strftime('%m-%d %H:%M')}")
+        nxt = t + every
+        if nxt > end:
+            return
+        time.sleep(max(5, nxt - time.time()))
 
 
 if __name__ == "__main__":
