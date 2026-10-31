@@ -5,8 +5,8 @@ import fs from "fs";
 import { execSync } from "child_process";
 
 const URL = process.env.SITE || "http://localhost:8000/#crowd";
-const SECONDS = +(process.env.SECONDS || 10), RATE = 0.25;
-const CENTER = [37.5255, 126.9895], ZOOM = 13;
+const SECONDS = +(process.env.SECONDS || 15), RATE = 0.25;
+const CENTER = [37.5465, 126.986], ZOOM = 13;   // 앱 시작 화면과 같게
 const dir = "promo/frames"; fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
 
 const b = await chromium.launch();
