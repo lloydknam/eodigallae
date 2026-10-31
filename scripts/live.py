@@ -208,6 +208,43 @@ def coords_for(name: str, cache: dict):
     return None
 
 
+def append_history(data: dict) -> int:
+    """오늘 수집한 지역별 인파 추정치를 10분 단위 이력으로 누적 저장한다."""
+    stamp = dt.datetime.fromisoformat(data["at"]).astimezone(KST)
+    day = stamp.date().isoformat()
+    folder = OUT / "history"
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"{day}.json"
+    history = load(path, {"date": day, "samples": []})
+
+    sample = {
+        "at": data["at"],
+        "places": [
+            {"cd": row["cd"], "min": row["min"], "max": row["max"], "lvl": row["lvl"]}
+            for row in data.get("places", [])
+        ],
+    }
+    samples = history.setdefault("samples", [])
+    if samples and samples[-1].get("at") == sample["at"]:
+        samples[-1] = sample
+    else:
+        samples.append(sample)
+
+    history["date"] = day
+    path.write_text(json.dumps(history, ensure_ascii=False, separators=(",", ":")))
+
+    # 일별 파일을 유지하되 최근 7일보다 오래된 이력은 정리한다.
+    cutoff = stamp.date() - dt.timedelta(days=7)
+    for old in folder.glob("????-??-??.json"):
+        try:
+            old_day = dt.date.fromisoformat(old.stem)
+            if old_day < cutoff:
+                old.unlink()
+        except ValueError:
+            continue
+    return len(samples)
+
+
 def collect_once():
     key = os.environ.get("SEOUL_API_KEY", "").strip()
     sample = not key
@@ -270,6 +307,8 @@ def collect_once():
         return False
     data = {"at": dt.datetime.now(KST).isoformat(timespec="minutes"), "sample": sample, "places": rows}
     (OUT / "seoul.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    history_count = append_history(data)
+    print(f"  오늘 누적 이력: {history_count}회 수집")
     lv = {}
     for r in rows:
         lv[r["lvl"]] = lv.get(r["lvl"], 0) + 1
