@@ -140,6 +140,43 @@ def num(v) -> int | None:
         return None
 
 
+def rate(v) -> float | None:
+    """서울시 성·연령 비율을 숫자(%)로 보존한다."""
+    try:
+        return round(float(str(v).replace("%", "").replace(",", "").strip()), 1)
+    except (TypeError, ValueError):
+        return None
+
+
+def find_field(obj, key: str):
+    """API 응답의 중첩 위치가 달라도 지정 필드를 재귀적으로 찾는다."""
+    if isinstance(obj, dict):
+        if key in obj and obj[key] not in (None, ""):
+            return obj[key]
+        for value in obj.values():
+            found = find_field(value, key)
+            if found not in (None, ""):
+                return found
+    elif isinstance(obj, list):
+        for value in obj:
+            found = find_field(value, key)
+            if found not in (None, ""):
+                return found
+    return None
+
+
+def demographics(item: dict) -> dict | None:
+    keys = {
+        "male": "MALE_PPLTN_RATE", "female": "FEMALE_PPLTN_RATE",
+        "age0": "PPLTN_RATE_0", "age10": "PPLTN_RATE_10",
+        "age20": "PPLTN_RATE_20", "age30": "PPLTN_RATE_30",
+        "age40": "PPLTN_RATE_40", "age50": "PPLTN_RATE_50",
+        "age60": "PPLTN_RATE_60", "age70": "PPLTN_RATE_70",
+    }
+    result = {name: rate(find_field(item, field)) for name, field in keys.items()}
+    return result if any(value is not None for value in result.values()) else None
+
+
 def coords_for(name: str, cache: dict):
     """손으로 적은 좌표표를 먼저 본다: 이름이 똑같은 것 → 이름 안에 든 가장 긴 것 → 이름을 품은 것. 없을 때만 OSM 결과(기억해 둔 것)."""
     n = norm(name)
@@ -225,6 +262,7 @@ def collect_once():
             "lvl": it.get("AREA_CONGEST_LVL", ""), "msg": (it.get("AREA_CONGEST_MSG") or "")[:140],
             "min": num(it.get("AREA_PPLTN_MIN")), "max": num(it.get("AREA_PPLTN_MAX")),
             "time": it.get("PPLTN_TIME", ""), "fc": fc[:6],
+            "demo": demographics(it),
         })
     (OUT / "coords.json").write_text(json.dumps(coords, ensure_ascii=False, separators=(",", ":")))
     if not rows:
