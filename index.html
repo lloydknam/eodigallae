@@ -1309,7 +1309,8 @@ img { max-width: 100%; }
       ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
       <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
     // 서울 전체가 한눈에 보이는 축척(11)으로 시작 — 휴대폰·PC 모두 같은 축척
-    map.setView([37.553, 126.99], 11, { animate: false });
+    const savedView = window.__liveMapView; window.__liveMapView = null;
+    map.setView(savedView?.center || [37.553, 126.99], savedView?.zoom || 11, { animate: false });
     window.__crowdMap = map;   // 홍보 영상 녹화용
     const marks = new Map();
     ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
@@ -1364,6 +1365,23 @@ img { max-width: 100%; }
         map.setView(m.getLatLng(), 14); m.openPopup();
       };
     }
+    // 지도를 열어 둔 동안 2분마다 새 데이터를 확인하고, 새 수집분이 오면 지도만 갱신한다.
+    if (!window.__liveRefreshTimer) window.__liveRefreshTimer = setInterval(async () => {
+      if (!document.getElementById("hotmap") || !window.__crowdMap) return;
+      try {
+        const check = await fetch("data/live/seoul.json", { cache: "no-cache" });
+        if (!check.ok) return;
+        const latest = await check.json();
+        if (!latest.at || latest.at === liveData?.at) return;
+        const oldMap = window.__crowdMap;
+        const center = oldMap.getCenter();
+        window.__liveMapView = { center: [center.lat, center.lng], zoom: oldMap.getZoom() };
+        oldMap.remove();
+        window.__crowdMap = null;
+        liveData = latest;
+        await renderLiveMap();
+      } catch { /* 통신 오류는 다음 확인 때 재시도 */ }
+    }, 120000);
   }
 
   // ── 전국 주간 랭킹 ──
