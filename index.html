@@ -354,12 +354,19 @@ img { max-width: 100%; }
 .crowd-filters { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:12px 0; }
 .crowd-filters label { display:grid; gap:5px; color:var(--muted); font-size:12px; font-weight:700; }
 .crowd-filters select { width:100%; min-width:0; padding:11px 10px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); font:inherit; font-size:13px; }
-.demo-stats { display:grid; gap:7px; margin-top:7px; padding-top:8px; border-top:1px solid #E5EAE8; }
-.demo-title { font-size:12px; color:#52645F; font-weight:800; }
-.demo-row { display:grid; grid-template-columns:43px 1fr 39px; align-items:center; gap:6px; font-size:11px; color:#52645F; }
-.demo-track { height:7px; border-radius:99px; overflow:hidden; background:#E9EFEC; }
+.demo-stats { display:grid; gap:8px; margin-top:8px; padding-top:9px; border-top:1px solid #E5EAE8; }
+.demo-title { font-size:12px; color:#52645F; font-weight:800; margin-top:2px; }
+.demo-gender { display:grid; gap:6px; }
+.demo-gender-bar { display:flex; width:100%; height:14px; overflow:hidden; border-radius:99px; background:#E9EFEC; }
+.demo-gender-m { background:#4389D5; height:100%; }
+.demo-gender-f { background:#E47BA5; height:100%; }
+.demo-legend { display:flex; justify-content:space-between; gap:10px; font-size:11px; color:#52645F; }
+.demo-legend span { display:inline-flex; align-items:center; gap:4px; }
+.demo-dot { width:8px; height:8px; display:inline-block; border-radius:50%; }
+.demo-row { display:grid; grid-template-columns:43px 1fr 42px; align-items:center; gap:6px; font-size:11px; color:#52645F; }
+.demo-track { height:8px; border-radius:99px; overflow:hidden; background:#E9EFEC; }
 .demo-fill { height:100%; border-radius:inherit; background:#279B80; }
-.demo-note { color:#78847F; font-size:10px; }
+.demo-note { color:#78847F; font-size:10px; line-height:1.45; }
 .live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
 .live-legend span { display: inline-flex; align-items: center; gap: 4px; }
 .live-legend i, .live-row i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
@@ -1317,18 +1324,43 @@ img { max-width: 100%; }
     }).addTo(map);
     const ps = liveData.places.filter((p) => p.lat != null);
     const maxP = Math.max(...ps.map((p) => p.max || 0), 1);
-    const demoRows = (p, keys) => keys.filter(([key]) => p.demo?.[key] != null).map(([key, label]) => {
-      const value = Math.max(0, Math.min(100, Number(p.demo[key])));
-      return `<div class="demo-row"><span>${label}</span><div class="demo-track"><div class="demo-fill" style="width:${value}%"></div></div><b>${value.toFixed(1)}%</b></div>`;
-    }).join("");
+    const demoValue = (p, key) => p.demo?.[key] == null || !Number.isFinite(Number(p.demo[key]))
+      ? null : Math.max(0, Math.min(100, Number(p.demo[key])));
+    const genderChart = (p) => {
+      const male = demoValue(p, "male"), female = demoValue(p, "female");
+      if (male == null && female == null) return "";
+      const m = male ?? 0, f = female ?? 0, total = m + f;
+      const mw = total > 0 ? (m / total) * 100 : 0;
+      const fw = total > 0 ? (f / total) * 100 : 0;
+      return `<div class="demo-gender">
+        <div class="demo-gender-bar" role="img" aria-label="남성 ${male == null ? "자료 없음" : male.toFixed(1) + "%"}, 여성 ${female == null ? "자료 없음" : female.toFixed(1) + "%"}">
+          <span class="demo-gender-m" style="width:${mw}%"></span><span class="demo-gender-f" style="width:${fw}%"></span>
+        </div>
+        <div class="demo-legend">
+          <span><i class="demo-dot" style="background:#4389D5"></i>남성 ${male == null ? "—" : male.toFixed(1) + "%"}</span>
+          <span><i class="demo-dot" style="background:#E47BA5"></i>여성 ${female == null ? "—" : female.toFixed(1) + "%"}</span>
+        </div>
+      </div>`;
+    };
+    const ageChart = (p) => [["age0", "0~10세"], ["age10", "10대"], ["age20", "20대"], ["age30", "30대"], ["age40", "40대"], ["age50", "50대"], ["age60", "60대"], ["age70", "70대+"]]
+      .filter(([key]) => demoValue(p, key) != null)
+      .map(([key, label]) => {
+        const value = demoValue(p, key);
+        return `<div class="demo-row"><span>${label}</span><div class="demo-track"><div class="demo-fill" style="width:${value}%"></div></div><b>${value.toFixed(1)}%</b></div>`;
+      }).join("");
     const pop = (p) => {
-      const gender = demoRows(p, [["male", "남성"], ["female", "여성"]]);
-      const ages = demoRows(p, [["age0", "0~10세"], ["age10", "10대"], ["age20", "20대"], ["age30", "30대"], ["age40", "40대"], ["age50", "50대"], ["age60", "60대"], ["age70", "70대+"]]);
+      const gender = genderChart(p), ages = ageChart(p);
       return `<div class="mpop"><b>${esc(liveLabel(p))}</b>
         <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
         ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
         ${p.fc?.length ? `<span class="mfc">${p.fc.slice(0, 3).map(([t, l, a, b]) => `${esc(t)} ${esc(l)}${a != null ? ` · ${pplRange(a, b)}` : ""}`).join(" → ")}</span>` : ""}
-        ${gender || ages ? `<div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>${gender ? `<b class="demo-title">전체 성별 비율</b>${gender}` : ""}${ages ? `<b class="demo-title">연령대별 전체 비율</b>${ages}` : ""}<span class="demo-note">공개 실시간 데이터는 성별 전체 비율과 연령대 전체 비율을 각각 제공합니다. 20대 남녀처럼 연령×성별 교차 비율은 제공하지 않습니다.</span></div>` : `<span class="demo-note">성별·연령별 통계 자료 없음</span>`}
+        <div class="demo-stats"><b class="demo-title">실시간 추정 인구 구성</b>
+          <b class="demo-title">남성·여성 전체 비율</b>
+          ${gender || `<span class="demo-note">성별 통계 자료 없음</span>`}
+          <b class="demo-title">연령대별 인구 비율</b>
+          ${ages || `<span class="demo-note">연령대 통계 자료 없음</span>`}
+          <span class="demo-note">남녀 비율과 연령대 비율은 각각 전체 인구를 기준으로 산출한 값입니다.</span>
+        </div>
         <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
     };
     // 서울 전체가 한눈에 보이는 축척(11)으로 시작 — 휴대폰·PC 모두 같은 축척
