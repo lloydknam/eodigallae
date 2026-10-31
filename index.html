@@ -323,7 +323,13 @@ img { max-width: 100%; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
 .mpop b { font-size: 15.5px; }
 .mpop span { color: #5B6B67; font-size: 13px; }
-.lvchip { font-style: normal; color: #fff; font-weight: 700; font-size: 12.5px; padding: 1px 8px; border-radius: 999px; margin-right: 4px; }
+.lv-pulse { animation: lvpulse 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.lv-busy { animation-duration: 2.4s; }
+.lv-warm { animation-duration: 3s; }
+.lv-calm { animation-duration: 4.6s; }
+@keyframes lvpulse { 0%, 100% { fill-opacity: .9; stroke-opacity: .9; transform: scale(1); } 50% { fill-opacity: .38; stroke-opacity: .35; transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .lv-pulse { animation: none; } }
+.lvchip { font-style: normal; color: #191F28; font-weight: 700; font-size: 12.5px; padding: 1px 8px; border-radius: 999px; margin-right: 4px; }
 .mfc { color: #191F28 !important; }
 .live-home { width: 100%; margin-top: 10px; padding: 12px 14px; border: 0; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); text-align: left; }
 .live-home b { font-size: 15px; flex: 1; }
@@ -1241,7 +1247,10 @@ img { max-width: 100%; }
   }
 
   // ── 인파지도 (서울시 실시간 인구데이터, 30분마다 수집) ──
-  const LIVE_LV = [["붐빔", "#E4503A"], ["약간 붐빔", "#F08C2E"], ["보통", "#E3B52A"], ["여유", "#2E9E6B"]];
+  // 파스텔 색(채움) + 같은 계열 진한 색(테두리)
+  const LIVE_LV = [["붐빔", "#F4978E", "#D9584A"], ["약간 붐빔", "#F8C08A", "#DE8A3C"], ["보통", "#F3DC86", "#C9A73A"], ["여유", "#9ED9BC", "#4FA77F"]];
+  const lvLine = (l) => (LIVE_LV.find(([k]) => k === l) || [, , "#8A939C"])[2];
+  const lvKey = (l) => ["busy", "warm", "mid", "calm"][lvRank(l)] || "calm";
   const lvRank = (l) => { const i = LIVE_LV.findIndex(([k]) => k === l); return i < 0 ? 9 : i; };
   const lvColor = (l) => (LIVE_LV.find(([k]) => k === l) || [, "#9AA4AE"])[1];
   const fmtPpl = (n) => n == null ? "" : n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}만` : n.toLocaleString();
@@ -1281,8 +1290,9 @@ img { max-width: 100%; }
     ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
     for (const p of ps) {
       const c = lvColor(p.lvl);
-      const m = L.circleMarker([p.lat, p.lng], { radius: 6, color: "#fff", weight: 1.5, fillColor: c, fillOpacity: 0.9 })
-        .addTo(map).bindPopup(pop(p), { maxWidth: 250 });
+      const m = L.circleMarker([p.lat, p.lng], { radius: 6, color: lvLine(p.lvl), weight: 1.5, opacity: 0.9, fillColor: c, fillOpacity: 0.85,
+        className: `lv-pulse lv-${lvKey(p.lvl)}` }).addTo(map).bindPopup(pop(p), { maxWidth: 250 });
+      const el = m.getElement(); if (el) el.style.animationDelay = `${(-Math.random() * 4).toFixed(2)}s`;   // 제각각 깜빡이게
       m._base = 4 + 9 * Math.sqrt((p.max || 0) / maxP);
       marks.set(p.cd, m);
     }
