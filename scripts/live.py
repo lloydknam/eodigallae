@@ -74,6 +74,9 @@ COORDS = {
     "올림픽공원": (37.5206, 127.1214), "홍제폭포": (37.5800, 126.9350), "롯데월드": (37.5111, 127.0982),
     "코엑스": (37.5118, 127.0592), "타임스퀘어": (37.5170, 126.9033), "문래": (37.5160, 126.8950),
     "을지로": (37.5660, 126.9910), "성수": (37.5446, 127.0557), "이태원": (37.5345, 126.9946),
+    "광장전통시장": (37.5701, 126.9996), "잠실롯데타워": (37.5125, 127.1025), "석촌호수": (37.5090, 127.1040),
+    "송리단길": (37.5085, 127.1055), "송현녹지광장": (37.5765, 126.9817), "시의회앞": (37.5660, 126.9775),
+    "숭례문": (37.5600, 126.9754), "신촌스타광장": (37.5560, 126.9370), "구로역": (37.5030, 126.8820),
 }
 
 CAT = [("관광특구", "관광특구"), ("궁", "고궁·문화유산"), ("종묘", "고궁·문화유산"), ("유적", "고궁·문화유산"), ("보신각", "고궁·문화유산"),
@@ -138,16 +141,18 @@ def num(v) -> int | None:
 
 
 def coords_for(name: str, cache: dict):
+    """손으로 적은 좌표표를 먼저 본다: 이름이 똑같은 것 → 이름 안에 든 가장 긴 것 → 이름을 품은 것. 없을 때만 OSM 결과(기억해 둔 것)."""
     n = norm(name)
+    keys = {norm(k): ll for k, ll in COORDS.items()}
+    if n in keys:
+        return list(keys[n])
+    inside = sorted((k for k in keys if k and k in n), key=len, reverse=True)
+    if inside:
+        return list(keys[inside[0]])
+    around = sorted((k for k in keys if k and n in k), key=len)
+    if around:
+        return list(keys[around[0]])
     if n in cache:
-        return cache[n]
-    best = None
-    for k, ll in COORDS.items():
-        kk = norm(k)
-        if kk and (kk in n or n in kk) and (best is None or len(kk) > best[0]):
-            best = (len(kk), ll)
-    if best:
-        cache[n] = list(best[1])
         return cache[n]
     # OpenStreetMap에서 한 번 찾기 (서울 안으로 제한, 1초 간격 예의)
     q = re.sub(r"(관광특구|일대|·)", " ", name).strip()
@@ -235,4 +240,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-# 2026-10-31T03:00:13Z 키 등록 후 실행
