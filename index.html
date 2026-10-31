@@ -1047,7 +1047,12 @@ img { max-width: 100%; }
       </section>
       <section class="weekly map-sec" style="margin-top:14px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
-        <div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+<div class="crowd-filters" aria-label="인구 통계 필터">
+  <label>성별 비중<select id="live-gender-filter"><option value="all">전체 성별</option><option value="male">남성 비중 50% 이상</option><option value="female">여성 비중 50% 이상</option></select></label>
+  <label>연령대 비중<select id="live-age-filter"><option value="all">전체 연령</option><option value="age0">0~9세 비중 최다</option><option value="age10">10대 비중 최다</option><option value="age20">20대 비중 최다</option><option value="age30">30대 비중 최다</option><option value="age40">40대 비중 최다</option><option value="age50">50대 비중 최다</option><option value="age60">60대 비중 최다</option><option value="age70">70대 이상 비중 최다</option></select></label>
+</div>
+<p class="demo-note">서울시 실시간 추정 인구의 성별·연령별 비율을 기준으로 표시합니다.</p>
+<div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
         <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
         <div id="live-list"></div>
       </section>`;
