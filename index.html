@@ -310,6 +310,23 @@ img { max-width: 100%; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
 .mpop b { font-size: 15.5px; }
 .mpop span { color: #5B6B67; font-size: 13px; }
+.lvchip { font-style: normal; color: #fff; font-weight: 700; font-size: 12.5px; padding: 1px 8px; border-radius: 999px; margin-right: 4px; }
+.mfc { color: #191F28 !important; }
+.live-home { width: 100%; margin-top: 10px; padding: 12px 14px; border: 0; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); text-align: left; }
+.live-home b { font-size: 15px; flex: 1; }
+.live-home span:last-child { color: var(--celadon); font-size: 13.5px; font-weight: 700; }
+.live-dot { width: 10px; height: 10px; border-radius: 50%; background: #E4503A; box-shadow: 0 0 0 0 rgba(228,80,58,.5); flex: none; }
+@media (prefers-reduced-motion: no-preference) { .live-dot { animation: livepulse 1.8s ease-out infinite; } }
+@keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(228,80,58,.55); } 100% { box-shadow: 0 0 0 9px rgba(228,80,58,0); } }
+.live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
+.live-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.live-legend i, .live-row i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.live-h { font-size: 16px; margin: 16px 2px 6px; }
+.live-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.live-list li + li { border-top: 1px solid var(--line); }
+.live-row { width: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; padding: 11px 14px; border: 0; background: none; text-align: left; cursor: pointer; }
+.live-row b { font-size: 15px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.live-row span { font-size: 13px; color: var(--muted); white-space: nowrap; }
 .mpop .mweek { color: #E4503A; font-weight: 600; }
 .mpop .mlinks { display: flex; gap: 12px; margin-top: 4px; }
 .mpop a { color: #12907A; font-weight: 600; text-decoration: none; }
@@ -473,7 +490,7 @@ img { max-width: 100%; }
 (() => {
   const app = document.getElementById("app");
   const topbar = document.getElementById("topbar");
-  const state = { index: null, prov: "전체", q: "", city: null, tab: "course", course: 0, day: 0, sort: "hot", weekly: null, list: "youtube" };
+  const state = { mapMode: (() => { try { return localStorage.getItem("mapMode") || "hot"; } catch { return "hot"; } })(), index: null, prov: "전체", q: "", city: null, tab: "course", course: 0, day: 0, sort: "hot", weekly: null, list: "youtube" };
   const cityCache = new Map();
 
   // 어디냥 + 소품 (cls: flip=좌우 반전, tilt=기울기, left=소품을 왼손에)
@@ -946,22 +963,32 @@ img { max-width: 100%; }
         <a class="entry" href="#video"><b>🎬 영상 그대로 여행</b><span>유튜브 링크 → 코스 완성</span></a>
         <a class="entry" href="#report"><b>📮 숨은 핫플 제보</b><span>나만 아는 곳 알려주기</span></a>
       </div>
+      <button class="live-home" data-mapmode="live"><span class="live-dot"></span><b>지금 서울 어디가 붐빌까?</b><span>실시간 인파 지도 →</span></button>
       <section id="weekly" class="weekly"></section>
       <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
     renderWeekly();
     renderWeather();
   }
   function showMapPage() {
+    const live = state.mapMode === "live";
     app.innerHTML = `
       <section class="page-head">
-        <h1>${mz("🔍", "tilt")}핫플 지도</h1>
-        <p>동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요. 한 손가락으로 끌어서 옮기고, 두 손가락으로 벌리거나 +버튼을 누르면 확대돼요. 화면을 내릴 땐 지도 바깥을 밀어 주세요.</p>
+        <h1>${live ? mz("👀", "flip left") : mz("🔍", "tilt")}${live ? "지금 붐비는 곳" : "핫플 지도"}</h1>
+        <p>${live ? "서울 주요 장소의 지금 인파예요. 통신사 휴대폰 신호로 추정한 서울시 실시간 인구데이터를 30분마다 받아요."
+          : "동그라미가 클수록 요즘 유튜브에 많이 나오는 도시예요. 빨간 숫자는 전국 화제 장소 순위예요."}
+          한 손가락으로 끌어서 옮기고, 두 손가락이나 +버튼으로 확대해요.</p>
       </section>
-      <section class="weekly map-sec" style="margin-top:14px">
+      <div class="course-pick" role="group" aria-label="지도 종류" style="margin-top:12px">
+        <button class="chip" data-mapmode="hot" aria-pressed="${!live}">🔥 유튜브 핫플</button>
+        <button class="chip" data-mapmode="live" aria-pressed="${live}">👥 지금 붐비는 곳 · 서울</button>
+      </div>
+      <section class="weekly map-sec" style="margin-top:10px">
         <div class="weekly-head"><span class="wk" id="map-at"></span></div>
-        <div id="hotmap" class="hotmap" role="region" aria-label="전국 핫플 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+        <div id="hotmap" class="hotmap" role="region" aria-label="${live ? "서울 실시간 인파 지도" : "전국 핫플 지도"}"><p class="map-wait">지도를 불러오는 중…</p></div>
+        ${live ? `<div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
+          <div id="live-list"></div>` : ""}
       </section>`;
-    renderMap();
+    if (live) renderLiveMap(); else renderMap();
   }
   function showCitiesPage() {
     const provinces = ["전체", ...(state.half?.regions?.length ? ["반값여행"] : []), ...new Set(state.index.cities.map((c) => c.province))];
@@ -1176,6 +1203,68 @@ img { max-width: 100%; }
     };
     map.on("zoomend", sync);
     sync();
+  }
+
+  // ── 지금 붐비는 곳 (서울시 실시간 인구데이터, 30분마다 수집) ──
+  const LIVE_LV = [["붐빔", "#E4503A"], ["약간 붐빔", "#F08C2E"], ["보통", "#E3B52A"], ["여유", "#2E9E6B"]];
+  const lvRank = (l) => { const i = LIVE_LV.findIndex(([k]) => k === l); return i < 0 ? 9 : i; };
+  const lvColor = (l) => (LIVE_LV.find(([k]) => k === l) || [, "#9AA4AE"])[1];
+  const fmtPpl = (n) => n == null ? "" : n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}만` : n.toLocaleString();
+  const pplRange = (a, b) => a == null ? "" : `약 ${fmtPpl(a)}~${fmtPpl(b)}명`;
+  let liveData = null;
+  async function renderLiveMap() {
+    const box = document.getElementById("hotmap");
+    if (!box) return;
+    try {
+      const r = await fetch("data/live/seoul.json", { cache: "no-cache" });
+      liveData = r.ok ? await r.json() : null;
+      await loadLeaflet();
+    } catch { liveData = liveData || null; }
+    if (!document.body.contains(box)) return;
+    const list = document.getElementById("live-list");
+    if (!liveData || !window.L) {
+      box.innerHTML = `<p class="map-wait">실시간 인파 자료를 준비하고 있어요. 조금만 기다려 주세요!</p>`;
+      return;
+    }
+    const at = new Date(liveData.at), age = (Date.now() - at) / 60000;
+    document.getElementById("map-at").textContent = `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")} 기준${age > 120 ? " · 업데이트가 늦어지고 있어요" : ""}`;
+    box.innerHTML = "";
+    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true })
+      .fitBounds([[37.45, 126.82], [37.67, 127.15]]);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · 서울시 실시간 인구데이터',
+    }).addTo(map);
+    const ps = liveData.places.filter((p) => p.lat != null);
+    const maxP = Math.max(...ps.map((p) => p.max || 0), 1);
+    const pop = (p) => `<div class="mpop"><b>${esc(p.name)}</b>
+      <span><em class="lvchip" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</em> ${pplRange(p.min, p.max)}</span>
+      ${p.msg ? `<span>${esc(p.msg)}</span>` : ""}
+      ${p.fc?.length ? `<span class="mfc">${p.fc.filter((_, i) => i % 2 === 1).slice(0, 3).map(([t, l]) => `${esc(t)} ${esc(l)}`).join(" → ")}</span>` : ""}
+      <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
+    if (ps.length > 3) map.fitBounds(L.latLngBounds(ps.map((p) => [p.lat, p.lng])), { padding: [18, 18] });
+    const marks = new Map();
+    ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
+    for (const p of ps) {
+      const r = 7 + 15 * Math.sqrt((p.max || 0) / maxP), c = lvColor(p.lvl);
+      const m = L.circleMarker([p.lat, p.lng], { radius: r, color: "#fff", weight: 2, fillColor: c, fillOpacity: 0.85 })
+        .addTo(map).bindPopup(pop(p), { maxWidth: 250 });
+      marks.set(p.cd, m);
+    }
+    if (list) {
+      const top = [...liveData.places].sort((a, b) => lvRank(a.lvl) - lvRank(b.lvl) || (b.max || 0) - (a.max || 0));
+      const calm = top.filter((p) => p.lvl === "여유" && p.cat !== "인구밀집지역").sort((a, b) => (a.max || 0) - (b.max || 0));
+      const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i>
+        <b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
+      list.innerHTML = `<h3 class="live-h">지금 가장 붐비는 곳</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>
+        ${calm.length ? `<h3 class="live-h">지금 한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}
+        <p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
+      list.onclick = (e) => {
+        const b = e.target.closest("[data-live]"); if (!b) return;
+        const m = marks.get(b.dataset.live); if (!m) return;
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+        map.setView(m.getLatLng(), 14); m.openPopup();
+      };
+    }
   }
 
   // ── 전국 주간 랭킹 ──
@@ -1552,7 +1641,7 @@ img { max-width: 100%; }
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go],[data-heart],[data-unheart],[data-share-plan],[data-clear-plan],[data-take-plan],[data-take-video],[data-share-video]");
+    const t = e.target.closest("[data-city],[data-home],[data-prov],[data-tab],[data-course],[data-day],[data-sort],[data-list],[data-spot],[data-view],[data-stamp],[data-share-stamps],[data-half-go],[data-heart],[data-unheart],[data-share-plan],[data-clear-plan],[data-take-plan],[data-take-video],[data-share-video],[data-mapmode]");
     if (!t) return;
     if (t.dataset.stamp) {
       const id = t.dataset.stamp;
@@ -1576,6 +1665,11 @@ img { max-width: 100%; }
     if ("takePlan" in t.dataset) {
       for (const p of state.sharedPlan || []) if (!inPlan(p.id)) plan.push(p);
       savePlan(); toast("내 코스에 담았어요"); go("me"); return;
+    }
+    if (t.dataset.mapmode) {
+      e.preventDefault(); state.mapMode = t.dataset.mapmode; store.set("mapMode", state.mapMode);
+      if (location.hash !== "#map") go("map"); else showMapPage();
+      return;
     }
     if ("takeVideo" in t.dataset) {
       let n = 0;
