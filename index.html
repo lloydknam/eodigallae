@@ -382,6 +382,25 @@ img { max-width: 100%; }
 .live-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 12.5px; color: var(--muted); }
 .live-legend span { display: inline-flex; align-items: center; gap: 4px; }
 .live-legend i, .live-row i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.live-compare { margin: 18px 0 8px; padding: 14px; border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.live-compare-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:9px; }
+.live-compare-head b { font-size:15px; }
+.live-compare-head small { color:var(--muted); font-size:10.5px; }
+.live-compare-add { width:100%; margin-bottom:9px; padding:9px 10px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:var(--surface); font:inherit; font-size:12.5px; }
+.live-compare-rows { display:grid; gap:10px; }
+.live-compare-row { display:grid; gap:4px; }
+.live-compare-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; }
+.live-compare-meta b { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.live-compare-level { flex:none; padding:2px 7px; border-radius:999px; color:#fff; font-size:10px; font-weight:700; }
+.live-compare-track { height:9px; overflow:hidden; border-radius:99px; background:#E9EFEC; }
+.live-compare-fill { height:100%; border-radius:inherit; }
+.live-compare-value { display:flex; justify-content:space-between; color:var(--muted); font-size:10.5px; }
+.live-compare-remove { flex:none; border:0; padding:1px 4px; background:transparent; color:var(--muted); font-size:15px; cursor:pointer; }
+.live-compare-note { margin:9px 0 0; color:var(--muted); font-size:10px; line-height:1.35; }
+@media (max-width:600px) {
+  .live-compare { padding:11px; }
+  .live-compare-head b { font-size:14px; }
+}
 .live-h { font-size: 16px; margin: 16px 2px 6px; }
 .live-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
 .live-list li + li { border-top: 1px solid var(--line); }
@@ -1070,6 +1089,12 @@ img { max-width: 100%; }
 <p class="demo-note">서울시 실시간 추정 인구의 성별·연령별 비율을 기준으로 표시합니다.</p>
 <div id="hotmap" class="hotmap crowd-map" role="region" aria-label="서울 인파지도"><p class="map-wait">지도를 불러오는 중…</p></div>
         <div class="live-legend" aria-hidden="true">${LIVE_LV.map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join("")}</div>
+        <section id="live-compare" class="live-compare" aria-label="지역별 실시간 인구 비교">
+          <div class="live-compare-head"><b>지역별 실시간 인구 비교</b><small>추정 인구 중간값</small></div>
+          <select id="live-compare-add" class="live-compare-add" aria-label="비교할 지역 추가"><option value="">비교할 지역 추가</option></select>
+          <div id="live-compare-rows" class="live-compare-rows"></div>
+          <p class="live-compare-note">같은 수집 회차의 지역별 추정 인구를 비교합니다. 막대 길이는 각 지역 추정 인구 범위의 중간값 기준입니다.</p>
+        </section>
         <div id="live-list"></div>
       </section>`;
     renderLiveMap();
@@ -1458,6 +1483,58 @@ img { max-width: 100%; }
       const row = (p) => `<li><button class="live-row" data-live="${esc(p.cd)}"><i style="background:${lvColor(p.lvl)}"></i><b>${esc(p.name)}</b><span>${esc(p.lvl)} · ${pplRange(p.min, p.max)}</span></button></li>`;
       list.innerHTML = `${top.length ? `<h3 class="live-h">실시간 장소 ${top.length}곳 · 붐비는 순</h3><ol class="live-list">${top.slice(0, 8).map(row).join("")}</ol>` : ""}${calm.length ? `<h3 class="live-h">한산한 나들이 장소</h3><ol class="live-list">${calm.slice(0, 6).map(row).join("")}</ol>` : ""}${liveData.sample ? `<p class="plan-note"><b>준비 중:</b> 시험용으로 광화문 한 곳만 보여요.</p>` : ""}<p class="plan-note">출처: 서울시 실시간 인구데이터(서울 주요 ${liveData.places.length}곳). 통신 데이터로 추정한 값이라 실제와 다를 수 있어요.</p>`;
     };
+    const compareBox = document.getElementById("live-compare");
+    const compareAdd = document.getElementById("live-compare-add");
+    const compareRows = document.getElementById("live-compare-rows");
+    if (compareBox && compareAdd && compareRows) {
+      const preferred = ["이태원 관광특구", "홍대 관광특구", "성수카페거리"];
+      let compareCodes = preferred
+        .map((name) => liveData.places.find((p) => p.name === name)?.cd)
+        .filter(Boolean);
+      if (compareCodes.length < 3) {
+        for (const p of liveData.places) {
+          if (compareCodes.length >= 3) break;
+          if (!compareCodes.includes(p.cd)) compareCodes.push(p.cd);
+        }
+      }
+      const renderLiveCompare = () => {
+        const selected = compareCodes.map((cd) => liveData.places.find((p) => p.cd === cd)).filter(Boolean);
+        const mid = (p) => p.min == null || p.max == null ? null : (Number(p.min) + Number(p.max)) / 2;
+        const maxMid = Math.max(1, ...selected.map((p) => mid(p) || 0));
+        compareAdd.innerHTML = `<option value="">비교할 지역 추가</option>${liveData.places
+          .filter((p) => !compareCodes.includes(p.cd))
+          .map((p) => `<option value="${esc(p.cd)}">${esc(p.name)}</option>`).join("")}`;
+        compareAdd.disabled = compareCodes.length >= 5;
+        compareRows.innerHTML = selected.map((p) => {
+          const value = mid(p);
+          const width = value == null ? 0 : Math.max(2, Math.min(100, value / maxMid * 100));
+          const amount = p.min == null || p.max == null ? "인구 정보 없음" : pplRange(p.min, p.max);
+          return `<div class="live-compare-row">
+            <div class="live-compare-meta">
+              <b>${esc(p.name)}</b>
+              <span class="live-compare-level" style="background:${lvColor(p.lvl)}">${esc(p.lvl || "정보 없음")}</span>
+              <button class="live-compare-remove" type="button" data-compare-remove="${esc(p.cd)}" aria-label="${esc(p.name)} 비교에서 제외">×</button>
+            </div>
+            <div class="live-compare-track"><div class="live-compare-fill" style="width:${width}%;background:${lvColor(p.lvl)}"></div></div>
+            <div class="live-compare-value"><span>${amount}</span><span>${esc((p.time || "").slice(-5))} 기준</span></div>
+          </div>`;
+        }).join("");
+        if (!selected.length) compareRows.innerHTML = `<span class="demo-note">비교할 지역을 추가해 주세요.</span>`;
+      };
+      compareAdd.onchange = () => {
+        const cd = compareAdd.value;
+        if (!cd || compareCodes.includes(cd) || compareCodes.length >= 5) return;
+        compareCodes.push(cd);
+        renderLiveCompare();
+      };
+      compareRows.onclick = (e) => {
+        const button = e.target.closest("[data-compare-remove]");
+        if (!button) return;
+        compareCodes = compareCodes.filter((cd) => cd !== button.dataset.compareRemove);
+        renderLiveCompare();
+      };
+      renderLiveCompare();
+    }
     if (list) {
       renderLiveList();
       list.onclick = (e) => {
