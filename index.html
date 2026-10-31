@@ -320,7 +320,7 @@ img { max-width: 100%; }
 .mpin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermilion); color: #fff;
   font: 400 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
 .mpin.top { width: 34px; height: 34px; margin: -2px; font-size: 18px; }
-.mpop { display: grid; gap: 2px; font: 13px/1.35 var(--font-body); color: #1C2422; min-width: 250px; }
+.mpop { display: grid; gap: 2px; font: 13px/1.35 var(--font-body); color: #1C2422; min-width: 180px; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
 .mpop b { font-size: 15.5px; }
 .mpop span { color: #5B6B67; font-size: 13px; }
@@ -1373,7 +1373,7 @@ img { max-width: 100%; }
     for (const p of ps) {
       const c = lvColor(p.lvl);
       const m = L.circleMarker([p.lat, p.lng], { radius: 6, color: lvLine(p.lvl), weight: 1.5, opacity: 1, fillColor: c, fillOpacity: 0.95,
-        className: `lv-pulse lv-${lvKey(p.lvl)}` }).addTo(map).bindPopup(pop(p), { maxWidth: 330, minWidth: 280 });
+        className: `lv-pulse lv-${lvKey(p.lvl)}` }).addTo(map).bindPopup(pop(p), { maxWidth: 250 });
       const el = m.getElement(); if (el) el.style.animationDelay = `${(-Math.random() * 4).toFixed(2)}s`;   // 제각각 깜빡이게
       m._base = 4 + 9 * Math.sqrt((p.max || 0) / maxP);
       if (lvRank(p.lvl) <= 1) {   // 붐빔·약간 붐빔
