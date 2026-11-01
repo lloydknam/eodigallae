@@ -368,12 +368,16 @@ syncChips();
 var trains=new Map(),sel=null,sheetKey='',lastUI=0,total=0,sdNow=0;
 function makeTrain(L,d,dep,key){
   var g=mk('g',{'class':'tr'},gTr);g.dataset.k=key;
-  mk('circle',{r:13,fill:'transparent'},g);
-  mk('circle',{'class':'sel',r:11.5,fill:'none',stroke:'var(--ink)','stroke-width':2},g);
+  mk('circle',{r:14,fill:'transparent'},g);
+  mk('circle',{'class':'sel',r:14,fill:'none',stroke:'var(--ink)','stroke-width':2},g);
   var arrow=mk('g',{},g);
-  mk('path',{d:'M12.5,0 L7.2,-3.8 L7.2,3.8 Z',fill:L.c,stroke:'var(--land)','stroke-width':.8,'stroke-linejoin':'round'},arrow);
-  mk('circle',{r:7.4,fill:L.c,stroke:'var(--land)','stroke-width':1.6},g);
-  var t=mk('text',{x:0,y:3.5,'text-anchor':'middle',fill:L.tc,style:'font:600 10px var(--f-display);pointer-events:none'},g);
+  /* 열차 몸체: 진행방향(+x)을 바라보는 둥근 코 모양 차량 실루엣 */
+  mk('path',{d:'M-9.5,-4.4 L3,-4.4 Q9.6,-4.4 11.2,0 Q9.6,4.4 3,4.4 L-9.5,4.4 Z',fill:L.c,stroke:'var(--land)','stroke-width':1,'stroke-linejoin':'round'},arrow);
+  mk('rect',{x:-7,y:-2.6,width:2.8,height:5.2,rx:1,fill:'#fff',opacity:.55},arrow);
+  mk('rect',{x:-2.6,y:-2.6,width:2.8,height:5.2,rx:1,fill:'#fff',opacity:.4},arrow);
+  mk('circle',{cx:6,cy:0,r:1.3,fill:'#fff',opacity:.9},arrow);
+  mk('circle',{r:6.6,fill:L.c,stroke:'var(--land)','stroke-width':1.4},g);
+  var t=mk('text',{x:0,y:3.2,'text-anchor':'middle',fill:L.tc,style:'font:600 9px var(--f-display);pointer-events:none'},g);
   t.textContent=L.n;
   var r={g:g,arrow:arrow,L:L,d:d,dep:dep,p:null};
   trains.set(key,r);return r;
