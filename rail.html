@@ -28,11 +28,11 @@ h1{font:36px/1.2 var(--display);font-weight:400;margin:4px 0}.lead{margin:0;colo
 <div class="kicker">TRAIN & TRANSIT</div><h1>열차정보</h1>
 <p class="lead">전국 철도와 수도권 지하철 위를 달리는 열차를 지도에서 살펴보세요.</p>
 <div class="switch" role="tablist" aria-label="교통수단 선택">
-<button id="nationalBtn" class="active" type="button" role="tab" aria-selected="true">🚄 전국 철도</button>
-<button id="metroBtn" type="button" role="tab" aria-selected="false">🚇 수도권 지하철</button>
+<button id="metroBtn" class="active" type="button" role="tab" aria-selected="true">🚇 수도권 지하철</button>
+<button id="nationalBtn" type="button" role="tab" aria-selected="false">🚄 전국 철도</button>
 </div>
-<section class="panel" id="natPanel"><iframe id="natFrame" title="전국 철도 열차지도" src="rail-map.html?embed=1"></iframe></section>
-<section class="panel" id="metroPanel" hidden><iframe id="metroFrame" title="수도권 지하철 열차지도" data-src="subway-map.html?embed=1"></iframe></section>
+<section class="panel" id="metroPanel"><iframe id="metroFrame" title="수도권 지하철 열차지도" src="subway-map.html?embed=1"></iframe></section>
+<section class="panel" id="natPanel" hidden><iframe id="natFrame" title="전국 철도 열차지도" data-src="rail-map.html?embed=1"></iframe></section>
 <div class="notice" id="notice">열차 위치는 시간표를 흉내 낸 모의 운행이며 실제 위치가 아닙니다(지하철 지도의 "실시간" 버튼을 켜면 서울시 실시간 위치로 바뀝니다). 노선도는 주요 역만 이은 약식 지도입니다. 실제 운행·시간표는 코레일 및 각 운영기관의 공지를 확인하세요.</div>
 <a class="back" href="./">← 어디갈래 홈으로</a>
 </main>
@@ -45,11 +45,11 @@ function showTab(type){
   document.getElementById('metroBtn').setAttribute('aria-selected',String(metroOn));
   document.getElementById('natPanel').hidden=metroOn;
   document.getElementById('metroPanel').hidden=!metroOn;
-  if(metroOn){const f=document.getElementById('metroFrame');if(!f.getAttribute('src'))f.src=f.dataset.src}
-  try{history.replaceState(null,'',metroOn?'#metro':location.pathname+location.search)}catch(e){}
+  if(!metroOn){const f=document.getElementById('natFrame');if(!f.getAttribute('src'))f.src=f.dataset.src}
+  try{history.replaceState(null,'',metroOn?location.pathname+location.search:'#rail')}catch(e){}
 }
 document.getElementById('nationalBtn').addEventListener('click',()=>showTab('rail'));
 document.getElementById('metroBtn').addEventListener('click',()=>showTab('metro'));
-if(location.hash==='#metro')showTab('metro');
+if(location.hash==='#rail')showTab('rail');
 </script>
 </body></html>
