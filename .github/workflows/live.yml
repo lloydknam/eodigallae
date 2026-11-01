@@ -1,6 +1,8 @@
 name: 인파지도(서울)
 
-# GitHub Actions가 10분마다 한 번 실행되어 서울시 실시간 인구를 수집하고 JSON을 갱신한다.
+# 한 번 실행되면 약 13분 동안 10분마다 서울시 실시간 인구를 받아 올린다.
+# 10분마다 다시 시작해 끊김 없이 이어 간다 — GitHub 예약 실행이 자주 밀리므로
+# 한 번 켜질 때 다음 예약 시각을 넘겨 오래 돌면서 자체적으로 만회한다(열차지도 워크플로와 같은 방식).
 on:
   schedule:
     - cron: "3,13,23,33,43,53 * * * *"
@@ -15,12 +17,12 @@ permissions:
 
 concurrency:
   group: live-refresh
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   live:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 16
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -30,7 +32,7 @@ jobs:
       - name: 10분마다 서울 실시간 인구 받기
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
-          LIVE_LOOP_MIN: "1"
+          LIVE_LOOP_MIN: "13"
           LIVE_EVERY_MIN: "10"
         run: |
           git config user.name "github-actions[bot]"
