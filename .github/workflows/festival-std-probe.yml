@@ -1,0 +1,21 @@
+name: 전국문화축제표준데이터 응답 확인 (수동)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 응답 확인
+        env:
+          FESTIVAL_STD_KEY: ${{ secrets.FESTIVAL_STD_KEY }}
+        run: python scripts/festival_std_probe.py
