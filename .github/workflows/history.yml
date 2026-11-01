@@ -1,0 +1,35 @@
+name: 작년 이맘때 인파지도
+
+on:
+  schedule:
+    - cron: "27 21 * * *"   # 매일 한국시간 06:27
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/history.py", ".github/workflows/history.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  history:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - name: 작년 같은 날 생활인구 받기
+        env:
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+        run: python scripts/history.py
+      - name: 올리기
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/history
+          git diff --cached --quiet && exit 0
+          git commit -m "작년 이맘때 인파지도 $(TZ=Asia/Seoul date +'%m-%d')"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 5; done
