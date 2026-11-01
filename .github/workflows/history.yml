@@ -25,7 +25,9 @@ jobs:
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
           PROBE: "20260731,20260701,20260401,20260101,20251231,20251101,20250701,20250101,20240101,20231101,20221231,20220101"
-        run: python scripts/history.py
+        run: |
+          python scripts/probe_files.py || true
+          python scripts/history.py
       - name: 올리기
         run: |
           git config user.name "github-actions[bot]"
