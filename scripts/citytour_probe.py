@@ -20,7 +20,7 @@ def main():
     try:
         js = json.loads(body)
         print(json.dumps(js, ensure_ascii=False)[:2500])
-    print("totalCount", js.get("body", {}).get("totalCount"))
+        print("totalCount", js.get("body", {}).get("totalCount"))
     except Exception:
         print("JSON 아님:", body[:1500])
 
