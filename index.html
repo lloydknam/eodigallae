@@ -585,6 +585,16 @@ img { max-width: 100%; }
   .panel { animation: rise .22s ease-out both; }
   @keyframes rise { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }
 }
+.passport-block, .passport-card { margin: 14px 0; padding: 14px 16px; border-radius: 16px; background: var(--surface); }
+.passport-block h2, .passport-card h2 { font-size: 16px; margin: 0 0 4px; }
+.passport-card h2 em { font-style: normal; font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+.passport-sub, .passport-src { font-size: 12px; color: var(--muted); margin: 2px 0 8px; }
+.passport-route { display: flex; flex-direction: column; gap: 2px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.5; }
+.passport-route b { color: var(--celadon); }
+.passport-card ul { list-style: none; margin: 4px 0 0; padding: 0; }
+.passport-card li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.passport-card li a { color: var(--ink); font-weight: 600; text-decoration: none; }
+.passport-card li span { color: var(--muted); font-size: 12px; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -596,6 +606,7 @@ img { max-width: 100%; }
     <a href="#map" data-view="map"><span>📍</span>핫플 지도</a>
     <a href="#crowd" data-view="crowd"><span>👥</span>인파지도 <em>서울 실시간</em></a>
     <a href="rail.html"><span>🚆</span>열차정보 <em>지하철·국철</em></a>
+    <a href="#courses" data-view="courses"><span>🏛️</span>국가유산 방문코스 <em>13개 노선</em></a>
     <a href="#cities" data-view="cities"><span>🔍</span>도시 찾기</a>
     <a href="#me" data-view="me"><span>🧳</span>내 여행 <em>코스·도장깨기</em></a>
     <hr>
@@ -1109,7 +1120,7 @@ img { max-width: 100%; }
   }
 
   // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
-  const VIEWS = ["map", "crowd", "cities", "about", "me"];
+  const VIEWS = ["map", "crowd", "cities", "about", "me", "courses"];
   function setTabbar(view) {
     document.querySelectorAll("#tabbar [data-view], #menu-drop [data-view]").forEach((b) => {
       if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
@@ -1127,6 +1138,7 @@ img { max-width: 100%; }
     if (view === "cities") return showCitiesPage();
     if (view === "about") return showAboutPage();
     if (view === "me") return showMePage();
+    if (view === "courses") return showCoursesPage();
     app.innerHTML = `
       <section class="hero-card">
         <h1>이번 주말,<br><em>어디 갈래?</em></h1>
@@ -1858,6 +1870,7 @@ img { max-width: 100%; }
         ${d.sample ? `<div class="notice">샘플 데이터예요. 좌표는 근사치이고, 사진·영상·식당은 API를 연결하면 자동으로 채워져요. 지금은 사진을 누르면 유튜브 검색으로 연결돼요.</div>` : ""}
       </section>
       ${cityTop10(d)}
+      <div id="passport-slot"></div>
       <div class="tabs" role="tablist" id="tabs">
         ${tabBtn("course", "추천 코스", d.courses.length)}
         ${tabBtn("spots", "관광지", d.spots.length)}
@@ -1867,6 +1880,43 @@ img { max-width: 100%; }
       <div class="home-more"><a class="btn-ghost" href="#report=${enc(d.id)}" style="text-decoration:none">📮 ${esc(baseCity(d.name) || d.name)} 숨은 핫플 제보하기</a></div>
       <p class="credit">${esc(d.credit || "관광정보: 한국관광공사 TourAPI · 영상: YouTube")} · 이동시간은 직선거리 기반 추정치예요. 정확한 경로는 카카오맵 길찾기로 확인하세요.</p>`;
     renderPanel();
+    loadPassport().then((data) => {
+      const routes = passportForCity(d.id, data), slot = document.getElementById("passport-slot");
+      if (slot && routes.length && state.city === d) slot.innerHTML = passportBlockHtml(routes);
+    });
+  }
+
+  // ── 국가유산 방문코스 (국가유산청 방문 캠페인, 노선 13개) ──
+  let passportData = null;
+  async function loadPassport() {
+    if (!passportData) {
+      try { const r = await fetch("data/passport-courses.json", { cache: "no-cache" }); passportData = r.ok ? await r.json() : { routes: [] }; }
+      catch { passportData = { routes: [] }; }
+    }
+    return passportData;
+  }
+  const passportForCity = (cityId, data) => data.routes
+    .map((r) => ({ name: r.name, sites: r.sites.filter((s) => s.cityId === cityId) }))
+    .filter((r) => r.sites.length);
+  function passportBlockHtml(routes) {
+    return `<section class="passport-block">
+      <h2>🏛️ 국가유산 방문코스</h2>
+      <p class="passport-sub">이 도시에 있는 방문코스 거점이에요. 도장을 찍으려면 방문자 여권을 챙겨 가세요.</p>
+      ${routes.map((r) => `<div class="passport-route"><b>${esc(r.name)}</b><span>${r.sites.map((s) => esc(s.name)).join(" · ")}</span></div>`).join("")}
+      <p class="passport-src">출처: 국가유산청 방문 캠페인 (kh.or.kr)</p>
+    </section>`;
+  }
+  async function showCoursesPage() {
+    state.city = null;
+    app.innerHTML = `<section class="hero"><span class="prov">국가유산청</span><h1>국가유산 방문코스</h1>
+      <span class="meta">노선 13개 · 거점 103건 (중복 포함)</span></section><p class="loading">불러오는 중…</p>`;
+    const data = await loadPassport();
+    if (!data.routes.length) { app.innerHTML = `<p class="loading">방문코스 목록을 불러오지 못했어요. 잠시 뒤 다시 해 주세요.</p>`; return; }
+    app.innerHTML = `<section class="hero"><span class="prov">국가유산청</span><h1>국가유산 방문코스</h1>
+      <span class="meta">노선 ${data.routes.length}개 · 거점 ${data.routes.reduce((n, r) => n + r.sites.length, 0)}건 (중복 포함) · 거점을 누르면 그 도시로 가요</span></section>
+      ${data.routes.map((r) => `<section class="passport-card"><h2>${esc(r.name)} <em>${r.sites.length}곳</em></h2>
+        <ul>${r.sites.map((s) => `<li><a href="#${encodeURIComponent(s.cityId)}">${esc(s.name)}</a><span>${esc(s.city)}</span></li>`).join("")}</ul></section>`).join("")}
+      <p class="credit">출처: 국가유산청 방문 캠페인 (kh.or.kr) · 방문자 여권 도장은 직접 현장에서 찍어야 해요.</p>`;
   }
   // 도시별 유튜브 조회수 Top 10 (최근 6개월 영상 중 그 장소가 나온 영상들의 조회수 합)
   function cityTop10(d) {
