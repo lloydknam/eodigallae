@@ -162,18 +162,8 @@ img { max-width: 100%; }
 .rplay svg { width: 13px; height: 13px; }
 .rbody { display: grid; gap: 2px; text-decoration: none; min-width: 0; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
 .city-top { margin: 18px 0 8px; }
-.tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(6, 1fr);
-  background: var(--surface);
-  border-top: 1px solid var(--line); box-shadow: 0 -2px 10px rgba(11, 110, 97, .06);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px));
-}
-.tabbar button { border: 0; background: none; padding: 5px 0 4px; display: grid; justify-items: center; gap: 0; cursor: pointer; color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1.3; min-height: 46px; }
-.tabbar svg { width: 21px; height: 21px; }
-.tabbar button[aria-current="page"] { color: var(--celadon); }
 #app.wrap { padding-bottom: 8px !important; }
-.site-foot.wrap { padding-top: 0; padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
+.site-foot.wrap { padding-top: 0; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important; }
 .page-head { padding-block: 14px 2px; }
 .page-head h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 8vw, 38px); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
 .page-head h1 img { width: 52px; height: auto; }
@@ -639,15 +629,6 @@ img { max-width: 100%; }
   </nav></div></header>
 <main class="wrap" id="app"><p class="loading"><img src="icons/mascot-160.png" alt="">어디냥이 길을 찾는 중이에요…</p></main>
 <footer class="wrap site-foot"><div class="maker"><a class="lab" href="https://lloydknam.github.io/showcase/" target="_blank" rel="noopener" title="Lloyd’s Balcony Lab 프로젝트 모음"><img src="icons/brand/lockup-light.svg" alt="Lloyd's Balcony Lab · with claude · GitHub(@lloydknam)"></a></div></footer>
-<nav class="tabbar" id="tabbar" aria-label="메뉴">
-  <button data-view="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z" fill="currentColor"/></svg><span>홈</span></button>
-  <button data-view="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg><span>핫플 지도</span></button>
-  <button data-view="crowd"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2" fill="currentColor"/><path d="M2.8 19.5c.4-3.6 3-5.8 6.2-5.8s5.8 2.2 6.2 5.8z" fill="currentColor"/><circle cx="16.8" cy="9" r="2.6" fill="currentColor" opacity=".7"/><path d="M15.6 13.9c3 .1 5.2 2 5.6 5.6h-4.3c-.2-2.2-.7-4-1.3-5.6z" fill="currentColor" opacity=".7"/></svg><span>인파지도</span></button>
-  <button data-view="cities"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>도시 찾기</span></button>
-  <button data-view="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m8 12.5 2.6 2.6L16.5 9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>내 여행</span></button>
-  <button data-view="about"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2.2" fill="currentColor"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><circle cx="19" cy="12" r="2.2" fill="currentColor"/></svg><span>더보기</span></button>
-</nav>
-
 <script>
 (() => {
   const app = document.getElementById("app");
@@ -1193,7 +1174,7 @@ img { max-width: 100%; }
   // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
   const VIEWS = ["map", "crowd", "cities", "about", "me", "courses", "festivals"];
   function setTabbar(view) {
-    document.querySelectorAll("#tabbar [data-view], #menu-drop [data-view]").forEach((b) => {
+    document.querySelectorAll("#menu-drop [data-view]").forEach((b) => {
       if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
   }
