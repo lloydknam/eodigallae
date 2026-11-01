@@ -98,13 +98,26 @@ def tour_entry(it: dict, city: dict) -> dict:
 
 
 # ── 2) 전국문화축제표준데이터 ──
-def std_fetch(key: str) -> list[dict]:
-    q = {"serviceKey": key, "pageNo": "1", "numOfRows": "600", "type": "json"}
+def std_call(key: str, page: int) -> dict:
+    q = {"serviceKey": key, "pageNo": str(page), "numOfRows": "500", "type": "json"}
     url = f"{STD_BASE}?{urllib.parse.urlencode(q)}"
     with urllib.request.urlopen(url, timeout=30) as r:
-        js = json.loads(r.read().decode("utf-8", "replace"))
-    raw = js.get("body", {}).get("items", {}).get("item")
-    return raw if isinstance(raw, list) else [raw] if raw else []
+        return json.loads(r.read().decode("utf-8", "replace"))
+
+
+def std_fetch(key: str) -> list[dict]:
+    out, page = [], 1
+    while True:
+        js = std_call(key, page)
+        body = js.get("body", {})
+        raw = body.get("items", {}).get("item")
+        items = raw if isinstance(raw, list) else [raw] if raw else []
+        out += items
+        total = int(body.get("totalCount") or 0)
+        if not items or len(out) >= total or page > 20:
+            break
+        page += 1
+    return out
 
 
 def nearest_city(lat: float, lng: float, cities: list[dict]) -> dict | None:
