@@ -3,14 +3,12 @@ import json, os, urllib.parse, urllib.request
 
 ODII = "https://apis.data.go.kr/B551011/Odii"
 ENG = "https://apis.data.go.kr/B551011/EngService2"
-OPS_ODII = ["storyBasedList", "areaBasedList", "areaBasedList", "areaBasedList2", "locationBasedList", "locationBasedList2", "searchKeyword",
-            "searchKeyword2", "detailCommon", "detailCommon2", "detailInfo", "detailIntro", "detailIntro2",
-            "storyList", "storyDetail", "syncList", "syncList2", "storyBasedList", "areaCode", "categoryCode"]
+OPS_ODII = ['storyBasedList', 'storyKeywordList', 'storySearchList', 'storyDetailList', 'storyDetailCommon', 'storyCommon', 'storyIntro', 'storyImage', 'storySyncList', 'storyLocationBasedList', 'storyLocationList', 'storyAreaBasedList', 'attractionBasedList', 'attractionLocationBasedList', 'attractionKeywordList', 'attractionSearchList', 'attractionDetail', 'attractionDetailCommon', 'attractionSyncList', 'attractionList', 'tourAttractionList', 'tourStoryList', 'odiiList', 'odiiDetail', 'keywordList', 'searchList', 'detailList', 'syncList', 'locationList', 'areaList', 'basicList', 'detailStory', 'storyTourList']
 OPS_ENG = ["areaBasedList2"]
 
 def call(base, op, key, env_name):
     q = {"serviceKey": key, "MobileOS": "ETC", "MobileApp": "eodigallae", "_type": "json",
-         "numOfRows": "2", "pageNo": "1", "arrange": "A", "areaCode": "1", "contentTypeId": "12",
+         "numOfRows": "2", "pageNo": "1", "arrange": "A", "langCode": "ko", "areaCode": "1", "contentTypeId": "12",
          "keyword": "경복궁", "mapX": "126.9770", "mapY": "37.5759", "radius": "2000", "contentId": "126508"}
     url = f"{base}/{op}?{urllib.parse.urlencode(q)}"
     try:
@@ -33,10 +31,12 @@ def call(base, op, key, env_name):
             fields = sorted(first.keys())
         else:
             fields = []
+        if "NO_OPENAPI_SERVICE" in body: return
         print(f"[{env_name}] {op}: HTTP {status} code={hdr.get('resultCode')} msg={hdr.get('resultMsg')} total={cnt} fields={fields} body={body[:260]!r}")
         if fields:
             print("   sample:", json.dumps(first if isinstance(first, dict) else first[0], ensure_ascii=False)[:600])
     except Exception:
+        if "NO_OPENAPI_SERVICE" in body: return
         print(f"[{env_name}] {op}: HTTP {status} (JSON 아님) body={body[:260]!r}")
 
 def main():
@@ -46,9 +46,6 @@ def main():
         print("ODII_KEY가 없어요. 저장소 Secrets에 ODII_KEY를 등록해 주세요.")
     for op in OPS_ODII if odii_key else []:
         call(ODII, op, odii_key, "ODII")
-    if tour_key:
-        for op in OPS_ENG:
-            call(ENG, op, tour_key, "ENG")
 
 if __name__ == "__main__":
     main()
