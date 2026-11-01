@@ -3,12 +3,12 @@ import json, os, urllib.parse, urllib.request
 
 ODII = "https://apis.data.go.kr/B551011/Odii"
 ENG = "https://apis.data.go.kr/B551011/EngService2"
-OPS_ODII = ['storyBasedList', 'storyKeywordList', 'storySearchList', 'storyDetailList', 'storyDetailCommon', 'storyCommon', 'storyIntro', 'storyImage', 'storySyncList', 'storyLocationBasedList', 'storyLocationList', 'storyAreaBasedList', 'attractionBasedList', 'attractionLocationBasedList', 'attractionKeywordList', 'attractionSearchList', 'attractionDetail', 'attractionDetailCommon', 'attractionSyncList', 'attractionList', 'tourAttractionList', 'tourStoryList', 'odiiList', 'odiiDetail', 'keywordList', 'searchList', 'detailList', 'syncList', 'locationList', 'areaList', 'basicList', 'detailStory', 'storyTourList']
+OPS_ODII = ["storyBasedList", "storySearchList", "storyLocationBasedList", 'storyBasedList', 'storyKeywordList', 'storySearchList', 'storyDetailList', 'storyDetailCommon', 'storyCommon', 'storyIntro', 'storyImage', 'storySyncList', 'storyLocationBasedList', 'storyLocationList', 'storyAreaBasedList', 'attractionBasedList', 'attractionLocationBasedList', 'attractionKeywordList', 'attractionSearchList', 'attractionDetail', 'attractionDetailCommon', 'attractionSyncList', 'attractionList', 'tourAttractionList', 'tourStoryList', 'odiiList', 'odiiDetail', 'keywordList', 'searchList', 'detailList', 'syncList', 'locationList', 'areaList', 'basicList', 'detailStory', 'storyTourList']
 OPS_ENG = ["areaBasedList2"]
 
 def call(base, op, key, env_name):
     q = {"serviceKey": key, "MobileOS": "ETC", "MobileApp": "eodigallae", "_type": "json",
-         "numOfRows": "2", "pageNo": "1", "arrange": "A", "langCode": "ko", "areaCode": "1", "contentTypeId": "12",
+         "numOfRows": "2", "pageNo": "1", "langCode": "ko", "areaCode": "1", "contentTypeId": "12",
          "keyword": "경복궁", "mapX": "126.9770", "mapY": "37.5759", "radius": "2000", "contentId": "126508"}
     url = f"{base}/{op}?{urllib.parse.urlencode(q)}"
     try:
@@ -32,6 +32,7 @@ def call(base, op, key, env_name):
         else:
             fields = []
         if "NO_OPENAPI_SERVICE" in body: return
+        if "resultCode" in body and "response" not in body: print(f"[{env_name}] {op}: HTTP {status} body={body[:1200]!r}"); return
         print(f"[{env_name}] {op}: HTTP {status} code={hdr.get('resultCode')} msg={hdr.get('resultMsg')} total={cnt} fields={fields} body={body[:260]!r}")
         if fields:
             print("   sample:", json.dumps(first if isinstance(first, dict) else first[0], ensure_ascii=False)[:600])
