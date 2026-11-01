@@ -207,7 +207,13 @@ function init(){
       return cm;
     });
   });
-  if(allPts.length){try{map.fitBounds(allPts,{padding:[18,18]});}catch(e){}}
+  if(allPts.length){
+    try{
+      /* 전체 역이 들어오는 줌 레벨을 구한 뒤, 거기서 4단계 더 확대해 한강을 가운데 둔 위치로 시작 */
+      var bz=map.getBoundsZoom(L.latLngBounds(allPts),false,[18,18]);
+      map.setView([37.52,127.00],Math.min(map.getMaxZoom(),bz+4));
+    }catch(e){}
+  }
 
   LINES.forEach(function(G){
     var b=document.createElement('button');
