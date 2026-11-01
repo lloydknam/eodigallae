@@ -2012,7 +2012,7 @@ img { max-width: 100%; }
       <p class="passport-sub">앞으로 ${items.length}건의 축제·행사가 있어요.</p>
       ${items.slice(0, 8).map((f) => `<div class="passport-route">
         <b>${esc(f.title)} ${festivalDday(f)}</b>
-        <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}${f.addr ? ` · ${esc(f.addr)}` : ""}</span>
+        <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}${f.addr ? ` · ${esc(f.addr)}` : ""}${f.homepage ? ` · <a href="${esc(f.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}</span>
       </div>`).join("")}
       <p class="passport-src">출처: 한국관광공사 TourAPI 축제공연행사정보</p>
     </section>`;
@@ -2038,7 +2038,8 @@ img { max-width: 100%; }
             <h4>${esc(f.title)} ${festivalDday(f)}</h4>
             <span class="addr">${esc(f.city)}${f.addr ? ` · ${esc(f.addr)}` : ""}</span>
             <span class="addr">${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
-            <div class="links"><a href="#${encodeURIComponent(f.cityId)}">${esc(f.city)} 둘러보기 →</a></div>
+            <div class="links"><a href="#${encodeURIComponent(f.cityId)}">${esc(f.city)} 둘러보기 →</a>
+              ${f.homepage ? `<a href="${esc(f.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}</div>
           </div>
         </article>`).join("")}</div>`;
       document.getElementById("fest-list").innerHTML = group("진행 중", filt(ongoing)) + group("다가오는 축제", filt(upcoming))

@@ -24,6 +24,7 @@ jobs:
       - name: 전국 축제·행사 정보
         env:
           TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
+          FESTIVAL_STD_KEY: ${{ secrets.FESTIVAL_STD_KEY }}
         run: python scripts/festival.py
       - name: 변경분 커밋
         run: |
