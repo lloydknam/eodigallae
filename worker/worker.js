@@ -2,6 +2,7 @@
 // 1) GET  /video?url=<유튜브 링크>  → 영상 속 장소를 찾아 좌표와 함께 돌려준다 (코스 만들기용)
 // 2) POST /report                  → 숨은 핫플 제보를 텔레그램으로 전달한다
 // 3) GET  /subway                  → 서울 지하철 1~9호선 실시간 열차 위치(서울 열린데이터광장)를 한 번에 돌려준다
+// 4) GET  /story?mapX=&mapY=&radius= 또는 /story?keyword= → 한국관광공사 오디(Odii) 오디오 가이드 검색 (1시간 캐시)
 //
 // 비밀값(Settings → Variables and Secrets):
 //   YOUTUBE_API_KEY   유튜브 Data API 키
@@ -9,6 +10,7 @@
 //   SEOUL_API_KEY     (열차지도용) 서울 열린데이터광장 인증키 — GitHub Secrets에 있는 것과 같은 값
 //   TELEGRAM_TOKEN    (제보용) 텔레그램 봇 토큰
 //   TELEGRAM_CHAT_ID  (제보용) 제보를 받을 채팅 ID
+//   ODII_KEY          한국관광공사 오디(Odii) 오디오 가이드 인증키 (공공데이터포털)
 //
 // 카카오 정책: 장소 좌표·주소는 저장하지 않고 요청 때마다 실시간으로 조회해 바로 돌려준다.
 
@@ -174,6 +176,31 @@ async function handleSubway(env) {
   return { at: Date.now(), lines: okLines, trains };
 }
 
+// 한국관광공사 오디(Odii) 오디오 가이드: 좌표 근처 또는 검색어로 찾아 필요한 항목만 돌려준다.
+async function handleStory(env, { mapX, mapY, radius, keyword }) {
+  if (!env.ODII_KEY) return { error: "오디 인증키(ODII_KEY)가 아직 등록되지 않았어요." };
+  const op = keyword ? "storySearchList" : "storyLocationBasedList";
+  const q = new URLSearchParams({ serviceKey: env.ODII_KEY, MobileOS: "ETC", MobileApp: "eodigallae", _type: "json",
+    numOfRows: "10", pageNo: "1", langCode: "ko" });
+  if (keyword) q.set("keyword", keyword);
+  else { q.set("mapX", mapX); q.set("mapY", mapY); q.set("radius", radius || "300"); }
+  let r;
+  try { r = await fetch(`https://apis.data.go.kr/B551011/Odii/${op}?${q}`); }
+  catch { return { error: "오디 서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요." }; }
+  if (!r.ok) return { error: "오디오 가이드를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  let js; try { js = await r.json(); } catch { return { error: "오디오 가이드를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." }; }
+  const code = js?.response?.header?.resultCode;
+  if (code && code !== "0000") return { error: "오디오 가이드를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  const raw = js?.response?.body?.items?.item;
+  const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
+  const items = list.filter((it) => it.audioUrl).map((it) => ({
+    title: it.title, audioTitle: it.audioTitle, script: (it.script || "").trim().slice(0, 1200),
+    playTime: +it.playTime || null, audioUrl: it.audioUrl, imageUrl: it.imageUrl || null,
+    mapX: +it.mapX || null, mapY: +it.mapY || null,
+  }));
+  return { items };
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get("Origin") || "";
@@ -196,6 +223,18 @@ export default {
         const res = await handleSubway(env);
         if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=20" } })));
         return json(res, res.error ? 502 : 200, origin);
+      }
+      if (url.pathname === "/story" && request.method === "GET") {
+        const keyword = (url.searchParams.get("keyword") || "").slice(0, 30);
+        const mapX = url.searchParams.get("mapX") || "", mapY = url.searchParams.get("mapY") || "";
+        const radius = (url.searchParams.get("radius") || "300").slice(0, 6);
+        if (!keyword && (!mapX || !mapY)) return json({ error: "위치나 검색어를 알려 주세요." }, 400, origin);
+        const cacheKey = new Request(`https://cache.eodigallae/story/${keyword || `${mapX},${mapY},${radius}`}`);
+        const hit = await caches.default.match(cacheKey);
+        if (hit) return json(await hit.json(), 200, origin);
+        const res = await handleStory(env, { mapX, mapY, radius, keyword });
+        if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=3600" } })));
+        return json(res, res.error ? 400 : 200, origin);
       }
       if (url.pathname === "/report" && request.method === "POST") {
         const res = await handleReport(env, await request.json().catch(() => ({})));

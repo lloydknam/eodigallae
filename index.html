@@ -595,6 +595,19 @@ img { max-width: 100%; }
 .passport-card li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
 .passport-card li a { color: var(--ink); font-weight: 600; text-decoration: none; }
 .passport-card li span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.audio-btn { margin-top: 8px; padding: 8px 12px; border: 0; border-radius: 10px; background: var(--celadon-soft); color: var(--celadon); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.audio-ov { position: fixed; inset: 0; z-index: 3000; background: rgba(10,20,18,.45); display: flex; align-items: flex-end; justify-content: center; }
+.audio-card { width: min(520px, 100%); max-height: 82vh; overflow: auto; background: var(--paper); color: var(--ink); border-radius: 18px 18px 0 0; padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 30px rgba(0,0,0,.25); }
+.audio-head { display: flex; justify-content: space-between; align-items: center; font-size: 16px; margin-bottom: 4px; }
+.audio-x { border: 0; background: var(--surface); border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; }
+.audio-item { margin-top: 12px; padding: 12px; border-radius: 14px; background: var(--surface); }
+.audio-item h4 { margin: 0 0 4px; font-size: 14.5px; }
+.audio-item audio { width: 100%; margin: 8px 0 4px; }
+.audio-item .script { font-size: 12.5px; color: var(--muted); line-height: 1.5; max-height: 4.5em; overflow: hidden; }
+.audio-item .script.open { max-height: none; }
+.audio-item .more { font-size: 12px; color: var(--celadon); background: none; border: 0; padding: 4px 0 0; cursor: pointer; font-weight: 700; }
+.audio-note { font-size: 14px; color: var(--muted); margin: 12px 0; }
+.audio-foot { font-size: 11px; color: var(--muted); margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -1098,8 +1111,56 @@ img { max-width: 100%; }
     return d;
   }
 
-  // 도우미 서버(Cloudflare Worker) 주소. 비어 있으면 영상 코스·제보는 '준비 중'으로 보인다.
+  // 도우미 서버(Cloudflare Worker) 주소. 비어 있으면 영상 코스·제보·오디오 가이드는 '준비 중'으로 보인다.
   const WORKER = "";
+
+  // ── 오디(한국관광공사 오디오 가이드) 재생 ──
+  const audioKey = (e) => { if (e.key === "Escape") closeAudio(); };
+  function closeAudio() {
+    document.getElementById("audioOv")?.querySelectorAll("audio").forEach((a) => a.pause());
+    document.getElementById("audioOv")?.remove();
+    document.removeEventListener("keydown", audioKey);
+  }
+  function audioItemHtml(it, i) {
+    const script = esc(it.script || "");
+    return `<div class="audio-item">
+      <h4>🎧 ${esc(it.audioTitle || it.title || "오디오 가이드")}</h4>
+      ${it.title && it.title !== it.audioTitle ? `<span class="addr">${esc(it.title)}</span>` : ""}
+      ${it.audioUrl ? `<audio controls preload="none" src="${esc(it.audioUrl)}"></audio>` : `<p class="audio-note">이 항목은 소리 파일이 없어요.</p>`}
+      ${script ? `<p class="script" id="aScript${i}">${script}</p><button type="button" class="more" data-script="${i}">더 보기</button>` : ""}
+      ${it.playTime ? `<span class="addr">${Math.round(it.playTime / 60) || 1}분 분량</span>` : ""}
+    </div>`;
+  }
+  async function openAudioAt({ name, lat, lng, keyword }) {
+    closeAudio();
+    const wrap = document.createElement("div");
+    wrap.className = "audio-ov"; wrap.id = "audioOv";
+    wrap.innerHTML = `<div class="audio-card" role="dialog" aria-modal="true" aria-label="${esc(name)} 오디오 가이드">
+      <div class="audio-head"><b>🎧 ${esc(name)} 오디오 가이드</b><button type="button" class="audio-x" aria-label="닫기">✕</button></div>
+      <div class="audio-body"><p class="audio-note">불러오는 중…</p></div>
+      <div class="audio-foot"></div></div>`;
+    document.body.appendChild(wrap);
+    wrap.addEventListener("click", (e) => { if (e.target === wrap || e.target.closest(".audio-x")) closeAudio(); });
+    wrap.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-script]"); if (!b) return;
+      const p = document.getElementById(`aScript${b.dataset.script}`); if (!p) return;
+      p.classList.toggle("open"); b.textContent = p.classList.contains("open") ? "접기" : "더 보기";
+    });
+    document.addEventListener("keydown", audioKey);
+    const body = wrap.querySelector(".audio-body"), foot = wrap.querySelector(".audio-foot");
+    if (!WORKER) { body.innerHTML = `<p class="audio-note">오디오 가이드는 도우미 서버를 연결하면 들을 수 있어요. 준비 중이에요.</p>`; return; }
+    try {
+      const q = keyword ? `keyword=${enc(keyword)}` : `mapX=${lng}&mapY=${lat}&radius=400`;
+      const r = await fetch(`${WORKER}/story?${q}`);
+      const js = await r.json();
+      if (!r.ok || js.error) throw new Error(js.error || "fail");
+      if (!wrap.isConnected) return;
+      body.innerHTML = js.items?.length ? js.items.map(audioItemHtml).join("") : `<p class="audio-note">이 근처 오디오 가이드가 아직 없어요.</p>`;
+      foot.textContent = "한국관광공사 오디(Odii) 오디오 가이드 · 음성·대본 저작권은 한국관광공사에 있어요.";
+    } catch {
+      if (wrap.isConnected) body.innerHTML = `<p class="audio-note">오디오 가이드를 가져오지 못했어요. 잠시 뒤 다시 해 주세요.</p>`;
+    }
+  }
   // ── 라우팅: #도시id ──
   function go(id) {
     if (id) { if (location.hash !== "#" + id) history.pushState(null, "", "#" + id); }
@@ -1902,8 +1963,9 @@ img { max-width: 100%; }
     return `<section class="passport-block">
       <h2>🏛️ 국가유산 방문코스</h2>
       <p class="passport-sub">이 도시에 있는 방문코스 거점이에요. 도장을 찍으려면 방문자 여권을 챙겨 가세요.</p>
-      ${routes.map((r) => `<div class="passport-route"><b>${esc(r.name)}</b><span>${r.sites.map((s) => esc(s.name)).join(" · ")}</span></div>`).join("")}
-      <p class="passport-src">출처: 국가유산청 방문 캠페인 (kh.or.kr)</p>
+      ${routes.map((r) => `<div class="passport-route"><b>${esc(r.name)}</b><span>${r.sites.map((s) =>
+        `${esc(s.name)} <button type="button" class="audio-btn" style="margin:0 0 0 2px;padding:3px 8px;font-size:11.5px;vertical-align:1px" data-audio-kw="${esc(s.name.split(/\s+/).slice(-1)[0])}" data-audio-name="${esc(s.name)}">🎧</button>`).join(" · ")}</span></div>`).join("")}
+      <p class="passport-src">출처: 국가유산청 방문 캠페인 (kh.or.kr) · 🎧은 한국관광공사 오디 오디오 가이드예요</p>
     </section>`;
   }
   async function showCoursesPage() {
@@ -1915,7 +1977,8 @@ img { max-width: 100%; }
     app.innerHTML = `<section class="hero"><span class="prov">국가유산청</span><h1>국가유산 방문코스</h1>
       <span class="meta">노선 ${data.routes.length}개 · 거점 ${data.routes.reduce((n, r) => n + r.sites.length, 0)}건 (중복 포함) · 거점을 누르면 그 도시로 가요</span></section>
       ${data.routes.map((r) => `<section class="passport-card"><h2>${esc(r.name)} <em>${r.sites.length}곳</em></h2>
-        <ul>${r.sites.map((s) => `<li><a href="#${encodeURIComponent(s.cityId)}">${esc(s.name)}</a><span>${esc(s.city)}</span></li>`).join("")}</ul></section>`).join("")}
+        <ul>${r.sites.map((s) => `<li><a href="#${encodeURIComponent(s.cityId)}">${esc(s.name)}</a><span>${esc(s.city)}
+          <button type="button" class="audio-btn" style="margin-left:6px;padding:3px 8px;font-size:11.5px" data-audio-kw="${esc(s.name.split(/\s+/).slice(-1)[0])}" data-audio-name="${esc(s.name)}">🎧</button></span></li>`).join("")}</ul></section>`).join("")}
       <p class="credit">출처: 국가유산청 방문 캠페인 (kh.or.kr) · 방문자 여권 도장은 직접 현장에서 찍어야 해요.</p>`;
   }
   // 도시별 유튜브 조회수 Top 10 (최근 6개월 영상 중 그 장소가 나온 영상들의 조회수 합)
@@ -2118,6 +2181,7 @@ img { max-width: 100%; }
             ${heartBtn(s)}
             <a href="${igTag(s.name)}" target="_blank" rel="noopener">인스타그램 #${esc(s.name.replace(/\s+/g, ""))} ↗</a>
             <a href="${kakaoPin(s)}" target="_blank" rel="noopener">${s.kakao ? "카카오맵·리뷰" : "지도"} ↗</a>
+            ${s.lat != null ? `<button type="button" class="audio-btn" data-audio-lat="${s.lat}" data-audio-lng="${s.lng}" data-audio-name="${esc(s.name)}">🎧 오디오 가이드</button>` : ""}
           </div>
         </div>
       </article>`;
@@ -2157,6 +2221,14 @@ img { max-width: 100%; }
   menuDrop.addEventListener("click", () => setTimeout(() => setMenu(false)));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menuDrop.hidden) { setMenu(false); menuBtn.focus(); } });
   window.addEventListener("hashchange", () => setMenu(false));
+
+  // 오디오 가이드 버튼 (좌표 또는 검색어로 연다)
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-audio-lat],[data-audio-kw]");
+    if (!b) return;
+    if (b.dataset.audioLat) openAudioAt({ name: b.dataset.audioName, lat: b.dataset.audioLat, lng: b.dataset.audioLng });
+    else openAudioAt({ name: b.dataset.audioName, keyword: b.dataset.audioKw });
+  });
 
   // ── 이벤트 위임 ──
   document.addEventListener("click", (e) => {

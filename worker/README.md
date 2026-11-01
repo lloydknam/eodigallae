@@ -8,6 +8,7 @@
    - `YOUTUBE_API_KEY`, `KAKAO_REST_KEY` (GitHub Secrets에 넣은 것과 같은 값)
    - `SEOUL_API_KEY` (열차지도 실시간용, GitHub Secrets에 넣은 서울 열린데이터광장 인증키와 같은 값)
    - `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID` (제보를 받을 텔레그램 봇)
+   - `ODII_KEY` (오디오 가이드용, GitHub Secrets에 넣은 오디(Odii) 인증키와 같은 값)
 4. 주소(`https://eodigallae.<내아이디>.workers.dev`)를 index.html의 `const WORKER = ""`에 넣기
 
 카카오 정책에 따라 장소 좌표·주소는 저장하지 않고, 요청마다 실시간으로 조회해 돌려줘요.
@@ -19,3 +20,11 @@
 3. `subway-map.html` 위쪽의 `var WORKER = ""` 에 워커 주소를 넣고 커밋 → 지하철 지도의 **실시간** 버튼이 켜져요
 
 호출은 20초 동안 한 번만 하도록 묶어 두었어요(노선 9개 = 요청 9건). 서울시 일일 호출 제한은 인증키마다 다르니, 모자라면 `max-age=20`을 늘려 주세요.
+
+## 오디오 가이드(오디) 연결
+
+1. 위 3번에서 `ODII_KEY`를 등록하고 Deploy
+2. `https://eodigallae.<내아이디>.workers.dev/story?keyword=경복궁` 을 열어 `{"items":[…]}` 가 나오는지 확인
+3. 도시 페이지의 관광지 카드와 국가유산 방문코스에 있는 '🎧 오디오 가이드' 버튼이 켜져요
+
+좌표(`mapX`,`mapY`)로 찾은 결과는 1시간 동안 같은 응답을 재사용해요. 음성·대본의 저작권은 한국관광공사에 있어요.
