@@ -162,7 +162,7 @@ function hhmm(sec){sec=Math.floor(sec)%86400;return pad(Math.floor(sec/3600))+':
 function fmt(s){s=Math.max(0,Math.round(s));var m=Math.floor(s/60),r=s%60;return m?m+'분 '+r+'초':r+'초';}
 
 var map=L.map('map',{zoomControl:true,attributionControl:true,minZoom:9,maxZoom:17});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'© OpenStreetMap · © CARTO'}).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
 map.setView([37.56,126.98],11);
 
 var LINES=[], chips=$('#chips'), trains=new Map(), sel=null, sheetKey='', lastUI=0, total=0, follow=false, curPopup=null;
