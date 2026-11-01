@@ -1,0 +1,39 @@
+name: 축제·행사 갱신
+
+on:
+  schedule:
+    - cron: "33 16 * * *"   # 매일 한국시간 01:33
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  festival:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: 전국 축제·행사 정보
+        env:
+          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
+        run: python scripts/festival.py
+      - name: 변경분 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/festivals.json
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "축제·행사 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d')"
+            git pull --rebase origin main
+            git push
+          fi

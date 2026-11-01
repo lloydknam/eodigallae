@@ -1931,6 +1931,7 @@ img { max-width: 100%; }
         ${d.sample ? `<div class="notice">샘플 데이터예요. 좌표는 근사치이고, 사진·영상·식당은 API를 연결하면 자동으로 채워져요. 지금은 사진을 누르면 유튜브 검색으로 연결돼요.</div>` : ""}
       </section>
       ${cityTop10(d)}
+      <div id="festival-slot"></div>
       <div id="passport-slot"></div>
       <div class="tabs" role="tablist" id="tabs">
         ${tabBtn("course", "추천 코스", d.courses.length)}
@@ -1945,6 +1946,39 @@ img { max-width: 100%; }
       const routes = passportForCity(d.id, data), slot = document.getElementById("passport-slot");
       if (slot && routes.length && state.city === d) slot.innerHTML = passportBlockHtml(routes);
     });
+    loadFestivals().then((data) => {
+      const items = festivalsForCity(d.id, data), slot = document.getElementById("festival-slot");
+      if (slot && items.length && state.city === d) slot.innerHTML = festivalBlockHtml(items);
+    });
+  }
+
+  // ── 축제·행사 (한국관광공사 TourAPI 축제공연행사정보) ──
+  let festivalData = null;
+  async function loadFestivals() {
+    if (!festivalData) {
+      try { const r = await fetch("data/festivals.json", { cache: "no-cache" }); festivalData = r.ok ? await r.json() : { items: [] }; }
+      catch { festivalData = { items: [] }; }
+    }
+    return festivalData;
+  }
+  const festivalsForCity = (cityId, data) => (data.items || []).filter((f) => f.cityId === cityId);
+  const fmtFDate = (s) => s && s.length === 8 ? `${s.slice(4, 6)}.${s.slice(6, 8)}` : s || "";
+  function festivalDday(f) {
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    if (f.start <= today && (!f.end || f.end >= today)) return `<span class="rank hot">진행 중</span>`;
+    if (f.start > today) return `<span class="rank">D-${Math.ceil((new Date(f.start.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")) - new Date(today.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3"))) / 864e5)}</span>`;
+    return "";
+  }
+  function festivalBlockHtml(items) {
+    return `<section class="passport-block">
+      <h2>🎪 축제·행사</h2>
+      <p class="passport-sub">앞으로 ${items.length}건의 축제·행사가 있어요.</p>
+      ${items.slice(0, 8).map((f) => `<div class="passport-route">
+        <b>${esc(f.title)} ${festivalDday(f)}</b>
+        <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}${f.addr ? ` · ${esc(f.addr)}` : ""}</span>
+      </div>`).join("")}
+      <p class="passport-src">출처: 한국관광공사 TourAPI 축제공연행사정보</p>
+    </section>`;
   }
 
   // ── 국가유산 방문코스 (국가유산청 방문 캠페인, 노선 13개) ──
