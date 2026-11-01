@@ -35,10 +35,11 @@ def clean(text: object) -> str:
     return t.replace(KEY, "***").replace(urllib.parse.quote(KEY, safe=""), "***") if KEY else t
 
 
-def fetch_line(n: int) -> tuple[list[dict], dict]:
+def fetch_line(n: int, key: str | None = None) -> tuple[list[dict], dict]:
+    key = key or KEY
     info: dict = {"line": n}
     try:
-        r = S.get(URL.format(key=KEY, line=urllib.parse.quote(f"{n}호선")), timeout=15)
+        r = S.get(URL.format(key=key, line=urllib.parse.quote(f"{n}호선")), timeout=15)
         info["http"] = r.status_code
         j = r.json()
     except Exception as e:  # noqa: BLE001
@@ -83,6 +84,13 @@ def snapshot() -> tuple[dict, dict]:
     return data, probe
 
 
+def sample_probe() -> dict:
+    """서울시 견본 키('sample')로 응답 형식만 확인한다. 이 데이터는 앱에 쓰지 않는다."""
+    with ThreadPoolExecutor(max_workers=9) as ex:
+        res = list(ex.map(lambda n: fetch_line(n, "sample"), range(1, 10)))
+    return {"note": "견본 키 응답(형식 확인용)", "per_line": [i for _, i in res]}
+
+
 def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], cwd=cwd, check=check, capture_output=True, text=True)
 
@@ -111,6 +119,8 @@ def main() -> int:
         (work / "subway.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         if first or n % 20 == 0:
             (work / "probe.json").write_text(json.dumps(probe, ensure_ascii=False, indent=1), encoding="utf-8")
+        if first and data["lines"] == 0:
+            (work / "probe_sample.json").write_text(json.dumps(sample_probe(), ensure_ascii=False, indent=1), encoding="utf-8")
         git(work, "add", "-A")
         msg = f"subway {time.strftime('%H:%M:%S', time.gmtime())}Z {len(data['trains'])}대"
         if first:
