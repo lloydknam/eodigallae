@@ -175,20 +175,23 @@ def main():
     if tour_key:
         ldong_idx, area_idx = build_ldong_index(cities), build_area_index(cities)
         raw = fetch_tour(tour_key)
-        unmatched = 0
+        unmatched, misses = 0, []
         for it in raw:
             if not it.get("title") or (it.get("eventenddate") and it["eventenddate"] < today):
                 continue
             city = match_city_tour(it, ldong_idx, area_idx)
             if not city:
                 unmatched += 1
+                misses.append(f"{it.get('title','')[:20]} (ldong={it.get('lDongRegnCd','')}{it.get('lDongSignguCd','')} area={it.get('areacode','')}/{it.get('sigungucode','')})")
                 continue
             out.append(tour_entry(it, city))
         log(f"TourAPI 축제 {sum(1 for x in out if x['source'] == 'tour')}건 매칭 (실패 {unmatched}건, 전체 {len(raw)}건)")
+        if misses:
+            log("TourAPI 매칭 실패 목록: " + " | ".join(misses[:30]))
 
     if std_key:
         raw = std_fetch(std_key)
-        unmatched = 0
+        unmatched, misses = 0, []
         for it in raw:
             end = (it.get("fstvlEndDate") or "").replace("-", "")
             if not it.get("fstvlNm") or (end and end < today):
@@ -197,9 +200,12 @@ def main():
             city = nearest_city(float(lat), float(lng), cities) if lat and lng else None
             if not city:
                 unmatched += 1
+                misses.append(f"{it.get('fstvlNm','')[:20]} ({it.get('latitude','')},{it.get('longitude','')})")
                 continue
             out.append(std_entry(it, city))
         log(f"표준데이터 축제 {sum(1 for x in out if x['source'] == 'std')}건 매칭 (실패 {unmatched}건, 전체 {len(raw)}건)")
+        if misses:
+            log("표준데이터 매칭 실패 목록: " + " | ".join(misses[:30]))
 
     out = dedupe(out)
     out.sort(key=lambda x: x["start"] or "99999999")

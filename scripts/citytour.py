@@ -72,18 +72,21 @@ def main():
     cities = json.loads((ROOT / "data" / "cities.json").read_text(encoding="utf-8"))["cities"]
     idx = build_index(cities)
     raw = fetch_all(key)
-    out, unmatched = [], 0
+    out, unmatched, misses = [], 0, []
     for it in raw:
         if not it.get("cityTourCourse"):
             continue
         city = match_city(it, idx)
         if not city:
             unmatched += 1
+            misses.append(f"{it.get('ctprvnNm','')}/{it.get('signguNm','')} ({it.get('cityTourCourse','')[:20]})")
             continue
         out.append(to_entry(it, city))
     payload = {"updatedAt": date.today().isoformat(), "count": len(out), "items": out}
     (ROOT / "data" / "citytour.json").write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
     log(f"시티투어 {len(out)}건 저장 (도시 매칭 실패 {unmatched}건, 전체 {len(raw)}건)")
+    if misses:
+        log("매칭 실패 목록: " + " | ".join(misses[:30]))
 
 
 if __name__ == "__main__":
