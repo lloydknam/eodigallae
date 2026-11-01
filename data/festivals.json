@@ -1,6 +1,6 @@
 {
  "updatedAt": "2026-11-01",
- "count": 179,
+ "count": 190,
  "items": [
   {
    "id": "tour-3481597",
@@ -106,6 +106,36 @@
    "cityId": "a1",
    "city": "서울",
    "source": "tour"
+  },
+  {
+   "id": "std-5680000-당진면천읍성축제-20260101",
+   "title": "당진면천읍성축제",
+   "start": "20260101",
+   "end": "20261231",
+   "addr": "충청남도 당진시 면천면 동문1길 3",
+   "tel": "",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a34-s4",
+   "city": "당진시",
+   "source": "std"
+  },
+  {
+   "id": "std-5680000-당진댄스페스티벌-20260101",
+   "title": "당진 댄스 페스티벌",
+   "start": "20260101",
+   "end": "20261231",
+   "addr": "충청남도 당진시 석문면 장고항리 1443",
+   "tel": "",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a34-s4",
+   "city": "당진시",
+   "source": "std"
   },
   {
    "id": "tour-2433596",
@@ -663,6 +693,21 @@
    "source": "tour"
   },
   {
+   "id": "std-5420000-2026경남고성공룡세계엑스포-20260923",
+   "title": "2026경남고성공룡세계엑스포",
+   "start": "20260923",
+   "end": "20261101",
+   "addr": "경상남도 고성군 회화면 당항만로 1116",
+   "tel": "055-670-7400",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": "https://www.gngsctf.or.kr/dinoexpo/index.goseong",
+   "cityId": "a36-s3",
+   "city": "고성군",
+   "source": "std"
+  },
+  {
    "id": "std-5885000-대한민국국향대전-20261001",
    "title": "대한민국 국향대전",
    "start": "20261001",
@@ -705,6 +750,21 @@
    "homepage": null,
    "cityId": "a36-s21",
    "city": "합천군",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4108258",
+   "title": "2026 한글문화특별기획전 〈세종과 남준〉",
+   "start": "20261009",
+   "end": "20261108",
+   "addr": "세종특별자치시 중앙공원로 60 (세종동)",
+   "tel": "044-850-8952",
+   "lat": 36.4917742203,
+   "lng": 127.2717369032,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/46/4108746_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a8",
+   "city": "세종특별자치시",
    "source": "tour"
   },
   {
@@ -1533,6 +1593,21 @@
    "source": "tour"
   },
   {
+   "id": "std-5310000-진주국제농식품박람회-20261104",
+   "title": "진주국제농식품박람회",
+   "start": "20261104",
+   "end": "20261108",
+   "addr": "경상남도 진주시 동진로 415",
+   "tel": "055-749-6266",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": "https://www.jinju.go.kr/agrex",
+   "cityId": "a36-s13",
+   "city": "진주시",
+   "source": "std"
+  },
+  {
    "id": "std-4460000-괴산김장축제-20261105",
    "title": "괴산김장축제",
    "start": "20261105",
@@ -1878,6 +1953,36 @@
    "source": "std"
   },
   {
+   "id": "std-5100000-금호삼삼오오이웃대잔치-20261107",
+   "title": "금호삼삼오오이웃대잔치",
+   "start": "20261107",
+   "end": "20261107",
+   "addr": "경상북도 영천시 금호읍 금호로 153",
+   "tel": "",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a35-s15",
+   "city": "영천시",
+   "source": "std"
+  },
+  {
+   "id": "std-4610000-2026의좋은형제축제-20261107",
+   "title": "2026 의좋은형제축제",
+   "start": "20261107",
+   "end": "20261108",
+   "addr": "충청남도 예산군 대흥면 의좋은형제길 3",
+   "tel": "",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a34-s11",
+   "city": "예산군",
+   "source": "std"
+  },
+  {
    "id": "std-5130000-2026경산반려문화축제-20261107",
    "title": "2026 경산 반려문화축제",
    "start": "20261107",
@@ -1980,6 +2085,21 @@
    "homepage": null,
    "cityId": "a1",
    "city": "서울",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4137577",
+   "title": "2026 국민건강 리부트 마음건강 걷기대회",
+   "start": "20261114",
+   "end": "20261114",
+   "addr": "세종특별자치시 중앙공원로 60 (세종동)",
+   "tel": "044-251-7113",
+   "lat": 36.4917742203,
+   "lng": 127.2717369032,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/78/4137578_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a8",
+   "city": "세종특별자치시",
    "source": "tour"
   },
   {
@@ -2523,6 +2643,21 @@
    "source": "tour"
   },
   {
+   "id": "std-5420000-빛으로만나는문화축제-20261224",
+   "title": "빛으로 만나는 문화축제",
+   "start": "20261224",
+   "end": "20270131",
+   "addr": "경상남도 고성군 고성읍 동외리 312-34",
+   "tel": "",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a36-s3",
+   "city": "고성군",
+   "source": "std"
+  },
+  {
    "id": "std-4761000-산타축제-20261224",
    "title": "산타축제",
    "start": "20261224",
@@ -2613,6 +2748,21 @@
    "source": "std"
   },
   {
+   "id": "std-5680000-왜목마을해넘이해돋이소원제-20261231",
+   "title": "왜목마을 해넘이·해돋이 소원제",
+   "start": "20261231",
+   "end": "20270101",
+   "addr": "충청남도 당진시 석문면 왜목길 27",
+   "tel": "",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a34-s4",
+   "city": "당진시",
+   "source": "std"
+  },
+  {
    "id": "std-5870000-해넘이해맞이축제-20261231",
    "title": "해넘이해맞이축제",
    "start": "20261231",
@@ -2640,6 +2790,21 @@
    "homepage": "http://www.dgs.go.kr/tour/",
    "cityId": "a4",
    "city": "대구",
+   "source": "std"
+  },
+  {
+   "id": "std-3130000-2027신년해맞이축제-20270101",
+   "title": "2027 신년 해맞이 축제",
+   "start": "20270101",
+   "end": "20270101",
+   "addr": "서울특별시 마포구 하늘공원로 95",
+   "tel": "02-3153-8353",
+   "lat": null,
+   "lng": null,
+   "image": null,
+   "homepage": null,
+   "cityId": "a1",
+   "city": "서울",
    "source": "std"
   },
   {
