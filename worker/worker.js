@@ -1,10 +1,12 @@
 // 어디갈래 도우미 서버 (Cloudflare Workers, 무료 범위)
 // 1) GET  /video?url=<유튜브 링크>  → 영상 속 장소를 찾아 좌표와 함께 돌려준다 (코스 만들기용)
 // 2) POST /report                  → 숨은 핫플 제보를 텔레그램으로 전달한다
+// 3) GET  /subway                  → 서울 지하철 1~9호선 실시간 열차 위치(서울 열린데이터광장)를 한 번에 돌려준다
 //
 // 비밀값(Settings → Variables and Secrets):
 //   YOUTUBE_API_KEY   유튜브 Data API 키
 //   KAKAO_REST_KEY    카카오 REST API 키
+//   SEOUL_API_KEY     (열차지도용) 서울 열린데이터광장 인증키 — GitHub Secrets에 있는 것과 같은 값
 //   TELEGRAM_TOKEN    (제보용) 텔레그램 봇 토큰
 //   TELEGRAM_CHAT_ID  (제보용) 제보를 받을 채팅 ID
 //
@@ -150,6 +152,28 @@ async function handleReport(env, body) {
   return r.ok ? { ok: true } : { error: "제보를 보내지 못했어요. 잠시 뒤 다시 해 주세요." };
 }
 
+// 서울 지하철 실시간 열차 위치: 1~9호선을 한꺼번에 받아 짧게 줄여 돌려준다.
+// 호출 수를 아끼려고 20초 동안은 같은 결과를 재사용한다.
+// l 호선 · t 열차번호 · s 현재역 · d 종착역 · u 상행/내선(0)·하행/외선(1) · st 0진입 1도착 2출발 3전역출발 · x 급행(1)
+async function handleSubway(env) {
+  if (!env.SEOUL_API_KEY) return { error: "서울시 인증키(SEOUL_API_KEY)가 아직 등록되지 않았어요." };
+  const trains = [];
+  let okLines = 0;
+  await Promise.all(Array.from({ length: 9 }, (_, i) => i + 1).map(async (n) => {
+    try {
+      const r = await fetch(`http://swopenapi.seoul.go.kr/api/subway/${env.SEOUL_API_KEY}/json/realtimePosition/0/200/${encodeURIComponent(n + "호선")}`);
+      if (!r.ok) return;
+      const j = await r.json();
+      const list = j.realtimePositionList;
+      if (!Array.isArray(list)) return;
+      okLines++;
+      for (const t of list) trains.push({ l: n, t: t.trainNo, s: t.statnNm, d: t.statnTnm, u: +t.updnLine, st: +t.trainSttus, x: +t.directAt || 0 });
+    } catch (e) { /* 한 노선이 실패해도 나머지는 돌려준다 */ }
+  }));
+  if (!okLines) return { error: "서울시에서 열차 위치를 받지 못했어요." };
+  return { at: Date.now(), lines: okLines, trains };
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get("Origin") || "";
@@ -164,6 +188,14 @@ export default {
         const res = await handleVideo(env, id || "");
         if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=3600" } })));
         return json(res, res.error ? 400 : 200, origin);
+      }
+      if (url.pathname === "/subway" && request.method === "GET") {
+        const cacheKey = new Request("https://cache.eodigallae/subway");
+        const hit = await caches.default.match(cacheKey);
+        if (hit) return json(await hit.json(), 200, origin);
+        const res = await handleSubway(env);
+        if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=20" } })));
+        return json(res, res.error ? 502 : 200, origin);
       }
       if (url.pathname === "/report" && request.method === "POST") {
         const res = await handleReport(env, await request.json().catch(() => ({})));
