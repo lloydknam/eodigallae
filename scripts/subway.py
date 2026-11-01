@@ -88,7 +88,9 @@ def snapshot() -> tuple[dict, dict]:
     ok = sum(1 for _, i in res if i.get("count") is not None)
     now = int(time.time() * 1000)
     data = {"at": now, "lines": ok, "trains": trains}
-    probe = {"at": now, "ok_lines": ok, "total": len(trains), "per_line": [i for _, i in res]}
+    # 어느 이름의 비밀값을 읽었는지만 남긴다(값 자체는 남기지 않는다).
+    src = "SEOUL_SUBWAY_KEY" if os.environ.get("SEOUL_SUBWAY_KEY", "").strip() else ("SEOUL_API_KEY" if os.environ.get("SEOUL_API_KEY", "").strip() else "없음")
+    probe = {"at": now, "key_source": src, "key_len": len(KEY), "ok_lines": ok, "total": len(trains), "per_line": [i for _, i in res]}
     return data, probe
 
 
