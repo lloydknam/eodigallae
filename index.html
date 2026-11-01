@@ -806,7 +806,8 @@ img { max-width: 100%; }
     svg.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { tip.hidden = true; card.querySelectorAll(".bar.on").forEach((b) => b.classList.remove("on")); } });
   }
 
-  // ── 이번 주 날씨 (Open-Meteo, 무료·키 없음). 정해 둔 지역 좌표만 보내고 사용자 위치는 쓰지 않는다 ──
+  // ── 이번 주 날씨 (Open-Meteo, 무료·키 없음). 날씨 서버에는 사용자 위치가 아니라 시·군 중심 좌표만 보낸다 ──
+  // "내 위치"는 사용자가 버튼을 눌러 허용할 때만 기기 안에서 가장 가까운 시·군을 찾는 데 쓰고, 좌표는 저장하지 않는다.
   const WX_REGIONS = [["서울", 37.5665, 126.978, "서울"], ["인천", 37.4563, 126.7052, "인천"], ["춘천", 37.8813, 127.7298, "춘천시"],
     ["강릉", 37.7519, 128.8761, "강릉시"], ["대전", 36.3504, 127.3845, "대전"], ["청주", 36.6424, 127.489, "청주시"],
     ["전주", 35.8242, 127.148, "전주시"], ["광주", 35.1595, 126.8526, "광주"], ["여수", 34.7604, 127.6622, "여수시"],
@@ -828,6 +829,37 @@ img { max-width: 100%; }
     try { localStorage.setItem("wx", JSON.stringify({ at: Date.now(), data })); } catch { /* 저장 불가 */ }
     return data;
   }
+  // 안드로이드 앱 1.0(WebView)은 위치 권한 처리가 없어 버튼을 숨긴다. 위치를 지원하는 앱(1.1 이상)과 일반 브라우저에서만 보인다.
+  const GEO_OK = !!navigator.geolocation && !/EodigallaeApp\/1\.0\b/.test(navigator.userAgent);
+  const WX_DAILY = "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max";
+  const kmBetween = (a, b) => {
+    const r = Math.PI / 180, dLa = (b[0] - a[0]) * r, dLo = (b[1] - a[1]) * r;
+    const h = Math.sin(dLa / 2) ** 2 + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLo / 2) ** 2;
+    return 12742 * Math.asin(Math.sqrt(h));
+  };
+  const nearestCity = (pt) => state.index.cities.filter((c) => Array.isArray(c.center))
+    .reduce((best, c) => { const d = kmBetween(pt, c.center); return !best || d < best.d ? { c, d } : best; }, null)?.c;
+  const shortName = (n) => (n.length > 2 ? n.replace(/(특별자치시|특별자치도|광역시|특별시|시|군)$/, "") : n) || n;
+  async function loadCityWeather(city) {
+    const key = "wxg:" + city.id;
+    try { const c = JSON.parse(localStorage.getItem(key) || "null"); if (c && Date.now() - c.at < 3600e3) return c.d; } catch { /* 없음 */ }
+    const q = new URLSearchParams({ latitude: city.center[0], longitude: city.center[1], daily: WX_DAILY, timezone: "Asia/Seoul", forecast_days: "8" });
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
+    if (!res.ok) throw new Error("weather");
+    const d = (await res.json()).daily;
+    try { localStorage.setItem(key, JSON.stringify({ at: Date.now(), d })); } catch { /* 저장 불가 */ }
+    return d;
+  }
+  // 기기 위치(대략) → 가장 가까운 시·군. 좌표는 이 함수 안에서만 쓰고 어디에도 저장·전송하지 않는다.
+  function locateCity() {
+    return new Promise((ok, ng) => {
+      if (!navigator.geolocation) return ng(new Error("unsupported"));
+      navigator.geolocation.getCurrentPosition((p) => {
+        const c = nearestCity([p.coords.latitude, p.coords.longitude]);
+        c ? ok(c) : ng(new Error("nocity"));
+      }, ng, { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 });
+    });
+  }
   async function renderWeather() {
     const box = document.getElementById("wx");
     if (!box) return;
@@ -835,8 +867,10 @@ img { max-width: 100%; }
     try { data = await loadWeather(); } catch { box.remove(); return; }
     if (!document.body.contains(box)) return;
     let ri = Math.max(0, WX_REGIONS.findIndex((r) => r[0] === store.get("wxRegion")));
+    let geo = null, geoMsg = "";   // geo: { name, cityName, d } — '내 위치' 날씨 (ri = -1 일 때 표시)
+    const useCity = async (c) => { geo = { name: shortName(c.name), cityName: c.name, d: await loadCityWeather(c) }; ri = -1; store.set("wxRegion", "gps"); store.set("wxGeoCity", c.id); geoMsg = ""; };
     const draw = () => {
-      const d = data[ri], [name, , , cityName] = WX_REGIONS[ri];
+      const d = ri < 0 ? geo.d : data[ri], [name, , , cityName] = ri < 0 ? [geo.name, 0, 0, geo.cityName] : WX_REGIONS[ri];
       const today = d.time[0], dows = d.time.map((t) => new Date(t + "T12:00:00+09:00").getDay());
       let end = dows.indexOf(0); if (end < 2) end = Math.max(2, dows.indexOf(0, 1));   // 오늘~이번 일요일(최소 3일, 최대 7일)
       end = Math.min(end, 6);
@@ -861,17 +895,35 @@ img { max-width: 100%; }
         : `${when} 날씨 최고! 떠나자냥 🐾`;
       const city = state.index.cities.find((c) => c.name === cityName && c.hasData);
       box.innerHTML = `<div class="wx-head"><h2>☀️ 이번 주 날씨</h2><span class="wx-src">Open-Meteo</span>${city ? `<a href="#${enc(city.id)}" data-city="${esc(city.id)}">${esc(name)} 여행지 →</a>` : ""}</div>
-        <div class="wx-regions" role="group" aria-label="지역">${WX_REGIONS.map((r, i) => `<button data-wx="${i}" aria-pressed="${i === ri}">${r[0]}</button>`).join("")}</div>
+        <div class="wx-regions" role="group" aria-label="지역">${GEO_OK ? `<button data-wx="geo" aria-pressed="${ri < 0}">📍 ${geo ? esc(geo.name) : "내 위치"}</button>` : ""}${WX_REGIONS.map((r, i) => `<button data-wx="${i}" aria-pressed="${i === ri}">${r[0]}</button>`).join("")}</div>
+        ${geoMsg ? `<p class="wx-note" role="status">${esc(geoMsg)}</p>` : ""}
         <div class="wx-days${idx.length > 4 ? " many" : ""}">${days}</div>
         <div class="wx-say"><img src="icons/mascot-160.png" alt=""><span>${say}</span></div>`;
     };
+    if (GEO_OK && store.get("wxRegion") === "gps") {
+      try {
+        const perm = await navigator.permissions?.query({ name: "geolocation" }).catch(() => null);
+        const saved = state.index.cities.find((c) => c.id === store.get("wxGeoCity"));
+        if (perm?.state === "granted") await useCity(await locateCity());
+        else if (saved && Array.isArray(saved.center)) await useCity(saved);
+      } catch { /* 실패하면 기본 지역을 보여준다 */ }
+      if (!document.body.contains(box)) return;
+    }
     draw();
     const sel = box.querySelector(".wx-regions [aria-pressed=true]"), bar = box.querySelector(".wx-regions");
     if (sel && ri > 3) bar.scrollLeft = sel.offsetLeft - bar.clientWidth / 2 + sel.clientWidth / 2;
     box.addEventListener("click", (e) => {
       const b = e.target.closest("[data-wx]"); if (!b) return;
-      ri = +b.dataset.wx; store.set("wxRegion", WX_REGIONS[ri][0]);
-      const x = box.querySelector(".wx-regions").scrollLeft; draw(); box.querySelector(".wx-regions").scrollLeft = x;
+      const x = () => box.querySelector(".wx-regions").scrollLeft;
+      if (b.dataset.wx === "geo") {
+        b.disabled = true; b.textContent = "📍 찾는 중…";
+        locateCity().then(useCity).catch((err) => {
+          geoMsg = err && err.code === 1 ? "위치 권한이 꺼져 있어요. 기기 설정에서 허용하거나 지역을 직접 골라 주세요." : "내 위치를 확인하지 못했어요. 지역을 직접 골라 주세요.";
+        }).finally(() => { const px = x(); if (ri < 0 && !geo) ri = 0; draw(); box.querySelector(".wx-regions").scrollLeft = px; });
+        return;
+      }
+      ri = +b.dataset.wx; store.set("wxRegion", WX_REGIONS[ri][0]); geoMsg = "";
+      const px = x(); draw(); box.querySelector(".wx-regions").scrollLeft = px;
     });
   }
 
