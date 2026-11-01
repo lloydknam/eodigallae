@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 KEY = os.environ.get("SEOUL_API_KEY", "").strip()
 LOOP_MIN = float(os.environ.get("SUBWAY_LOOP_MIN", "13"))
 EVERY = float(os.environ.get("SUBWAY_EVERY_SEC", "30"))
-URL = "http://swopenapi.seoul.go.kr/api/subway/{key}/json/realtimePosition/0/200/{line}"
+URL = "http://swopenapi.seoul.go.kr/api/subway/{key}/json/realtimePosition/0/{end}/{line}"
 S = requests.Session()
 S.headers["User-Agent"] = "eodigallae/1.0 (github.com/lloydknam/eodigallae)"
 
@@ -35,11 +35,11 @@ def clean(text: object) -> str:
     return t.replace(KEY, "***").replace(urllib.parse.quote(KEY, safe=""), "***") if KEY else t
 
 
-def fetch_line(n: int, key: str | None = None) -> tuple[list[dict], dict]:
+def fetch_line(n: int, key: str | None = None, end: int = 200) -> tuple[list[dict], dict]:
     key = key or KEY
     info: dict = {"line": n}
     try:
-        r = S.get(URL.format(key=key, line=urllib.parse.quote(f"{n}호선")), timeout=15)
+        r = S.get(URL.format(key=key, end=end, line=urllib.parse.quote(f"{n}호선")), timeout=15)
         info["http"] = r.status_code
         j = r.json()
     except Exception as e:  # noqa: BLE001
@@ -87,8 +87,14 @@ def snapshot() -> tuple[dict, dict]:
 def sample_probe() -> dict:
     """서울시 견본 키('sample')로 응답 형식만 확인한다. 이 데이터는 앱에 쓰지 않는다."""
     with ThreadPoolExecutor(max_workers=9) as ex:
-        res = list(ex.map(lambda n: fetch_line(n, "sample"), range(1, 10)))
-    return {"note": "견본 키 응답(형식 확인용)", "per_line": [i for _, i in res]}
+        res = list(ex.map(lambda n: fetch_line(n, "sample", 5), range(1, 10)))
+    # 요청 건수(끝 위치)를 바꿔 가며 어디서 오류가 나는지 확인한다(2호선만, 두 키로).
+    ranges = []
+    for who, k in (("sample", "sample"), ("mine", KEY)):
+        for end in (5, 50, 100, 200, 500, 1000):
+            _, i = fetch_line(2, k, end)
+            ranges.append({"key": who, "end": end, "code": i.get("code"), "count": i.get("count"), "message": (i.get("message") or "")[:60]})
+    return {"note": "견본 키 응답(형식 확인용)", "per_line": [i for _, i in res], "ranges": ranges}
 
 
 def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
