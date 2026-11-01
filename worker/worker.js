@@ -2,6 +2,7 @@
 // 1) GET  /video?url=<유튜브 링크>  → 영상 속 장소를 찾아 좌표와 함께 돌려준다 (코스 만들기용)
 // 2) POST /report                  → 숨은 핫플 제보를 텔레그램으로 전달한다
 // 3) GET  /subway                  → 서울 지하철 1~9호선 실시간 열차 위치(서울 열린데이터광장)를 한 번에 돌려준다
+//    GET  /subway?station=<역이름>  → 그 역의 다음 열차(양방향) 도착정보만 짧게 돌려준다 (인파지도 팝업용, 30초 캐시)
 // 4) GET  /story?mapX=&mapY=&radius= 또는 /story?keyword= → 한국관광공사 오디(Odii) 오디오 가이드 검색 (1시간 캐시)
 //
 // 비밀값(Settings → Variables and Secrets):
@@ -176,6 +177,36 @@ async function handleSubway(env) {
   return { at: Date.now(), lines: okLines, trains };
 }
 
+// 서울 지하철 실시간 도착정보(역 이름 기준, 양방향 다음 열차). 위치 정보는 쓰지 않고 역 이름만 보낸다.
+async function handleSubwayStation(env, station) {
+  const name = String(station || "").replace(/역$/, "").trim();
+  if (name.length < 2) return { error: "지하철역 이름을 확인해 주세요." };
+  if (!env.SEOUL_API_KEY) return { error: "서울시 인증키(SEOUL_API_KEY)가 아직 등록되지 않았어요." };
+  let r;
+  try { r = await fetch(`http://swopenapi.seoul.go.kr/api/subway/${env.SEOUL_API_KEY}/json/realtimeStationArrival/0/30/${encodeURIComponent(name)}`); }
+  catch { return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." }; }
+  if (!r.ok) return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  let js; try { js = await r.json(); } catch { return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." }; }
+  const code = (js.errorMessage || {}).code;
+  if (code && code !== "INFO-000" && code !== "INFO-200") return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  const list = js.realtimeArrivalList || [];
+  const lines = new Map();
+  for (const t of list) {
+    if (!lines.has(t.subwayId)) lines.set(t.subwayId, new Map());
+    const dirs = lines.get(t.subwayId);
+    const dname = t.updnLine || t.trainLineNm || "방향";
+    if (!dirs.has(dname)) dirs.set(dname, []);
+    dirs.get(dname).push({ sec: +t.barvlDt || 0, msg: t.arvlMsg2 || "", dest: t.bstatnNm || "" });
+  }
+  const out = [...lines].map(([id, dirs]) => ({
+    id,
+    dirs: [...dirs].map(([name, trains]) => ({ name, trains: trains.sort((a, b) => a.sec - b.sec).slice(0, 3) })).slice(0, 2),
+  }));
+  const rec = (list[0] && list[0].recptnDt) || "";
+  const updated = rec ? rec.slice(11, 19) : new Date(Date.now() + 9 * 3600e3).toISOString().slice(11, 19);
+  return { station: name, updated, lines: out };
+}
+
 // 한국관광공사 오디(Odii) 오디오 가이드: 좌표 근처 또는 검색어로 찾아 필요한 항목만 돌려준다.
 async function handleStory(env, { mapX, mapY, radius, keyword }) {
   if (!env.ODII_KEY) return { error: "오디 인증키(ODII_KEY)가 아직 등록되지 않았어요." };
@@ -217,6 +248,15 @@ export default {
         return json(res, res.error ? 400 : 200, origin);
       }
       if (url.pathname === "/subway" && request.method === "GET") {
+        const st = (url.searchParams.get("station") || "").slice(0, 20);
+        if (st) {
+          const cacheKey = new Request(`https://cache.eodigallae/subway/station/${encodeURIComponent(st)}`);
+          const hit = await caches.default.match(cacheKey);
+          if (hit) return json(await hit.json(), 200, origin);
+          const res = await handleSubwayStation(env, st);
+          if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=25" } })));
+          return json(res, res.error ? 400 : 200, origin);
+        }
         const cacheKey = new Request("https://cache.eodigallae/subway");
         const hit = await caches.default.match(cacheKey);
         if (hit) return json(await hit.json(), 200, origin);
