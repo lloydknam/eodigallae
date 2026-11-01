@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{--paper:#F2F4F6;--surface:#fff;--ink:#191F28;--muted:#6B7684;--line:#E5E8EB;--green:#12907A;--soft:#DFF2EB;--display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;--body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
 header{height:58px;background:#fff;display:flex;align-items:center;padding:0 max(16px,calc((100% - 980px)/2));border-bottom:1px solid var(--line)}
 header a{color:var(--green);text-decoration:none;font:26px var(--display)}
 main{max-width:980px;margin:auto;padding:22px 14px 48px}.kicker{font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--green)}
@@ -23,6 +23,7 @@ h1{font:36px/1.2 var(--display);font-weight:400;margin:4px 0}.lead{margin:0;colo
 .searchrow{display:flex;gap:8px;margin-top:9px}.searchrow input{min-width:0;flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font:14px var(--body);outline-color:var(--green)}.searchrow button{border:0;border-radius:11px;background:var(--soft);color:#08745f;font:600 13px var(--body);padding:0 13px;cursor:pointer}
 .notice{margin-top:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:12px}.back{display:inline-flex;margin-top:20px;color:var(--green);font-weight:700;text-decoration:none}
 .leaflet-popup-content{font-family:var(--body);font-size:13px}.leaflet-control-attribution{font-size:9px!important}
+#metroPanel iframe{display:block;width:100%;height:min(84vh,780px);min-height:560px;border:0;background:#E9EEF2}
 @media(max-width:620px){main{padding:19px 12px 36px}h1{font-size:33px}.below{grid-template-columns:1fr}#map{height:58vh;min-height:340px}.map-head{align-items:flex-start;flex-direction:column;gap:2px}}
 </style>
 </head>
@@ -30,24 +31,41 @@ h1{font:36px/1.2 var(--display);font-weight:400;margin:4px 0}.lead{margin:0;colo
 <header><a href="./">어디갈래</a></header>
 <main>
 <div class="kicker">TRAIN & TRANSIT</div><h1>열차정보</h1>
-<p class="lead">전국 철도와 수도권 지하철의 주요 노선·역을 지도에서 살펴보세요.</p>
+<p class="lead">전국 철도 노선과 수도권 지하철 열차지도를 한곳에서 살펴보세요.</p>
 <div class="switch" role="tablist" aria-label="교통수단 선택">
 <button id="nationalBtn" class="active" type="button" role="tab" aria-selected="true">🚄 전국 철도</button>
 <button id="metroBtn" type="button" role="tab" aria-selected="false">🚇 수도권 지하철</button>
 </div>
-<section class="panel">
+<section class="panel" id="natPanel">
 <div class="map-head"><strong id="mapTitle">전국 주요 철도 노선</strong><small id="mapSub">KTX · 주요 간선 · 주요 정차역</small></div>
 <div id="map" aria-label="철도 노선 지도"></div>
 </section>
-<div class="below">
+<section class="panel" id="metroPanel" hidden><iframe id="metroFrame" title="수도권 지하철 열차지도" data-src="subway-map.html?embed=1"></iframe></section>
+<div class="below" id="natBelow">
 <section class="info"><h2>노선 안내</h2><div id="legend" class="legend"></div></section>
 <section class="info"><h2>역 찾기</h2><div style="font-size:12px;color:#6B7684">역 이름을 입력하면 지도에서 위치를 확인합니다.</div><div class="searchrow"><input id="stationSearch" type="search" placeholder="예: 대전역, 서울역" aria-label="역 이름"><button id="searchBtn" type="button">찾기</button></div><div id="searchMsg" style="font-size:12px;color:#6B7684;margin-top:7px" aria-live="polite"></div></section>
 </div>
-<section class="info" style="margin-top:14px"><h2>오늘의 열차 운행정보</h2><div id="railDataStatus" style="font-size:12px;color:#6B7684">코레일 운행 데이터 연결을 준비하고 있습니다.</div><div id="railDataRows" style="margin-top:10px;font-size:13px"></div></section>
-<a class="info" href="subway-map.html" id="mapLink" style="display:block;margin-top:14px;text-decoration:none;color:inherit"><h2>🗺️ 열차지도</h2><div style="font-size:13px;color:#6B7684">1~9호선 노선도 위에서 열차가 움직이는 모습을 볼 수 있어요. 시간표 기반 모의 운행입니다. →</div></a>
+<section class="info" id="natInfo" style="margin-top:14px"><h2>오늘의 열차 운행정보</h2><div id="railDataStatus" style="font-size:12px;color:#6B7684">코레일 운행 데이터 연결을 준비하고 있습니다.</div><div id="railDataRows" style="margin-top:10px;font-size:13px"></div></section>
 <div class="notice" id="notice">지도는 주요 역을 연결한 노선 개요입니다. 열차의 실시간 위치나 운행 상태를 표시하지 않습니다. 실제 운행·시간표는 코레일 및 각 운영기관의 공지를 확인하세요.</div>
 <a class="back" href="./">← 어디갈래 홈으로</a>
 </main>
+<script>
+function showTab(type){
+  const metroOn=type==='metro';
+  document.getElementById('nationalBtn').classList.toggle('active',!metroOn);
+  document.getElementById('metroBtn').classList.toggle('active',metroOn);
+  document.getElementById('nationalBtn').setAttribute('aria-selected',String(!metroOn));
+  document.getElementById('metroBtn').setAttribute('aria-selected',String(metroOn));
+  ['natPanel','natBelow','natInfo','notice'].forEach(id=>document.getElementById(id).hidden=metroOn);
+  const mp=document.getElementById('metroPanel');mp.hidden=!metroOn;
+  if(metroOn){const f=document.getElementById('metroFrame');if(!f.getAttribute('src'))f.src=f.dataset.src}
+  else setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize()},100);
+  try{history.replaceState(null,'',metroOn?'#metro':location.pathname+location.search)}catch(e){}
+}
+document.getElementById('nationalBtn').addEventListener('click',()=>showTab('rail'));
+document.getElementById('metroBtn').addEventListener('click',()=>showTab('metro'));
+if(location.hash==='#metro')showTab('metro');
+</script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const map=L.map('map',{zoomControl:true,scrollWheelZoom:false}).setView([36.2,127.8],7);
@@ -61,23 +79,11 @@ const rail={
 '중앙선':{c:colors.jungang,p:[[37.5547,126.9707],[37.4918,127.4875],[37.5665,128.7294],[37.8813,127.7298]],n:['청량리역','양평역','원주역','춘천역(별도 노선 연결)']},
 '경전선':{c:colors.gyeongjeon,p:[[35.1796,129.0756],[35.2281,128.8894],[35.2279,128.6811],[35.1595,126.8526]],n:['부산역','진영역 권역','창원중앙역','광주송정역(연결축)']}
 };
-const metro={
-'1호선':{c:colors.m1,p:[[37.5547,126.9707],[37.5663,126.9779],[37.5701,126.9921],[37.5714,127.0095],[37.5753,127.0250],[37.5802,127.0465],[37.5885,127.0870],[37.5949,127.1000]],n:['서울역','종각역','종로3가역','동대문역','청량리역','회기역','석계역','광운대역']},
-'2호선':{c:colors.m2,p:[[37.5569,126.9723],[37.5573,126.9237],[37.5551,126.9368],[37.5567,126.9436],[37.5663,126.9779],[37.5701,126.9921],[37.5665,127.0077],[37.5636,127.0369],[37.5048,127.0049],[37.4979,127.0276],[37.5006,127.0366],[37.5088,127.0632],[37.5142,127.0602],[37.5446,127.0559]],n:['시청역','홍대입구역','신촌역','이대역','을지로입구역','을지로3가역','동대문역사문화공원역','왕십리역','교대역','강남역','역삼역','잠실새내역','잠실역','건대입구역']},
-'3호선':{c:colors.m3,p:[[37.5701,126.9921],[37.5760,126.9855],[37.5823,126.9727],[37.6027,126.9291],[37.6346,126.9180],[37.6511,126.9350]],n:['종로3가역','안국역','경복궁역','불광역','연신내역','대화 방면']},
-'4호선':{c:colors.m4,p:[[37.5547,126.9707],[37.5663,126.9827],[37.5759,126.9849],[37.5796,127.0152],[37.5885,127.0870],[37.6560,127.0636]],n:['서울역','명동역','충무로역','동대문역','미아사거리역','당고개 방면']},
-'5호선':{c:colors.m5,p:[[37.5658,126.9669],[37.5701,126.9921],[37.5663,127.0090],[37.5509,127.0403],[37.5129,127.1006]],n:['광화문역','을지로4가역','동대문역사문화공원역','군자역','올림픽공원역']},
-'6호선':{c:colors.m6,p:[[37.5567,126.9237],[37.5477,126.9220],[37.5396,126.9468],[37.5546,126.9726],[37.5663,127.0090],[37.6133,127.0301]],n:['합정역','망원역','공덕역','삼각지역','동묘앞역','돌곶이역']},
-'7호선':{c:colors.m7,p:[[37.5407,126.8397],[37.5265,126.8646],[37.5133,126.8910],[37.5048,127.0049],[37.5006,127.0366],[37.5404,127.0692]],n:['온수역','철산역','가산디지털단지역','고속터미널역','학동역','건대입구역']},
-'9호선':{c:colors.m9,p:[[37.5347,126.9028],[37.5172,126.9294],[37.5129,127.1006],[37.5142,127.0602],[37.5111,127.0860]],n:['여의도역','노량진역','올림픽공원역','잠실역','석촌역']}
-};
 let active='rail',layers=[],markers=[];
 function clearMap(){layers.forEach(x=>map.removeLayer(x));markers.forEach(x=>map.removeLayer(x));layers=[];markers=[]}
-function render(type){active=type;clearMap();const data=type==='rail'?rail:metro;document.getElementById('mapTitle').textContent=type==='rail'?'전국 주요 철도 노선':'수도권 지하철 주요 구간';document.getElementById('mapSub').textContent=type==='rail'?'KTX · 주요 간선 · 주요 정차역':'1~9호선 · 서울 주요 구간 개요';document.getElementById('legend').innerHTML='';
+function render(type){active=type;clearMap();const data=rail;document.getElementById('mapTitle').textContent=type==='rail'?'전국 주요 철도 노선':'수도권 지하철 주요 구간';document.getElementById('mapSub').textContent=type==='rail'?'KTX · 주요 간선 · 주요 정차역':'1~9호선 · 서울 주요 구간 개요';document.getElementById('legend').innerHTML='';
 const bounds=[];Object.entries(data).forEach(([name,line])=>{const poly=L.polyline(line.p,{color:line.c,weight:5,opacity:.86,lineCap:'round'}).addTo(map);layers.push(poly);line.p.forEach((pt,i)=>{bounds.push(pt);const marker=L.circleMarker(pt,{radius:5,color:'#fff',weight:2,fillColor:line.c,fillOpacity:1}).addTo(map).bindPopup('<b>'+line.n[i]+'</b><br>'+name);markers.push(marker)});const chip=document.createElement('span');chip.className='chip';chip.innerHTML='<i class="dot" style="background:'+line.c+'"></i>'+name;document.getElementById('legend').appendChild(chip)});map.fitBounds(bounds,{padding:[24,24]});setTimeout(()=>map.invalidateSize(),100);document.getElementById('searchMsg').textContent=type==='rail'?'주요 역과 간선 연결을 간략히 표시합니다.':'수도권 주요 구간을 간략히 표시합니다.'}
-document.getElementById('nationalBtn').addEventListener('click',()=>{document.getElementById('nationalBtn').classList.add('active');document.getElementById('metroBtn').classList.remove('active');document.getElementById('nationalBtn').setAttribute('aria-selected','true');document.getElementById('metroBtn').setAttribute('aria-selected','false');render('rail')});
-document.getElementById('metroBtn').addEventListener('click',()=>{document.getElementById('metroBtn').classList.add('active');document.getElementById('nationalBtn').classList.remove('active');document.getElementById('metroBtn').setAttribute('aria-selected','true');document.getElementById('nationalBtn').setAttribute('aria-selected','false');render('metro')});
-function findStation(){const q=document.getElementById('stationSearch').value.trim().replace(/역$/,'');if(!q)return;const data=active==='rail'?rail:metro;let found=null;Object.entries(data).some(([line,v])=>{const i=v.n.findIndex(n=>n.replace(/역.*$/,'').includes(q));if(i>=0){found={p:v.p[i],name:v.n[i],line};return true}return false});if(found){map.setView(found.p,13);const m=L.circleMarker(found.p,{radius:9,color:'#fff',weight:3,fillColor:'#12907A',fillOpacity:1}).addTo(map).bindPopup('<b>'+found.name+'</b><br>'+found.line).openPopup();markers.push(m);document.getElementById('searchMsg').textContent=found.name+' 위치로 이동했습니다.'}else document.getElementById('searchMsg').textContent='현재 표시된 주요 구간에서 역을 찾지 못했습니다.'}
+function findStation(){const q=document.getElementById('stationSearch').value.trim().replace(/역$/,'');if(!q)return;const data=rail;let found=null;Object.entries(data).some(([line,v])=>{const i=v.n.findIndex(n=>n.replace(/역.*$/,'').includes(q));if(i>=0){found={p:v.p[i],name:v.n[i],line};return true}return false});if(found){map.setView(found.p,13);const m=L.circleMarker(found.p,{radius:9,color:'#fff',weight:3,fillColor:'#12907A',fillOpacity:1}).addTo(map).bindPopup('<b>'+found.name+'</b><br>'+found.line).openPopup();markers.push(m);document.getElementById('searchMsg').textContent=found.name+' 위치로 이동했습니다.'}else document.getElementById('searchMsg').textContent='현재 표시된 주요 구간에서 역을 찾지 못했습니다.'}
 document.getElementById('searchBtn').addEventListener('click',findStation);document.getElementById('stationSearch').addEventListener('keydown',e=>{if(e.key==='Enter')findStation()});
 render('rail');
 </script>

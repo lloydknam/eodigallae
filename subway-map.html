@@ -94,7 +94,11 @@ button{font:inherit;color:inherit}
 .maker{flex:none;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;color:var(--muted);font-size:11px}
 .maker img{height:22px;display:block}
 body{padding-top:max(12px, env(safe-area-inset-top, 0px));padding-bottom:max(12px, env(safe-area-inset-bottom, 0px))}
+html.embed .top>div:first-child,html.embed .maker{display:none}
+html.embed .top{justify-content:flex-end}
+html.embed body{padding-top:8px;padding-bottom:8px}
 </style>
+<script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script>
 </head>
 <body>
 
