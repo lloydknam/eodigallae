@@ -171,8 +171,11 @@ allBtn.type='button';allBtn.className='chip all';allBtn.textContent='전체';
 chips.appendChild(allBtn);
 
 fetch('scripts/data/subway_lines.json').then(function(r){return r.json();}).then(function(data){
-  LINES=data.filter(function(g){return g.stations.length>=2;});
-  LINES.forEach(function(G){G.on=true;});
+  LINES=data.filter(function(g){return g.branches&&g.branches.some(function(b){return b.length>=2;});});
+  LINES.forEach(function(G){
+    G.on=true;
+    G.stations=[].concat.apply([],G.branches); /* 매칭·팝업용 평탄화 목록 */
+  });
   init();
 }).catch(function(e){
   $('#sheet').innerHTML='<div class="who"><div><strong>노선 데이터를 불러오지 못했어요</strong><span class="s">잠시 뒤 새로고침해 주세요</span></div></div>';
@@ -187,14 +190,17 @@ function mkIcon(G,st){
 function init(){
   var allPts=[];
   LINES.forEach(function(G,gi){
-    G.tl=[mkTl(G.stations),mkTl(G.stations.slice().reverse())];
-    G.deps=[0,1].map(function(d){
-      var a=[],t=5.5*3600+gi*47+d*131;
-      while(t<=24.5*3600){a.push(t);t+=hw(t)*(G.liveNum?1.3:2.1)*60;}
-      return a;
+    G.runs=G.branches.filter(function(b){return b.length>=2;}).map(function(sts,bi){
+      var tl=[mkTl(sts),mkTl(sts.slice().reverse())];
+      var deps=[0,1].map(function(d){
+        var a=[],t=5.5*3600+gi*47+bi*23+d*131;
+        while(t<=24.5*3600){a.push(t);t+=hw(t)*(G.liveNum?1.3:2.1)*60;}
+        return a;
+      });
+      var latlngs=sts.map(function(s){allPts.push([s.lat,s.lng]);return [s.lat,s.lng];});
+      var polyline=L.polyline(latlngs,{color:G.color,weight:4,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
+      return {tl:tl,deps:deps,polyline:polyline,key:G.id+'-'+bi};
     });
-    var latlngs=G.stations.map(function(s){allPts.push([s.lat,s.lng]);return [s.lat,s.lng];});
-    G.polyline=L.polyline(latlngs,{color:G.color,weight:4,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
     G.markers=G.stations.map(function(s){
       var cm=mkIcon(G,s).addTo(map);
       cm.on('click',function(){showStation(s);});
@@ -218,7 +224,7 @@ function init(){
 function syncChips(){
   LINES.forEach(function(G){
     G.chip.setAttribute('aria-pressed',String(G.on));
-    G.polyline.setStyle({opacity:G.on?.85:0});
+    G.runs.forEach(function(run){run.polyline.setStyle({opacity:G.on?.85:0});});
     G.markers.forEach(function(m){m.setStyle({opacity:G.on?1:0,fillOpacity:G.on?1:0});});
     trains.forEach(function(r){if(r.G===G){var el=r.marker.getElement();if(el)el.style.display=G.on?'':'none';}});
   });
@@ -245,11 +251,11 @@ function trainSvg(G){
     '<text x="0" y="3.2" text-anchor="middle" fill="'+G.textColor+'" style="font:600 8.5px var(--f-display);pointer-events:none">'+(G.liveNum||G.name.slice(0,1))+'</text>'+
   '</svg>';
 }
-function makeTrain(G,d,dep,key){
+function makeTrain(G,run,d,dep,key){
   var divIcon=L.divIcon({className:'tricon',html:trainSvg(G),iconSize:[30,30],iconAnchor:[15,15]});
   var marker=L.marker([0,0],{icon:divIcon,interactive:true,keyboard:false}).addTo(map);
   marker.on('click',function(){select(key);});
-  var r={marker:marker,G:G,d:d,dep:dep,p:null};
+  var r={marker:marker,G:G,run:run,d:d,dep:dep,p:null};
   trains.set(key,r);return r;
 }
 function setTrainPos(r,lat,lng,angDeg){
@@ -269,7 +275,7 @@ function buildSheet(){
   var key=sel?'s:'+sel+':'+follow:'idle';
   if(key===sheetKey)return;sheetKey=key;
   if(sel&&trains.has(sel)){
-    var r=trains.get(sel),G=r.G,tl=G.tl[r.d];
+    var r=trains.get(sel),G=r.G,tl=r.live?null:r.run.tl[r.d];
     var dest=r.live?(r.live.d||'')+'행':tl.sts[tl.sts.length-1].name+'행';
     sheet.innerHTML='<div class="who"><span class="dot" style="background:'+G.color+';color:'+G.textColor+'">'+G.name+'</span><div><strong>'+dest+'</strong><span class="s" id="shSub"></span></div></div>'+
       '<div class="acts"><button type="button" class="btn" data-act="follow" aria-pressed="'+follow+'">'+(follow?'따라가는 중':'따라가기')+'</button><button type="button" class="btn" data-act="close">닫기</button></div>';
@@ -289,7 +295,7 @@ function updateSheet(){
     var r=trains.get(sel),p=r.p;
     if(r.live){sub.textContent=r.live.s+' '+(STT[r.live.st]||'')+' · 실시간'+(liveErr?' ('+liveErr+')':'');return;}
     if(!p)return;
-    var tl=r.G.tl[r.d];
+    var tl=r.run.tl[r.d];
     sub.textContent=(p.stop?tl.sts[p.i].name+' 정차 중 · '+Math.ceil(p.dwellLeft)+'초 후 출발':'다음 '+tl.sts[p.next].name+' · '+fmt(p.eta)+' 후 도착')+' · '+hhmm(r.dep)+' 출발';
   }else{
     var m=$('#shMain');
@@ -347,7 +353,7 @@ function pollLive(){
     unmapped=un;if(!(at&&Date.now()-at>300000))liveErr='';
   }).catch(function(){liveErr='실시간 데이터를 불러오지 못했어요';});
 }
-function makeLive(lt,key){var r=makeTrain(lt.G,0,0,key);r.live=lt;return r;}
+function makeLive(lt,key){var r=makeTrain(lt.G,null,0,0,key);r.live=lt;return r;}
 function liveFrame(seen,cnt){
   var tot=0,now=performance.now();
   liveTrains.forEach(function(lt,key){
@@ -382,16 +388,18 @@ liveBtn.addEventListener('click',function(){if(!liveBtn.disabled)setLive(!live);
 var lastClk='';
 function runSim(G,gid,sd,seen,cnt){
   var c=0;
-  for(var d=0;d<2;d++){
-    var arr=G.deps[d],T=G.tl[d].T;
-    for(var j=0;j<arr.length;j++){
-      var dep=arr[j];if(dep>sd)break; var t=sd-dep; if(t>=T)continue; c++;
-      if(!G.on)continue;
-      var key=gid+'-'+d+'-'+j,r=trains.get(key)||makeTrain(G,d,dep,key);
-      seen.add(key);
-      var p=posAt(G.tl[d],t);r.p=p; setTrainPos(r,p.lat,p.lng,p.ang*180/Math.PI);
+  G.runs.forEach(function(run){
+    for(var d=0;d<2;d++){
+      var arr=run.deps[d],T=run.tl[d].T;
+      for(var j=0;j<arr.length;j++){
+        var dep=arr[j];if(dep>sd)break; var t=sd-dep; if(t>=T)continue; c++;
+        if(!G.on)continue;
+        var key=run.key+'-'+d+'-'+j,r=trains.get(key)||makeTrain(G,run,d,dep,key);
+        seen.add(key);
+        var p=posAt(run.tl[d],t);r.p=p; setTrainPos(r,p.lat,p.lng,p.ang*180/Math.PI);
+      }
     }
-  }
+  });
   cnt[gid]=c;
   return c;
 }
