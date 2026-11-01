@@ -595,6 +595,10 @@ img { max-width: 100%; }
 .passport-card li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
 .passport-card li a { color: var(--ink); font-weight: 600; text-decoration: none; }
 .passport-card li span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.fest-search { margin: 10px 0 14px; }
+.fest-search input { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15px; }
+.fest-group { font-size: 14px; margin: 18px 0 8px; }
+.fest-group em { font-style: normal; font-weight: 500; color: var(--muted); font-size: 12px; margin-left: 4px; }
 .audio-btn { margin-top: 8px; padding: 8px 12px; border: 0; border-radius: 10px; background: var(--celadon-soft); color: var(--celadon); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .audio-ov { position: fixed; inset: 0; z-index: 3000; background: rgba(10,20,18,.45); display: flex; align-items: flex-end; justify-content: center; }
 .audio-card { width: min(520px, 100%); max-height: 82vh; overflow: auto; background: var(--paper); color: var(--ink); border-radius: 18px 18px 0 0; padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 30px rgba(0,0,0,.25); }
@@ -620,6 +624,7 @@ img { max-width: 100%; }
     <a href="#crowd" data-view="crowd"><span>👥</span>인파지도 <em>서울 실시간</em></a>
     <a href="rail.html"><span>🚆</span>열차정보 <em>지하철·국철</em></a>
     <a href="#courses" data-view="courses"><span>🏛️</span>국가유산 방문코스 <em>13개 노선</em></a>
+    <a href="#festivals" data-view="festivals"><span>🎪</span>전국 축제 <em>다가오는 행사</em></a>
     <a href="#cities" data-view="cities"><span>🔍</span>도시 찾기</a>
     <a href="#me" data-view="me"><span>🧳</span>내 여행 <em>코스·도장깨기</em></a>
     <hr>
@@ -1181,7 +1186,7 @@ img { max-width: 100%; }
   }
 
   // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
-  const VIEWS = ["map", "crowd", "cities", "about", "me", "courses"];
+  const VIEWS = ["map", "crowd", "cities", "about", "me", "courses", "festivals"];
   function setTabbar(view) {
     document.querySelectorAll("#tabbar [data-view], #menu-drop [data-view]").forEach((b) => {
       if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
@@ -1200,6 +1205,7 @@ img { max-width: 100%; }
     if (view === "about") return showAboutPage();
     if (view === "me") return showMePage();
     if (view === "courses") return showCoursesPage();
+    if (view === "festivals") return showFestivalsPage();
     app.innerHTML = `
       <section class="hero-card">
         <h1>이번 주말,<br><em>어디 갈래?</em></h1>
@@ -1932,6 +1938,7 @@ img { max-width: 100%; }
       </section>
       ${cityTop10(d)}
       <div id="festival-slot"></div>
+      <div id="citytour-slot"></div>
       <div id="passport-slot"></div>
       <div class="tabs" role="tablist" id="tabs">
         ${tabBtn("course", "추천 코스", d.courses.length)}
@@ -1950,6 +1957,36 @@ img { max-width: 100%; }
       const items = festivalsForCity(d.id, data), slot = document.getElementById("festival-slot");
       if (slot && items.length && state.city === d) slot.innerHTML = festivalBlockHtml(items);
     });
+    loadCitytour().then((data) => {
+      const items = citytourForCity(d.id, data), slot = document.getElementById("citytour-slot");
+      if (slot && items.length && state.city === d) slot.innerHTML = citytourBlockHtml(items);
+    });
+  }
+
+  // ── 시티투어 (전국시티투어정보표준데이터) ──
+  let citytourData = null;
+  async function loadCitytour() {
+    if (!citytourData) {
+      try { const r = await fetch("data/citytour.json", { cache: "no-cache" }); citytourData = r.ok ? await r.json() : { items: [] }; }
+      catch { citytourData = { items: [] }; }
+    }
+    return citytourData;
+  }
+  const citytourForCity = (cityId, data) => (data.items || []).filter((t) => t.cityId === cityId);
+  function citytourBlockHtml(items) {
+    return `<section class="passport-block">
+      <h2>🚌 시티투어</h2>
+      <p class="passport-sub">지자체가 운영하는 순회 관광버스예요. 예약·운행 여부는 문의처로 확인하세요.</p>
+      ${items.map((t) => `<div class="passport-route">
+        <b>${esc(t.course || "시티투어")}</b>
+        <span>${[t.schedule, t.open && t.close ? `${esc(t.open)}~${esc(t.close)}` : "", t.fee].filter(Boolean).map(esc).join(" · ")}</span>
+        ${t.board ? `<span>탑승: ${esc(t.board)}</span>` : ""}
+        ${t.courseInfo ? `<span>${esc(t.courseInfo)}</span>` : ""}
+        ${t.contact ? `<span>문의: ${esc(t.contact)}</span>` : ""}
+        ${t.homepage ? `<a href="${esc(t.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}
+      </div>`).join("")}
+      <p class="passport-src">출처: 전국시티투어정보표준데이터 (공공데이터포털) · ${esc(items[0]?.org || "")}</p>
+    </section>`;
   }
 
   // ── 축제·행사 (한국관광공사 TourAPI 축제공연행사정보) ──
@@ -1979,6 +2016,41 @@ img { max-width: 100%; }
       </div>`).join("")}
       <p class="passport-src">출처: 한국관광공사 TourAPI 축제공연행사정보</p>
     </section>`;
+  }
+
+  // 전국 축제 모아보기 페이지
+  async function showFestivalsPage() {
+    state.city = null;
+    app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎪 전국 축제</h1>
+      <span class="meta">다가오는 축제와 행사를 한눈에 모았어요</span></section><p class="loading">불러오는 중…</p>`;
+    const data = await loadFestivals();
+    const items = data.items || [];
+    if (!items.length) { app.innerHTML = `<p class="loading">축제 정보를 불러오지 못했어요. 잠시 뒤 다시 해 주세요.</p>`; return; }
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const ongoing = items.filter((f) => f.start <= today && (!f.end || f.end >= today));
+    const upcoming = items.filter((f) => f.start > today);
+    const render = (q) => {
+      const qq = (q || "").trim();
+      const filt = (list) => qq ? list.filter((f) => f.title.includes(qq) || f.city.includes(qq) || (f.addr || "").includes(qq)) : list;
+      const group = (title, list) => !list.length ? "" : `<h3 class="fest-group">${title} <em>${list.length}건</em></h3>
+        <div class="spots">${list.map((f) => `<article class="spot festival-card">
+          <div class="body">
+            <h4>${esc(f.title)} ${festivalDday(f)}</h4>
+            <span class="addr">${esc(f.city)}${f.addr ? ` · ${esc(f.addr)}` : ""}</span>
+            <span class="addr">${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
+            <div class="links"><a href="#${encodeURIComponent(f.cityId)}">${esc(f.city)} 둘러보기 →</a></div>
+          </div>
+        </article>`).join("")}</div>`;
+      document.getElementById("fest-list").innerHTML = group("진행 중", filt(ongoing)) + group("다가오는 축제", filt(upcoming))
+        || `<p class="loading">검색 결과가 없어요.</p>`;
+    };
+    app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎪 전국 축제</h1>
+      <span class="meta">진행 중 ${ongoing.length}건 · 다가오는 축제 ${upcoming.length}건 · ${esc((data.updatedAt || "").slice(0, 10))} 기준</span></section>
+      <div class="fest-search"><input type="search" id="fest-q" placeholder="축제 이름, 지역으로 찾기" aria-label="축제 검색"></div>
+      <div id="fest-list"></div>
+      <p class="credit">출처: 한국관광공사 TourAPI 축제공연행사정보</p>`;
+    render("");
+    document.getElementById("fest-q").addEventListener("input", (e) => render(e.target.value));
   }
 
   // ── 국가유산 방문코스 (국가유산청 방문 캠페인, 노선 13개) ──
