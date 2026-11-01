@@ -77,6 +77,12 @@ def match_city_tour(it: dict, ldong_idx: dict, area_idx: dict) -> dict | None:
         c = ldong_idx.get(regn + signgu)
         if c:
             return c
+        # 세종처럼 하위 구역이 없는 곳은 TourAPI가 시군구 코드에 광역 코드를 그대로 반복해서 보낸다
+        # (예: lDongRegnCd=36110, lDongSignguCd=36110) — 이때는 광역 코드 하나만으로 다시 찾는다
+        if signgu == regn:
+            c = ldong_idx.get(regn)
+            if c:
+                return c
     area, sgg = str(it.get("areacode") or ""), str(it.get("sigungucode") or "")
     if area:
         c = area_idx.get((area, sgg)) or area_idx.get((area, ""))
@@ -118,6 +124,58 @@ def std_fetch(key: str) -> list[dict]:
             break
         page += 1
     return out
+
+
+# 표준데이터 중 위도·경도가 비어 있는 항목을 위한 주소 텍스트 매칭(시도 축약형 → cities.json의 province 값)
+PROV_SHORT = {
+    "서울특별시": "서울", "서울": "서울", "부산광역시": "부산", "부산": "부산",
+    "대구광역시": "대구", "대구": "대구", "인천광역시": "인천", "인천": "인천",
+    "광주광역시": "광주", "광주": "광주", "대전광역시": "대전", "대전": "대전",
+    "울산광역시": "울산", "울산": "울산", "세종특별자치시": "세종특별자치시", "세종": "세종특별자치시",
+    "경기도": "경기도", "경기": "경기도",
+    "강원특별자치도": "강원특별자치도", "강원도": "강원특별자치도", "강원": "강원특별자치도",
+    "충청북도": "충청북도", "충북": "충청북도", "충청남도": "충청남도", "충남": "충청남도",
+    "전북특별자치도": "전북특별자치도", "전라북도": "전북특별자치도", "전북": "전북특별자치도",
+    "전라남도": "전라남도", "전남": "전라남도",
+    "경상북도": "경상북도", "경북": "경상북도", "경상남도": "경상남도", "경남": "경상남도",
+    "제주특별자치도": "제주특별자치도", "제주도": "제주특별자치도", "제주": "제주특별자치도",
+}
+
+
+def build_addr_index(cities: list[dict]) -> dict[str, list[dict]]:
+    idx: dict[str, list[dict]] = {}
+    for c in cities:
+        idx.setdefault(c["province"], []).append(c)
+    return idx
+
+
+def match_by_address(addr: str, addr_idx: dict[str, list[dict]]) -> dict | None:
+    """위도·경도가 없는 표준데이터용: 주소 문자열에서 시도→시군구 이름을 찾아 매칭한다."""
+    if not addr:
+        return None
+    province = None
+    for token, full in sorted(PROV_SHORT.items(), key=lambda kv: -len(kv[0])):
+        if token in addr:
+            province = full
+            break
+    if not province:
+        return None
+    cands = addr_idx.get(province) or []
+    # 시군구 이름이 가장 길게 일치하는 쪽(예: "고성군"이 "고성"보다 우선)을 고른다
+    best, best_len = None, 0
+    for c in cands:
+        name = c["name"]
+        if name == province:
+            continue
+        if name in addr and len(name) > best_len:
+            best, best_len = c, len(name)
+    if best:
+        return best
+    # 시군구 이름이 안 보이면(광역시 등 단일 도시) 그 시도 자체를 가리키는 항목으로
+    for c in cands:
+        if c["name"] == province:
+            return c
+    return None
 
 
 def nearest_city(lat: float, lng: float, cities: list[dict]) -> dict | None:
@@ -190,6 +248,7 @@ def main():
             log("TourAPI 매칭 실패 목록: " + " | ".join(misses[:30]))
 
     if std_key:
+        addr_idx = build_addr_index(cities)
         raw = std_fetch(std_key)
         unmatched, misses = 0, []
         for it in raw:
@@ -198,6 +257,9 @@ def main():
                 continue
             lat, lng = it.get("latitude"), it.get("longitude")
             city = nearest_city(float(lat), float(lng), cities) if lat and lng else None
+            if not city:
+                addr = (it.get("rdnmadr") or it.get("lnmadr") or "")
+                city = match_by_address(addr, addr_idx)
             if not city:
                 unmatched += 1
                 misses.append(f"{it.get('fstvlNm','')[:20]} ({it.get('latitude','')},{it.get('longitude','')})")
