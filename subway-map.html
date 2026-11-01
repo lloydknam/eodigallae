@@ -6,12 +6,12 @@
 <meta name="theme-color" content="#E9EEF2">
 <title>열차지도 | 어디갈래</title>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
   --bg:#E9EEF2; --land:#F6F8FA; --panel:#FFFFFF; --ink:#12202B; --muted:#586977; --rule:#CFD8DF; --water:#C6DEEE; --signal:#E4372B;
-  --f-display:'Barlow Condensed','Noto Sans KR',sans-serif; --f-body:'Noto Sans KR',system-ui,-apple-system,sans-serif;
+  --f-display:'Jua','Apple SD Gothic Neo','Malgun Gothic',sans-serif; --f-body:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){--bg:#0B1218;--land:#0F1A22;--panel:#16222C;--ink:#E7EEF3;--muted:#93A4B1;--rule:#25323D;--water:#123049;color-scheme:dark}
@@ -25,15 +25,15 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex:none}
-.top h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.top h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:23px;letter-spacing:-.01em}
 .sub{margin:2px 0 0;color:var(--muted);font-size:12px}
 .clock{text-align:right;flex:none}
-.clock b{display:block;font:600 30px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.clock b{display:block;font:400 30px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .clock small{color:var(--muted);font-size:11px}
 
 .ctl{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none;flex-wrap:wrap}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--panel)}
-.seg button{border:0;background:transparent;padding:6px 12px;cursor:pointer;font:500 14px var(--f-display);letter-spacing:.03em;min-width:44px}
+.seg button{border:0;background:transparent;padding:6px 12px;cursor:pointer;font:600 14px var(--f-body);letter-spacing:.01em;min-width:44px}
 .seg button+button{border-left:1px solid var(--rule)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .btn{border:1px solid var(--rule);background:var(--panel);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
@@ -45,9 +45,9 @@ button{font:inherit;color:inherit}
 .chips{display:flex;gap:6px;overflow-x:auto;flex:none;padding-bottom:2px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);background:var(--panel);border-radius:999px;padding:3px 10px 3px 3px;cursor:pointer;min-height:30px}
-.chip .d{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 11px var(--f-display);white-space:nowrap}
+.chip .d{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--f-body);white-space:nowrap}
 .chip .nm{font:500 13px var(--f-body);color:var(--ink);white-space:nowrap;max-width:94px;overflow:hidden;text-overflow:ellipsis}
-.chip .c{font:500 13px var(--f-display);font-variant-numeric:tabular-nums;color:var(--muted);min-width:1.1em;text-align:right}
+.chip .c{font:500 13px var(--f-body);font-variant-numeric:tabular-nums;color:var(--muted);min-width:1.1em;text-align:right}
 .chip.all{padding:3px 12px;font-size:13px}
 .chip[aria-pressed="false"]{opacity:.4}
 
@@ -59,14 +59,14 @@ button{font:inherit;color:inherit}
 .st-dot{border-radius:50%;background:var(--panel);box-sizing:border-box}
 .st-pop{font:500 13px var(--f-body)}
 .st-pop b{display:block;font-size:14px;margin-bottom:2px}
-.st-pop .ln{display:inline-block;margin:2px 3px 0 0;padding:1px 7px;border-radius:999px;font:600 11px var(--f-display)}
+.st-pop .ln{display:inline-block;margin:2px 3px 0 0;padding:1px 7px;border-radius:999px;font:700 11px var(--f-body)}
 .tricon{pointer-events:auto;cursor:pointer}
 .tricon .body{transition:none}
 .tricon.sel .ring{opacity:1!important}
 
 .sheet{flex:none;background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:10px 12px;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .who{display:flex;align-items:center;gap:10px;min-width:0}
-.who .dot{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--f-display);text-align:center;line-height:1.05}
+.who .dot{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--f-body);text-align:center;line-height:1.05}
 .who strong{display:block;font-size:15px}
 .who span.s{display:block;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 .acts{display:flex;gap:6px;flex:none}
@@ -254,7 +254,7 @@ function trainSvg(G){
       '<circle cx="6" cy="0" r="1.3" fill="#fff" opacity=".9"/>'+
     '</g>'+
     '<circle r="6.6" fill="'+G.color+'" stroke="var(--land)" stroke-width="1.4"/>'+
-    '<text x="0" y="3.2" text-anchor="middle" fill="'+G.textColor+'" style="font:600 8.5px var(--f-display);pointer-events:none">'+(G.liveNum||G.name.slice(0,1))+'</text>'+
+    '<text x="0" y="3.2" text-anchor="middle" fill="'+G.textColor+'" style="font:700 8.5px var(--f-body);pointer-events:none">'+(G.liveNum||G.name.slice(0,1))+'</text>'+
   '</svg>';
 }
 function makeTrain(G,run,d,dep,key){
