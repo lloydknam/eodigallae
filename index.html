@@ -1209,10 +1209,12 @@ img { max-width: 100%; }
         <a class="entry" href="#video"><b>🎬 영상 그대로 여행</b><span>유튜브 링크 → 코스 완성</span></a>
         <a class="entry" href="#report"><b>📮 숨은 핫플 제보</b><span>나만 아는 곳 알려주기</span></a>
       </div>
+      <section id="home-festival"></section>
       <section id="weekly" class="weekly"></section>
       <div class="home-more"><button class="btn-ghost" data-view="map">핫플 지도로 보기 →</button></div>`;
     renderWeekly();
     renderWeather();
+    renderHomeFestival();
   }
   function showMapPage() {
     app.innerHTML = `
@@ -2002,6 +2004,31 @@ img { max-width: 100%; }
       </div>`).join("")}
       <p class="passport-src">출처: 한국관광공사 TourAPI 축제공연행사정보</p>
     </section>`;
+  }
+
+  // 메인 화면: 다가오는 축제 카드 (전국 핫플 랭킹 앞)
+  function renderHomeFestival() {
+    const box = document.getElementById("home-festival");
+    if (!box) return;
+    loadFestivals().then((data) => {
+      if (!box.isConnected) return;
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      const items = (data.items || []).filter((f) => !f.end || f.end >= today);
+      if (!items.length) { box.hidden = true; return; }
+      const sorted = [...items].sort((a, b) => (a.start || "").localeCompare(b.start || ""));
+      const show = sorted.slice(0, 6);
+      box.hidden = false;
+      box.innerHTML = `<section class="passport-block">
+        <div class="weekly-head">
+          <h2>${mz("🎪", "tilt")}다가오는 축제</h2>
+          <a class="wk-link" href="#festivals">전체 보기 →</a>
+        </div>
+        ${show.map((f) => `<a class="passport-route" style="text-decoration:none;color:inherit" href="#${enc(f.cityId)}">
+          <b>${esc(f.title)} ${festivalDday(f)}</b>
+          <span>${esc(f.city)} · ${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
+        </a>`).join("")}
+      </section>`;
+    });
   }
 
   // 전국 축제 모아보기 페이지
