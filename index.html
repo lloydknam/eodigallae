@@ -1922,10 +1922,10 @@ img { max-width: 100%; }
         <span class="meta">관광지 ${d.spots.length}곳${hotCount ? ` · 요즘 뜨는 곳 ${hotCount}곳` : ""} · 추천 코스 ${d.courses.length}개${vidCount ? ` · 영상 ${vidCount}편` : ""} · ${esc((d.updatedAt || "").slice(0, 10))} 기준</span>
         ${d.sample ? `<div class="notice">샘플 데이터예요. 좌표는 근사치이고, 사진·영상·식당은 API를 연결하면 자동으로 채워져요. 지금은 사진을 누르면 유튜브 검색으로 연결돼요.</div>` : ""}
       </section>
-      ${cityTop10(d)}
       <div id="festival-slot"></div>
       <div id="passport-slot"></div>
       <div id="citytour-slot"></div>
+      ${cityTop10(d)}
       <div class="tabs" role="tablist" id="tabs">
         ${tabBtn("course", "추천 코스", d.courses.length)}
         ${tabBtn("spots", "관광지", d.spots.length)}
