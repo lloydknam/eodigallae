@@ -15,8 +15,25 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: 오디·영문 API 응답 구조 확인
+      - name: 오디 응답 전체 필드 확인
         env:
           ODII_KEY: ${{ secrets.ODII_KEY }}
-          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
-        run: python scripts/odii_probe.py
+        run: |
+          cat > /tmp/probe2.py <<'PYEOF'
+import os, urllib.parse, urllib.request, json
+ODII="https://apis.data.go.kr/B551011/Odii"
+key=os.environ.get("ODII_KEY","").strip()
+def run(op, extra):
+    q={"serviceKey":key,"MobileOS":"ETC","MobileApp":"eodigallae","_type":"json","numOfRows":"3","pageNo":"1","langCode":"ko",**extra}
+    url=f"{ODII}/{op}?{urllib.parse.urlencode(q)}"
+    with urllib.request.urlopen(url,timeout=30) as r: body=r.read().decode("utf-8","replace")
+    js=json.loads(body)
+    items=js["response"]["body"]["items"]["item"]
+    for item in items:
+        print(op, extra, "FIELDS:", sorted(item.keys()))
+        print(json.dumps(item, ensure_ascii=False)[:2000])
+run("storySearchList", {"keyword":"경복궁"})
+run("storyLocationBasedList", {"mapX":"126.9770","mapY":"37.5759","radius":"3000"})
+run("storyBasedList", {})
+PYEOF
+          python3 /tmp/probe2.py
