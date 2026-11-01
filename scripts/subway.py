@@ -39,12 +39,19 @@ def clean(text: object) -> str:
 def fetch_line(n: int, key: str | None = None, end: int = 200) -> tuple[list[dict], dict]:
     key = key or KEY
     info: dict = {"line": n}
-    try:
-        r = S.get(URL.format(key=key, end=end, line=urllib.parse.quote(f"{n}호선")), timeout=15)
-        info["http"] = r.status_code
-        j = r.json()
-    except Exception as e:  # noqa: BLE001
-        info["error"] = clean(e)[:200]
+    j = None
+    for attempt in range(3):  # 서울시 서버 접속이 가끔 시간 초과로 끊기므로 세 번까지 다시 시도한다
+        try:
+            r = S.get(URL.format(key=key, end=end, line=urllib.parse.quote(f"{n}호선")), timeout=(8, 12))
+            info["http"] = r.status_code
+            j = r.json()
+            info.pop("error", None)
+            break
+        except Exception as e:  # noqa: BLE001
+            info["error"] = clean(e)[:160]
+            info["attempts"] = attempt + 1
+            time.sleep(2)
+    if j is None:
         return [], info
     err = j.get("errorMessage") or {}
     if err:
@@ -136,8 +143,9 @@ def main() -> int:
             git(work, "commit", "-q", "--amend", "-m", msg)
         p = git(work, "push", "-q", "-f", "origin", "HEAD:refs/heads/live-data", check=False)
         print(f"[{n}] {msg} push={'ok' if p.returncode == 0 else clean(p.stderr)[:200]}", flush=True)
-        if first and data["lines"] == 0:
-            # 키가 실시간 서비스용이 아니거나 서울시 서버 오류: 13분 내내 빈 데이터를 올리지 않고 다음 예약 실행에 맡긴다.
+        if first and data["lines"] == 0 and all("code" in i for i in probe["per_line"]):
+            # 서울시가 응답은 했는데 거절한 경우(키가 실시간 서비스용이 아님 등): 13분 내내 빈 데이터를 올리지 않고 다음 예약 실행에 맡긴다.
+            # (접속 시간 초과처럼 응답 자체가 없던 경우는 계속 다시 시도한다)
             print("열차 위치를 한 노선도 받지 못했어요. probe.json 을 확인해 주세요.", flush=True)
             break
         first = False
