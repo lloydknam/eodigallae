@@ -7,7 +7,7 @@ def main():
     key = os.environ.get("CITYTOUR_KEY", "").strip()
     if not key:
         print("CITYTOUR_KEY가 없어요."); return
-    q = {"serviceKey": key, "pageNo": "1", "numOfRows": "5", "type": "json"}
+    q = {"serviceKey": key, "pageNo": "1", "numOfRows": "1", "type": "json"}
     url = f"{BASE}?{urllib.parse.urlencode(q)}"
     try:
         with urllib.request.urlopen(url, timeout=30) as r:
@@ -20,6 +20,7 @@ def main():
     try:
         js = json.loads(body)
         print(json.dumps(js, ensure_ascii=False)[:2500])
+    print("totalCount", js.get("body", {}).get("totalCount"))
     except Exception:
         print("JSON 아님:", body[:1500])
 
