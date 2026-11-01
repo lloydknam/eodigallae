@@ -1,0 +1,14 @@
+[
+ "20260731: {\"SPOP_LOCAL_RESD_DONG\":{\"list_total_count\":10176,\"RESULT\":{\"CODE\":\"INFO-000\",\"MESSAGE\":\"정상 처리되었습니다\"},\"row\":[{\"STDR_DE_ID\":\"20260731\",\"TMZON_PD_SE\":\"00\",\"ADSTRD_CODE_SE\":\"11110515\",\"TOT_LVPOP_CO\":\"14304.9203\",\"MALE_F0T9_LVPOP_CO\":\"435.2258\",\"MALE_F10T14_LVPOP_",
+ "20260701: {\"SPOP_LOCAL_RESD_DONG\":{\"list_total_count\":10176,\"RESULT\":{\"CODE\":\"INFO-000\",\"MESSAGE\":\"정상 처리되었습니다\"},\"row\":[{\"STDR_DE_ID\":\"20260701\",\"TMZON_PD_SE\":\"00\",\"ADSTRD_CODE_SE\":\"11110515\",\"TOT_LVPOP_CO\":\"14515.8611\",\"MALE_F0T9_LVPOP_CO\":\"515.1191\",\"MALE_F10T14_LVPOP_",
+ "20260401: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20260101: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20251231: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20251101: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20250701: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20250101: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20240101: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20231101: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20221231: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}",
+ "20220101: {\"RESULT\":{\"CODE\":\"INFO-200\",\"MESSAGE\":\"해당하는 데이터가 없습니다.\"}}"
+]
