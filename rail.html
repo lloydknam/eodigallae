@@ -7,46 +7,33 @@
 <title>열차정보 | 어디갈래</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
+[hidden]{display:none!important}
 :root{--paper:#F2F4F6;--surface:#fff;--ink:#191F28;--muted:#6B7684;--line:#E5E8EB;--green:#12907A;--soft:#DFF2EB;--display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;--body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
-[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
 header{height:58px;background:#fff;display:flex;align-items:center;padding:0 max(16px,calc((100% - 980px)/2));border-bottom:1px solid var(--line)}
 header a{color:var(--green);text-decoration:none;font:26px var(--display)}
 main{max-width:980px;margin:auto;padding:22px 14px 48px}.kicker{font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--green)}
 h1{font:36px/1.2 var(--display);font-weight:400;margin:4px 0}.lead{margin:0;color:var(--muted);font-size:14px}
 .switch{display:flex;gap:8px;margin:20px 0 12px}.switch button{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:13px;padding:11px 17px;font:600 14px var(--body);cursor:pointer}.switch button.active{background:var(--green);border-color:var(--green);color:white}
 .panel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 2px 10px #172b2410}
-.map-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line)}.map-head strong{font:21px var(--display);font-weight:400}.map-head small{color:var(--muted);font-size:12px}
-#map{height:min(62vh,570px);min-height:360px;background:#e9eef0}
-.below{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.info{background:#fff;border:1px solid var(--line);border-radius:17px;padding:15px}.info h2{font:19px var(--display);font-weight:400;margin:0 0 8px}.legend{display:flex;flex-wrap:wrap;gap:7px}.chip{display:inline-flex;align-items:center;gap:6px;background:#f5f7f8;border-radius:20px;padding:5px 9px;font-size:12px;color:#47515d}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-.searchrow{display:flex;gap:8px;margin-top:9px}.searchrow input{min-width:0;flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font:14px var(--body);outline-color:var(--green)}.searchrow button{border:0;border-radius:11px;background:var(--soft);color:#08745f;font:600 13px var(--body);padding:0 13px;cursor:pointer}
+.panel iframe{display:block;width:100%;height:min(84vh,780px);min-height:560px;border:0;background:#E7EDF1}
 .notice{margin-top:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:12px}.back{display:inline-flex;margin-top:20px;color:var(--green);font-weight:700;text-decoration:none}
-.leaflet-popup-content{font-family:var(--body);font-size:13px}.leaflet-control-attribution{font-size:9px!important}
-#metroPanel iframe{display:block;width:100%;height:min(84vh,780px);min-height:560px;border:0;background:#E9EEF2}
-@media(max-width:620px){main{padding:19px 12px 36px}h1{font-size:33px}.below{grid-template-columns:1fr}#map{height:58vh;min-height:340px}.map-head{align-items:flex-start;flex-direction:column;gap:2px}}
+@media(max-width:620px){main{padding:19px 12px 36px}h1{font-size:33px}}
 </style>
 </head>
 <body>
 <header><a href="./">어디갈래</a></header>
 <main>
 <div class="kicker">TRAIN & TRANSIT</div><h1>열차정보</h1>
-<p class="lead">전국 철도 노선과 수도권 지하철 열차지도를 한곳에서 살펴보세요.</p>
+<p class="lead">전국 철도와 수도권 지하철 위를 달리는 열차를 지도에서 살펴보세요.</p>
 <div class="switch" role="tablist" aria-label="교통수단 선택">
 <button id="nationalBtn" class="active" type="button" role="tab" aria-selected="true">🚄 전국 철도</button>
 <button id="metroBtn" type="button" role="tab" aria-selected="false">🚇 수도권 지하철</button>
 </div>
-<section class="panel" id="natPanel">
-<div class="map-head"><strong id="mapTitle">전국 주요 철도 노선</strong><small id="mapSub">KTX · 주요 간선 · 주요 정차역</small></div>
-<div id="map" aria-label="철도 노선 지도"></div>
-</section>
+<section class="panel" id="natPanel"><iframe id="natFrame" title="전국 철도 열차지도" src="rail-map.html?embed=1"></iframe></section>
 <section class="panel" id="metroPanel" hidden><iframe id="metroFrame" title="수도권 지하철 열차지도" data-src="subway-map.html?embed=1"></iframe></section>
-<div class="below" id="natBelow">
-<section class="info"><h2>노선 안내</h2><div id="legend" class="legend"></div></section>
-<section class="info"><h2>역 찾기</h2><div style="font-size:12px;color:#6B7684">역 이름을 입력하면 지도에서 위치를 확인합니다.</div><div class="searchrow"><input id="stationSearch" type="search" placeholder="예: 대전역, 서울역" aria-label="역 이름"><button id="searchBtn" type="button">찾기</button></div><div id="searchMsg" style="font-size:12px;color:#6B7684;margin-top:7px" aria-live="polite"></div></section>
-</div>
-<section class="info" id="natInfo" style="margin-top:14px"><h2>오늘의 열차 운행정보</h2><div id="railDataStatus" style="font-size:12px;color:#6B7684">코레일 운행 데이터 연결을 준비하고 있습니다.</div><div id="railDataRows" style="margin-top:10px;font-size:13px"></div></section>
-<div class="notice" id="notice">지도는 주요 역을 연결한 노선 개요입니다. 열차의 실시간 위치나 운행 상태를 표시하지 않습니다. 실제 운행·시간표는 코레일 및 각 운영기관의 공지를 확인하세요.</div>
+<div class="notice" id="notice">열차 위치는 시간표를 흉내 낸 모의 운행이며 실제 위치가 아닙니다. 노선도는 주요 역만 이은 약식 지도입니다. 실제 운행·시간표는 코레일 및 각 운영기관의 공지를 확인하세요.</div>
 <a class="back" href="./">← 어디갈래 홈으로</a>
 </main>
 <script>
@@ -56,35 +43,13 @@ function showTab(type){
   document.getElementById('metroBtn').classList.toggle('active',metroOn);
   document.getElementById('nationalBtn').setAttribute('aria-selected',String(!metroOn));
   document.getElementById('metroBtn').setAttribute('aria-selected',String(metroOn));
-  ['natPanel','natBelow','natInfo','notice'].forEach(id=>document.getElementById(id).hidden=metroOn);
-  const mp=document.getElementById('metroPanel');mp.hidden=!metroOn;
+  document.getElementById('natPanel').hidden=metroOn;
+  document.getElementById('metroPanel').hidden=!metroOn;
   if(metroOn){const f=document.getElementById('metroFrame');if(!f.getAttribute('src'))f.src=f.dataset.src}
-  else setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize()},100);
   try{history.replaceState(null,'',metroOn?'#metro':location.pathname+location.search)}catch(e){}
 }
 document.getElementById('nationalBtn').addEventListener('click',()=>showTab('rail'));
 document.getElementById('metroBtn').addEventListener('click',()=>showTab('metro'));
 if(location.hash==='#metro')showTab('metro');
-</script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-const map=L.map('map',{zoomControl:true,scrollWheelZoom:false}).setView([36.2,127.8],7);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
-const colors={gyeongbu:'#2878D0',honam:'#159B72',gangneung:'#8B62C8',jeolla:'#E28A27',jungang:'#C64C72',gyeongjeon:'#6D7C36',m1:'#3157A4',m2:'#159B72',m3:'#E28A27',m4:'#2996C8',m5:'#8B62C8',m6:'#A67B42',m7:'#68747F',m9:'#D4A51C'};
-const rail={
-'경부선 KTX':{c:colors.gyeongbu,p:[[37.5547,126.9707],[36.3504,127.3845],[35.8714,128.6014],[35.1796,129.0756]],n:['서울역','대전역','동대구역','부산역']},
-'호남선 KTX':{c:colors.honam,p:[[37.5547,126.9707],[36.3504,127.3845],[35.1595,126.8526],[35.8242,127.1480],[34.8118,126.3922]],n:['서울역','대전역','광주송정역','전주역(연결축)','목포역']},
-'강릉선 KTX':{c:colors.gangneung,p:[[37.5547,126.9707],[37.3705,128.3903],[37.7519,128.8761]],n:['서울역','평창역 권역','강릉역']},
-'전라선':{c:colors.jeolla,p:[[36.3504,127.3845],[35.8242,127.1480],[35.0159,126.7108],[34.7604,127.6622]],n:['대전역(연계)','전주역','익산역 권역','여수엑스포역']},
-'중앙선':{c:colors.jungang,p:[[37.5547,126.9707],[37.4918,127.4875],[37.5665,128.7294],[37.8813,127.7298]],n:['청량리역','양평역','원주역','춘천역(별도 노선 연결)']},
-'경전선':{c:colors.gyeongjeon,p:[[35.1796,129.0756],[35.2281,128.8894],[35.2279,128.6811],[35.1595,126.8526]],n:['부산역','진영역 권역','창원중앙역','광주송정역(연결축)']}
-};
-let active='rail',layers=[],markers=[];
-function clearMap(){layers.forEach(x=>map.removeLayer(x));markers.forEach(x=>map.removeLayer(x));layers=[];markers=[]}
-function render(type){active=type;clearMap();const data=rail;document.getElementById('mapTitle').textContent=type==='rail'?'전국 주요 철도 노선':'수도권 지하철 주요 구간';document.getElementById('mapSub').textContent=type==='rail'?'KTX · 주요 간선 · 주요 정차역':'1~9호선 · 서울 주요 구간 개요';document.getElementById('legend').innerHTML='';
-const bounds=[];Object.entries(data).forEach(([name,line])=>{const poly=L.polyline(line.p,{color:line.c,weight:5,opacity:.86,lineCap:'round'}).addTo(map);layers.push(poly);line.p.forEach((pt,i)=>{bounds.push(pt);const marker=L.circleMarker(pt,{radius:5,color:'#fff',weight:2,fillColor:line.c,fillOpacity:1}).addTo(map).bindPopup('<b>'+line.n[i]+'</b><br>'+name);markers.push(marker)});const chip=document.createElement('span');chip.className='chip';chip.innerHTML='<i class="dot" style="background:'+line.c+'"></i>'+name;document.getElementById('legend').appendChild(chip)});map.fitBounds(bounds,{padding:[24,24]});setTimeout(()=>map.invalidateSize(),100);document.getElementById('searchMsg').textContent=type==='rail'?'주요 역과 간선 연결을 간략히 표시합니다.':'수도권 주요 구간을 간략히 표시합니다.'}
-function findStation(){const q=document.getElementById('stationSearch').value.trim().replace(/역$/,'');if(!q)return;const data=rail;let found=null;Object.entries(data).some(([line,v])=>{const i=v.n.findIndex(n=>n.replace(/역.*$/,'').includes(q));if(i>=0){found={p:v.p[i],name:v.n[i],line};return true}return false});if(found){map.setView(found.p,13);const m=L.circleMarker(found.p,{radius:9,color:'#fff',weight:3,fillColor:'#12907A',fillOpacity:1}).addTo(map).bindPopup('<b>'+found.name+'</b><br>'+found.line).openPopup();markers.push(m);document.getElementById('searchMsg').textContent=found.name+' 위치로 이동했습니다.'}else document.getElementById('searchMsg').textContent='현재 표시된 주요 구간에서 역을 찾지 못했습니다.'}
-document.getElementById('searchBtn').addEventListener('click',findStation);document.getElementById('stationSearch').addEventListener('keydown',e=>{if(e.key==='Enter')findStation()});
-render('rail');
 </script>
 </body></html>
