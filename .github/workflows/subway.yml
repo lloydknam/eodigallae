@@ -1,0 +1,35 @@
+name: 열차지도(지하철 실시간)
+
+# 한 번 실행되면 약 13분 동안 30초마다 서울시 열차 위치를 받아 live-data 브랜치(subway.json)에 올린다.
+# 15분마다 다시 시작해 끊김 없이 이어 간다. main 브랜치에는 아무것도 커밋하지 않는다.
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main, feat/subway-snapshot]
+    paths: ["scripts/subway.py", ".github/workflows/subway.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: subway-live
+  cancel-in-progress: false
+
+jobs:
+  subway:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - name: 30초마다 열차 위치 받기
+        env:
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+          SUBWAY_LOOP_MIN: "13"
+          SUBWAY_EVERY_SEC: "30"
+        run: python scripts/subway.py
