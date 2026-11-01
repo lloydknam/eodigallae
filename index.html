@@ -582,6 +582,16 @@ img { max-width: 100%; }
   .panel { animation: rise .22s ease-out both; }
   @keyframes rise { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }
 }
+.train-btn { margin-top: 8px; width: 100%; padding: 9px 10px; border: 0; border-radius: 10px; background: #143631; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.train-ov { position: fixed; inset: 0; z-index: 3000; background: rgba(10,20,18,.45); display: flex; align-items: flex-end; justify-content: center; }
+.train-card { width: min(520px, 100%); max-height: 80vh; overflow: auto; background: #fff; color: #1B2423; border-radius: 18px 18px 0 0; padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 30px rgba(0,0,0,.25); }
+.train-head { display: flex; justify-content: space-between; align-items: center; font-size: 16px; margin-bottom: 4px; }
+.train-x { border: 0; background: #EEF2F1; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; }
+.train-line { margin: 12px 0 0; font-weight: 800; font-size: 13px; }
+.train-svg { width: 100%; height: auto; display: block; margin-top: 2px; }
+.train-list { margin: 4px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.6; }
+.train-note { font-size: 14px; color: #55625F; margin: 12px 0; }
+.train-foot { font-size: 11px; color: #7A8583; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -1351,6 +1361,84 @@ img { max-width: 100%; }
   const lvKey = (l) => ["busy", "warm", "mid", "calm"][lvRank(l)] || "calm";
   const lvRank = (l) => { const i = LIVE_LV.findIndex(([k]) => k === l); return i < 0 ? 9 : i; };
   const lvColor = (l) => (LIVE_LV.find(([k]) => k === l) || [, "#9AA4AE"])[1];
+
+  // ── 지하철역 '다음 열차 (양방향)' 팝업 ──
+  const isStation = (n) => /역$/.test(n) || ["노량진", "청량리", "신촌", "총신대입구"].includes(n);
+  const SUB_LINE = { "1001": ["1호선", "#0052A4"], "1002": ["2호선", "#00A84D"], "1003": ["3호선", "#EF7C1C"], "1004": ["4호선", "#00A5DE"],
+    "1005": ["5호선", "#996CAC"], "1006": ["6호선", "#CD7C2F"], "1007": ["7호선", "#747F00"], "1008": ["8호선", "#E6186C"], "1009": ["9호선", "#BDB092"],
+    "1063": ["경의중앙선", "#77C4A3"], "1065": ["공항철도", "#0090D2"], "1067": ["경춘선", "#178C72"], "1075": ["수인분당선", "#F5A200"],
+    "1077": ["신분당선", "#D31145"], "1092": ["우이신설선", "#B0CE18"], "1093": ["신림선", "#5E7DBE"] };
+  let trainTimer = null;
+  const trainKey = (e) => { if (e.key === "Escape") closeTrain(); };
+  function closeTrain() {
+    clearInterval(trainTimer); trainTimer = null;
+    document.getElementById("trainOv")?.remove();
+    document.removeEventListener("keydown", trainKey);
+  }
+  // 열차 장면: 가운데 역, 왼쪽·오른쪽으로 각 방향 열차가 다가오는 모습 (600초 안에 오면 가까워짐)
+  const trainLineHtml = (ln) => {
+    const info = SUB_LINE[ln.id] || ["노선", "#5E6B68"];
+    const cx = 160, W = 320;
+    const dirs = ln.dirs.slice(0, 2);
+    const scene = dirs.map((d, i) => {
+      const t = d.trains[0]; if (!t) return "";
+      const side = i === 0 ? -1 : 1;
+      const k = Math.min(1, (t.sec || 0) / 600);
+      const to = side * (24 + (cx - 60) * k), from = side * (cx - 24);
+      return `<g class="tr" data-from="${from}" data-to="${to}" transform="translate(${cx + from} 0)">
+        <rect x="-17" y="33" width="34" height="20" rx="6" fill="${info[1]}" stroke="#fff" stroke-width="1.5"/>
+        <text x="0" y="47" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">${esc(t.sec < 60 ? "곧" : `${Math.round(t.sec / 60)}분`)}</text></g>`;
+    }).join("");
+    const names = ["", ""];
+    dirs.forEach((d, i) => { names[i] = d.name; });
+    const list = dirs.map((d) => `<li><b>${esc(d.name)}</b> · ${d.trains.slice(0, 2).map((t) => esc(t.msg || `${Math.round(t.sec / 60)}분 후`) + (t.dest ? ` (${esc(t.dest)}행)` : "")).join(" / ") || "정보 없음"}</li>`).join("");
+    return `<div class="train-line" style="color:${info[1]}">${esc(info[0])}</div>
+      <svg class="train-svg" viewBox="0 0 ${W} 80" role="img" aria-label="${esc(info[0])} 양방향 열차 위치">
+        <line x1="12" y1="43" x2="${W - 12}" y2="43" stroke="${info[1]}" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+        <circle cx="${cx}" cy="43" r="9" fill="#fff" stroke="${info[1]}" stroke-width="4"/>
+        <text x="12" y="12" font-size="11" font-weight="700" fill="#55625F">${esc(names[0] || "")}</text>
+        <text x="${W - 12}" y="12" font-size="11" font-weight="700" fill="#55625F" text-anchor="end">${esc(names[1] || "")}</text>
+        ${scene}
+      </svg>
+      <ul class="train-list">${list}</ul>`;
+  };
+  const setTrainPositions = (root) => {
+    root.querySelectorAll("g.tr").forEach((g) => { g.style.transform = `translateX(${g.dataset.from}px)`; });
+    requestAnimationFrame(() => requestAnimationFrame(() => root.querySelectorAll("g.tr").forEach((g) => {
+      g.style.transition = "transform 1.4s cubic-bezier(.2,.7,.2,1)"; g.style.transform = `translateX(${g.dataset.to}px)`;
+    })));
+  };
+  function openTrain(name) {
+    closeTrain();
+    const st = name.replace(/역$/, "");
+    const wrap = document.createElement("div");
+    wrap.className = "train-ov"; wrap.id = "trainOv";
+    wrap.innerHTML = `<div class="train-card" role="dialog" aria-modal="true" aria-label="${esc(name)} 다음 열차">
+      <div class="train-head"><b>🚇 ${esc(name)} · 다음 열차</b><button type="button" class="train-x" aria-label="닫기">✕</button></div>
+      <div class="train-body"><p class="train-note">불러오는 중…</p></div>
+      <div class="train-foot"></div></div>`;
+    document.body.appendChild(wrap);
+    wrap.addEventListener("click", (e) => { if (e.target === wrap || e.target.closest(".train-x")) closeTrain(); });
+    document.addEventListener("keydown", trainKey);
+    const body = wrap.querySelector(".train-body"), foot = wrap.querySelector(".train-foot");
+    const load = async () => {
+      if (!WORKER) { body.innerHTML = `<p class="train-note">실시간 열차 정보는 도우미 서버를 연결하면 볼 수 있어요. 준비 중이에요.</p>`; return; }
+      try {
+        const r = await fetch(`${WORKER}/subway?station=${encodeURIComponent(st)}`);
+        const js = await r.json();
+        if (!r.ok || js.error) throw new Error(js.error || "fail");
+        if (!wrap.isConnected) return;
+        body.innerHTML = js.lines.length
+          ? js.lines.map(trainLineHtml).join("")
+          : `<p class="train-note">지금 도착 예정 열차 정보가 없어요.</p>`;
+        setTrainPositions(body);
+        foot.textContent = `${js.updated} 기준 · 30초마다 갱신 · 서울교통공사 실시간 도착정보`;
+      } catch {
+        if (wrap.isConnected) body.innerHTML = `<p class="train-note">열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요.</p>`;
+      }
+    };
+    load(); trainTimer = setInterval(load, 30000);
+  }
   const fmtPpl = (n) => n == null ? "" : n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, "")}만` : n.toLocaleString();
   const pplRange = (a, b) => a == null ? "" : `약 ${fmtPpl(a)}~${fmtPpl(b)}명`;
   // 데이터의 공식 장소명을 지도에서 읽기 쉬운 짧은 지역명으로 표시
@@ -1549,12 +1637,18 @@ img { max-width: 100%; }
           ${ages || `<span class="demo-note">연령대 통계 자료 없음</span>`}
           <span class="demo-note">남녀 비율과 연령대 비율은 각각 전체 인구를 기준으로 산출한 값입니다.</span>
         </div>
-        <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span></div>`;
+        <span>${esc((p.time || "").slice(-5))} 기준 · ${esc(p.cat)}</span>
+        ${isStation(p.name) ? `<button type="button" class="train-btn" data-train="${esc(p.name)}">🚇 다음 열차 보기 (양방향)</button>` : ""}</div>`;
     };
     // 서울 전체가 한눈에 보이는 축척(11)으로 시작 — 휴대폰·PC 모두 같은 축척
     const savedView = window.__liveMapView; window.__liveMapView = null;
     map.setView(savedView?.center || [37.553, 126.99], savedView?.zoom || 11, { animate: false });
     window.__crowdMap = map;   // 홍보 영상 녹화용
+    // 팝업 안의 '다음 열차 보기' 버튼 (Leaflet이 팝업 클릭을 막아서 팝업이 열릴 때 직접 연결)
+    map.on("popupopen", (e) => {
+      const b = e.popup.getElement()?.querySelector(".train-btn");
+      if (b && !b.dataset.bound) { b.dataset.bound = "1"; b.addEventListener("click", () => openTrain(b.dataset.train)); }
+    });
     const marks = new Map();
     ps.sort((a, b) => lvRank(b.lvl) - lvRank(a.lvl));   // 붐비는 곳이 위에 오게
     for (const p of ps) {

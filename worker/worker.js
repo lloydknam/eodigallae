@@ -1,12 +1,14 @@
 // 어디갈래 도우미 서버 (Cloudflare Workers, 무료 범위)
 // 1) GET  /video?url=<유튜브 링크>  → 영상 속 장소를 찾아 좌표와 함께 돌려준다 (코스 만들기용)
 // 2) POST /report                  → 숨은 핫플 제보를 텔레그램으로 전달한다
+// 3) GET  /subway?station=<역이름> → 서울 지하철 다음 열차(양방향) 실시간 도착정보 (30초 캐시)
 //
 // 비밀값(Settings → Variables and Secrets):
 //   YOUTUBE_API_KEY   유튜브 Data API 키
 //   KAKAO_REST_KEY    카카오 REST API 키
 //   TELEGRAM_TOKEN    (제보용) 텔레그램 봇 토큰
 //   TELEGRAM_CHAT_ID  (제보용) 제보를 받을 채팅 ID
+//   SEOUL_API_KEY     서울 열린데이터광장 인증키 (지하철 실시간 도착, 열린데이터광장과 같은 키)
 //
 // 카카오 정책: 장소 좌표·주소는 저장하지 않고 요청 때마다 실시간으로 조회해 바로 돌려준다.
 
@@ -150,6 +152,34 @@ async function handleReport(env, body) {
   return r.ok ? { ok: true } : { error: "제보를 보내지 못했어요. 잠시 뒤 다시 해 주세요." };
 }
 
+// 서울 지하철 실시간 도착정보 (서울 공개 API는 http만 지원해서 여기서 대신 받는다. 역 이름만 보내고 위치는 쓰지 않는다)
+async function handleSubway(env, station) {
+  const name = String(station || "").replace(/역$/, "").trim();
+  if (name.length < 2) return { error: "지하철역 이름을 확인해 주세요." };
+  if (!env.SEOUL_API_KEY) return { error: "열차 정보 키가 아직 설정되지 않았어요." };
+  const r = await fetch(`http://swopenAPI.seoul.go.kr/api/subway/${env.SEOUL_API_KEY}/json/realtimeStationArrival/0/30/${encodeURIComponent(name)}`);
+  if (!r.ok) return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  const js = await r.json();
+  const code = (js.errorMessage || {}).code;
+  if (code && code !== "INFO-000" && code !== "INFO-200") return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  const list = js.realtimeArrivalList || [];
+  const lines = new Map();
+  for (const t of list) {
+    if (!lines.has(t.subwayId)) lines.set(t.subwayId, new Map());
+    const dirs = lines.get(t.subwayId);
+    const dname = t.updnLine || t.trainLineNm || "방향";
+    if (!dirs.has(dname)) dirs.set(dname, []);
+    dirs.get(dname).push({ sec: +t.barvlDt || 0, msg: t.arvlMsg2 || "", dest: t.bstatnNm || "" });
+  }
+  const out = [...lines].map(([id, dirs]) => ({
+    id,
+    dirs: [...dirs].map(([name, trains]) => ({ name, trains: trains.sort((a, b) => a.sec - b.sec).slice(0, 3) })).slice(0, 2),
+  }));
+  const rec = (list[0] && list[0].recptnDt) || "";
+  const updated = rec ? rec.slice(11, 19) : new Date(Date.now() + 9 * 3600e3).toISOString().slice(11, 19);
+  return { station: name, updated, lines: out };
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get("Origin") || "";
@@ -163,6 +193,15 @@ export default {
         if (hit) return json(await hit.json(), 200, origin);
         const res = await handleVideo(env, id || "");
         if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=3600" } })));
+        return json(res, res.error ? 400 : 200, origin);
+      }
+      if (url.pathname === "/subway" && request.method === "GET") {
+        const st = (url.searchParams.get("station") || "").slice(0, 20);
+        const cacheKey = new Request(`https://cache.eodigallae/subway/${encodeURIComponent(st)}`);
+        const hit = await caches.default.match(cacheKey);
+        if (hit) return json(await hit.json(), 200, origin);
+        const res = await handleSubway(env, st);
+        if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=25" } })));
         return json(res, res.error ? 400 : 200, origin);
       }
       if (url.pathname === "/report" && request.method === "POST") {
