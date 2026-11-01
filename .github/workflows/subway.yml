@@ -29,6 +29,7 @@ jobs:
       - run: pip install -r scripts/requirements.txt
       - name: 30초마다 열차 위치 받기
         env:
+          SEOUL_SUBWAY_KEY: ${{ secrets.SEOUL_SUBWAY_KEY }}
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
           SUBWAY_LOOP_MIN: "13"
           SUBWAY_EVERY_SEC: "30"

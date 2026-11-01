@@ -153,6 +153,9 @@ var NS='http://www.w3.org/2000/svg', W=1000, H=760;
 /* 실시간 중계 서버(Cloudflare Worker) 주소. 비워 두면 '실시간' 버튼이 꺼져 있어요. 예: https://eodigallae.내아이디.workers.dev */
 var WORKER='';
 var API=(new URLSearchParams(location.search).get('api')||WORKER).replace(/\/$/,'');
+/* 중계 서버가 없으면 GitHub Actions가 30초마다 올리는 스냅샷을 읽는다 */
+var SNAP='https://raw.githubusercontent.com/lloydknam/eodigallae/live-data/subway.json';
+function liveUrl(){return API?API+'/subway':SNAP+'?t='+Date.now();}
 var SPP=2.2, DWELL=20; /* 지도 1px당 2.2초 주행, 역마다 20초 정차 */
 
 /* id:[이름, x, y, 주요역, 라벨 방향] */
@@ -423,15 +426,17 @@ function updateSheet(){
 }
 
 /* ---------- 실시간 모드 ---------- */
-var live=false,liveTrains=new Map(),liveErr='',unmapped=0,pollT=0,prevScale=10;
+var live=false,liveTrains=new Map(),liveErr='',unmapped=0,pollT=0,prevScale=10,liveAt=0;
 var ALIAS={'총신대입구':'이수'};
 function nm(s){s=String(s||'').replace(/\(.*?\)/g,'').replace(/\s/g,'').replace(/역$/,'');return ALIAS[s]||s;}
 LINES.forEach(function(L){L.nameIdx={};L.ids.forEach(function(id,i){L.nameIdx[nm(ST[id][0])]=i;});});
 var STT=['진입','도착','출발','전역 출발'];
 function pollLive(){
   if(!live)return;
-  fetch(API+'/subway',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
+  fetch(liveUrl(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
     if(j.error)throw 0;
+    liveAt=j.at||0;
+    if(liveAt&&Date.now()-liveAt>300000){liveErr='데이터가 '+Math.round((Date.now()-liveAt)/60000)+'분 전 것이에요';}
     var now=performance.now(),un=0;
     (j.trains||[]).forEach(function(it){
       var L=LINES[it.l-1];if(!L)return;
@@ -442,7 +447,7 @@ function pollLive(){
       else if(lt.tx!==st[1]||lt.ty!==st[2]){lt.ang=Math.atan2(st[2]-lt.ty,st[1]-lt.tx);lt.tx=st[1];lt.ty=st[2];}
       lt.seen=now;lt.s=it.s;lt.d=it.d;lt.st=it.st;
     });
-    unmapped=un;liveErr='';
+    unmapped=un;if(!(liveAt&&Date.now()-liveAt>300000))liveErr='';
   }).catch(function(){liveErr='실시간 데이터를 불러오지 못했어요';});
 }
 function makeLive(lt,key){var r=makeTrain(lt.L,0,0,key);r.live=lt;return r;}
@@ -462,7 +467,11 @@ function liveFrame(seen,cnt){
   return tot;
 }
 var liveBtn=$('#liveBtn');
-if(!API){liveBtn.disabled=true;liveBtn.textContent='실시간 준비 중';liveBtn.title='중계 서버 주소가 아직 설정되지 않았어요';}
+liveBtn.disabled=true;liveBtn.textContent='실시간 준비 중';liveBtn.title='실시간 열차 위치가 아직 연결되지 않았어요';
+/* 최근 5분 안에 받은 열차가 있을 때만 버튼을 켠다 */
+fetch(liveUrl(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
+  if(j&&!j.error&&j.at&&Date.now()-j.at<300000&&(j.trains||[]).length>0){liveBtn.disabled=false;liveBtn.textContent='실시간';liveBtn.title='';}
+}).catch(function(){});
 function setLive(on){
   if(on===live)return;
   live=on;
@@ -474,7 +483,7 @@ function setLive(on){
   else{setScale(prevScale);}
   sheetKey='';lastClk='';
 }
-liveBtn.addEventListener('click',function(){if(API)setLive(!live);});
+liveBtn.addEventListener('click',function(){if(!liveBtn.disabled)setLive(!live);});
 
 var lastClk='';
 function frame(ts){

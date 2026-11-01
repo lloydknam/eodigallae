@@ -21,7 +21,8 @@ from pathlib import Path
 import requests
 
 ROOT = Path(__file__).resolve().parent.parent
-KEY = os.environ.get("SEOUL_API_KEY", "").strip()
+# 실시간 지하철은 별도로 발급받은 인증키가 필요하다. SEOUL_SUBWAY_KEY 가 있으면 그것을, 없으면 SEOUL_API_KEY 를 쓴다.
+KEY = (os.environ.get("SEOUL_SUBWAY_KEY") or os.environ.get("SEOUL_API_KEY") or "").strip()
 LOOP_MIN = float(os.environ.get("SUBWAY_LOOP_MIN", "13"))
 EVERY = float(os.environ.get("SUBWAY_EVERY_SEC", "30"))
 URL = "http://swopenapi.seoul.go.kr/api/subway/{key}/json/realtimePosition/0/{end}/{line}"
@@ -103,7 +104,7 @@ def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProces
 
 def main() -> int:
     if not KEY:
-        print("SEOUL_API_KEY가 없어요.")
+        print("SEOUL_SUBWAY_KEY(또는 SEOUL_API_KEY)가 없어요.")
         return 1
     # 체크아웃에 저장된 인증 설정을 빌려 쓴다(액세스 토큰을 직접 다루지 않는다).
     header = git(ROOT, "config", "--get", "http.https://github.com/.extraheader", check=False).stdout.strip()
@@ -135,6 +136,10 @@ def main() -> int:
             git(work, "commit", "-q", "--amend", "-m", msg)
         p = git(work, "push", "-q", "-f", "origin", "HEAD:refs/heads/live-data", check=False)
         print(f"[{n}] {msg} push={'ok' if p.returncode == 0 else clean(p.stderr)[:200]}", flush=True)
+        if first and data["lines"] == 0:
+            # 키가 실시간 서비스용이 아니거나 서울시 서버 오류: 13분 내내 빈 데이터를 올리지 않고 다음 예약 실행에 맡긴다.
+            print("열차 위치를 한 노선도 받지 못했어요. probe.json 을 확인해 주세요.", flush=True)
+            break
         first = False
         n += 1
         if time.time() + EVERY >= deadline:
