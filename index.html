@@ -71,9 +71,12 @@ img { max-width: 100%; }
 .topbar .sub { color: var(--muted); font-size: 14px; margin-left: auto; white-space: nowrap; }
 .topbar .inner { position: relative; }
 .tb-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
-.menu-btn { flex: none; width: 40px; height: 40px; margin-right: -6px; border: 0; border-radius: 12px; background: none; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
-.menu-btn svg { width: 24px; height: 24px; }
-.menu-btn[aria-expanded="true"] { background: var(--paper); }
+.menu-btn { flex: none; width: 48px; height: 48px; margin-right: 0; border: 0; border-radius: 14px; background: var(--celadon); color: var(--celadon-ink); display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(18,144,122,.35); -webkit-tap-highlight-color: transparent; }
+.menu-btn svg { width: 28px; height: 28px; }
+.menu-btn:active { transform: scale(.95); }
+.menu-btn:focus-visible { outline: 3px solid var(--celadon-soft); outline-offset: 2px; }
+.menu-btn[aria-expanded="true"] { background: var(--celadon-deep); }
 .menu-drop { position: absolute; right: 8px; top: calc(100% - 4px); z-index: 40; min-width: 230px; padding: 6px; background: var(--surface); border-radius: 16px;
   box-shadow: 0 10px 30px rgba(25,31,40,.16), 0 1px 3px rgba(25,31,40,.08); display: grid; }
 .menu-drop a { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: var(--ink); font-size: 15.5px; font-weight: 600; }
@@ -587,7 +590,7 @@ img { max-width: 100%; }
 <body>
 <header class="topbar"><div class="inner"><div class="tb-main" id="topbar"></div>
   <button class="menu-btn" id="menu-btn" aria-label="전체 메뉴" aria-expanded="false" aria-controls="menu-drop">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
   <nav class="menu-drop" id="menu-drop" aria-label="전체 메뉴" hidden>
     <a href="#" data-view="home"><span>🏠</span>홈</a>
     <a href="#map" data-view="map"><span>📍</span>핫플 지도</a>
@@ -1061,8 +1064,7 @@ img { max-width: 100%; }
     });
   }
   function homeTopbar() {
-    const total = state.index.cities.filter((c) => !(c.updatedAt && !c.hasData)).length;
-    topbar.innerHTML = `<a class="brand" href="#" data-home><img class="clerk" src="icons/clerk.jpg" alt="클사무관" width="36" height="36">어디갈래</a><span class="sub">전국 ${total}개 시·군</span>`;
+    topbar.innerHTML = `<a class="brand" href="#" data-home><img class="clerk" src="icons/clerk.jpg" alt="클사무관" width="36" height="36">어디갈래</a>`;
   }
   function showHome(view = "home") {
     state.city = null;
