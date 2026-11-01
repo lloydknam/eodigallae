@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.lloydknam.eodigallae"
-    android:versionCode="2"
-    android:versionName="1.1">
+    android:versionCode="3"
+    android:versionName="1.2">
 
     <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="34" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 날씨의 '내 위치' 버튼용(대략적 위치만). 사용자가 버튼을 누를 때 한 번 물어본다 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:label="어디갈래"
