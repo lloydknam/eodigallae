@@ -3,10 +3,10 @@ import json, os, urllib.parse, urllib.request
 
 ODII = "https://apis.data.go.kr/B551011/Odii"
 ENG = "https://apis.data.go.kr/B551011/EngService2"
-OPS_ODII = ["areaBasedList", "areaBasedList2", "locationBasedList", "locationBasedList2", "searchKeyword",
+OPS_ODII = ["storyBasedList", "areaBasedList", "areaBasedList", "areaBasedList2", "locationBasedList", "locationBasedList2", "searchKeyword",
             "searchKeyword2", "detailCommon", "detailCommon2", "detailInfo", "detailIntro", "detailIntro2",
             "storyList", "storyDetail", "syncList", "syncList2", "storyBasedList", "areaCode", "categoryCode"]
-OPS_ENG = ["areaBasedList2", "locationBasedList2", "searchKeyword2", "detailCommon2", "detailIntro2"]
+OPS_ENG = ["areaBasedList2"]
 
 def call(base, op, key, env_name):
     q = {"serviceKey": key, "MobileOS": "ETC", "MobileApp": "eodigallae", "_type": "json",
@@ -33,11 +33,11 @@ def call(base, op, key, env_name):
             fields = sorted(first.keys())
         else:
             fields = []
-        print(f"[{env_name}] {op}: HTTP {status} code={hdr.get('resultCode')} msg={hdr.get('resultMsg')} total={cnt} fields={fields}")
+        print(f"[{env_name}] {op}: HTTP {status} code={hdr.get('resultCode')} msg={hdr.get('resultMsg')} total={cnt} fields={fields} body={body[:260]!r}")
         if fields:
             print("   sample:", json.dumps(first if isinstance(first, dict) else first[0], ensure_ascii=False)[:600])
     except Exception:
-        print(f"[{env_name}] {op}: HTTP {status} (JSON 아님) {body[:200]!r}")
+        print(f"[{env_name}] {op}: HTTP {status} (JSON 아님) body={body[:260]!r}")
 
 def main():
     odii_key = os.environ.get("ODII_KEY", "").strip()
