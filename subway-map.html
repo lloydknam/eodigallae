@@ -7,36 +7,20 @@
 <title>열차지도 | 어디갈래</title>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
-/* Layout: 한 화면 앱. 제목·시계 / 속도 / 노선 칩 / 지도(주인공) / 정보 시트 / 크레딧 */
 :root{
-  --bg:#E9EEF2;
-  --land:#F6F8FA;
-  --panel:#FFFFFF;
-  --ink:#12202B;
-  --muted:#586977;
-  --rule:#CFD8DF;
-  --water:#C6DEEE;
-  --signal:#E4372B;
-  --f-display:'Barlow Condensed','Noto Sans KR',sans-serif;
-  --f-body:'Noto Sans KR',system-ui,-apple-system,sans-serif;
+  --bg:#E9EEF2; --land:#F6F8FA; --panel:#FFFFFF; --ink:#12202B; --muted:#586977; --rule:#CFD8DF; --water:#C6DEEE; --signal:#E4372B;
+  --f-display:'Barlow Condensed','Noto Sans KR',sans-serif; --f-body:'Noto Sans KR',system-ui,-apple-system,sans-serif;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0B1218; --land:#0F1A22; --panel:#16222C; --ink:#E7EEF3; --muted:#93A4B1; --rule:#25323D; --water:#123049; color-scheme: dark;
-  }
+  :root:not([data-theme="light"]){--bg:#0B1218;--land:#0F1A22;--panel:#16222C;--ink:#E7EEF3;--muted:#93A4B1;--rule:#25323D;--water:#123049;color-scheme:dark}
 }
-:root[data-theme="dark"]{
-  --bg:#0B1218; --land:#0F1A22; --panel:#16222C; --ink:#E7EEF3; --muted:#93A4B1; --rule:#25323D; --water:#123049; color-scheme: dark;
-}
+:root[data-theme="dark"]{--bg:#0B1218;--land:#0F1A22;--panel:#16222C;--ink:#E7EEF3;--muted:#93A4B1;--rule:#25323D;--water:#123049;color-scheme:dark}
 html{box-sizing:border-box;height:100%}
-body{
-  box-sizing:border-box;height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;
-  display:flex;flex-direction:column;gap:10px;
-  padding-block:12px;
-  padding-left:max(16px, env(safe-area-inset-left, 0px));
-  padding-right:max(16px, env(safe-area-inset-right, 0px));
-}
+body{box-sizing:border-box;height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;
+  display:flex;flex-direction:column;gap:10px;padding-block:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 
@@ -61,42 +45,39 @@ button{font:inherit;color:inherit}
 .chips{display:flex;gap:6px;overflow-x:auto;flex:none;padding-bottom:2px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);background:var(--panel);border-radius:999px;padding:3px 10px 3px 3px;cursor:pointer;min-height:30px}
-.chip .d{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 15px var(--f-display)}
-.chip .c{font:500 14px var(--f-display);font-variant-numeric:tabular-nums;color:var(--muted);min-width:1.2em;text-align:right}
+.chip .d{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 11px var(--f-display);white-space:nowrap}
+.chip .nm{font:500 13px var(--f-body);color:var(--ink);white-space:nowrap;max-width:94px;overflow:hidden;text-overflow:ellipsis}
+.chip .c{font:500 13px var(--f-display);font-variant-numeric:tabular-nums;color:var(--muted);min-width:1.1em;text-align:right}
 .chip.all{padding:3px 12px;font-size:13px}
-.chip[aria-pressed="false"]{opacity:.42}
+.chip[aria-pressed="false"]{opacity:.4}
 
 .map{position:relative;flex:1;min-height:0;border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--land)}
-#map{position:absolute;inset:0;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none;display:block}
-.zoom{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--panel)}
-.zoom button{width:34px;height:34px;border:0;background:transparent;cursor:pointer;font:500 18px var(--f-display)}
-.zoom button+button{border-top:1px solid var(--rule)}
-.tr{cursor:pointer}
-.tr .sel{opacity:0}
-.tr.on .sel{opacity:1;animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.35}}
-@media (prefers-reduced-motion: reduce){.tr.on .sel{animation:none}}
-.lbl{fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-linejoin:round;font-family:var(--f-body);font-weight:500;pointer-events:none}
-.lbl.minor{display:none;fill:var(--muted)}
-#map.z .lbl.minor{display:block}
+#map{position:absolute;inset:0;width:100%;height:100%}
+.leaflet-tile-pane{filter:saturate(.7) brightness(1.05)}
+:root:not([data-theme="light"]) .leaflet-tile-pane,:root[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.55)}
+.leaflet-control-attribution{font-size:10px}
+.st-dot{border-radius:50%;background:var(--panel);box-sizing:border-box}
+.st-pop{font:500 13px var(--f-body)}
+.st-pop b{display:block;font-size:14px;margin-bottom:2px}
+.st-pop .ln{display:inline-block;margin:2px 3px 0 0;padding:1px 7px;border-radius:999px;font:600 11px var(--f-display)}
+.tricon{pointer-events:auto;cursor:pointer}
+.tricon .body{transition:none}
+.tricon.sel .ring{opacity:1!important}
 
 .sheet{flex:none;background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:10px 12px;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .who{display:flex;align-items:center;gap:10px;min-width:0}
-.who .dot{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 19px var(--f-display)}
+.who .dot{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--f-display);text-align:center;line-height:1.05}
 .who strong{display:block;font-size:15px}
 .who span.s{display:block;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 .acts{display:flex;gap:6px;flex:none}
 .acts .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
 .credit{flex:none;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;color:var(--muted);font-size:11px}
-.wm{font:600 12px var(--f-display);font-family:'Barlow',var(--f-display);letter-spacing:.24em;color:var(--ink);text-transform:uppercase}
-.wm sup{color:var(--signal);font-size:11px;letter-spacing:0;margin-left:1px}
-.credit a{color:inherit}
 .back{color:var(--muted);font-size:12px;text-decoration:none;display:inline-block;margin-bottom:2px}
 .back:hover{color:var(--ink)}
 .maker{flex:none;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;color:var(--muted);font-size:11px}
 .maker img{height:22px;display:block}
-body{padding-top:max(12px, env(safe-area-inset-top, 0px));padding-bottom:max(12px, env(safe-area-inset-bottom, 0px))}
+body{padding-top:max(12px,env(safe-area-inset-top,0px));padding-bottom:max(12px,env(safe-area-inset-bottom,0px))}
 html.embed .top>div:first-child,html.embed .maker{display:none}
 html.embed .top{justify-content:flex-end}
 html.embed body{padding-top:8px;padding-bottom:8px}
@@ -109,7 +90,7 @@ html.embed body{padding-top:8px;padding-bottom:8px}
   <div>
     <a class="back" href="rail.html">← 열차정보</a>
     <h1>열차지도</h1>
-    <p class="sub">수도권 지하철 1~9호선 · 시간표 기반 모의 운행(실제 위치 아님)</p>
+    <p class="sub">수도권 지하철·광역철도·경전철 전 역 · 시간표 기반 모의 운행(실제 위치 아님)</p>
   </div>
   <div class="clock"><b id="clk">--:--:--</b><small id="clkNote">KST</small></div>
 </header>
@@ -126,282 +107,171 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 <div class="chips" id="chips" role="group" aria-label="노선 선택"></div>
 
 <main class="map" id="mapwrap">
-  <svg id="map" viewBox="0 0 1000 760" preserveAspectRatio="xMidYMid meet" role="img" aria-label="서울 지하철 1~9호선 약식 노선도와 운행 중인 열차">
-    <g id="world">
-      <path id="river" d="M1000,365 C940,375 900,385 840,386 C790,388 740,405 690,438 C650,458 600,462 520,468 C480,468 450,452 400,444 C360,438 320,436 280,426 C230,412 190,388 150,360 C100,325 40,320 0,328" fill="none" stroke="var(--water)" stroke-width="22" stroke-linecap="round"/>
-      <text id="riverLbl" fill="var(--muted)" font-style="italic" style="font-family:var(--f-body)" opacity=".8">한강</text>
-      <g id="lines"></g>
-      <g id="stations"></g>
-      <g id="trains"></g>
-    </g>
-  </svg>
-  <div class="zoom">
-    <button type="button" id="zin" aria-label="확대">+</button>
-    <button type="button" id="zout" aria-label="축소">−</button>
-    <button type="button" id="zfit" aria-label="처음 화면">⌂</button>
-  </div>
+  <div id="map" role="img" aria-label="수도권 지하철·광역철도·경전철 전체 역과 운행 중인 열차 지도"></div>
 </main>
 
 <section class="sheet" id="sheet" aria-live="polite"></section>
 
 <footer class="maker"><a class="lab" href="https://lloydknam.github.io/showcase/" target="_blank" rel="noopener" title="Lloyd’s Balcony Lab 프로젝트 모음"><img src="icons/brand/lockup-light.svg" alt="Lloyd's Balcony Lab · with claude · GitHub(@lloydknam)"></a></footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function(){
 'use strict';
-var NS='http://www.w3.org/2000/svg', W=1000, H=760;
-/* 실시간 중계 서버(Cloudflare Worker) 주소. 비워 두면 '실시간' 버튼이 꺼져 있어요. 예: https://eodigallae.내아이디.workers.dev */
+/* 실시간 중계 서버(Cloudflare Worker) 주소. 비워 두면 '실시간' 버튼이 꺼져 있어요. */
 var WORKER='';
 var API=(new URLSearchParams(location.search).get('api')||WORKER).replace(/\/$/,'');
 /* 중계 서버가 없으면 GitHub Actions가 30초마다 올리는 스냅샷을 읽는다 */
 var SNAP='https://raw.githubusercontent.com/lloydknam/eodigallae/live-data/subway.json';
 function liveUrl(){return API?API+'/subway':SNAP+'?t='+Date.now();}
-var SPP=2.2, DWELL=20; /* 지도 1px당 2.2초 주행, 역마다 20초 정차 */
 
-/* id:[이름, x, y, 주요역, 라벨 방향] */
-var ST={
-dobong:['도봉산',600,100,1,'l'],jangam:['장암',680,60,0,'r'],nowon:['노원',735,170,1,'r'],changdong:['창동',600,150,1,'l'],
-suyu:['수유',565,175,0,'l'],mia:['미아',548,205,0,'l'],seongsin:['성신여대입구',540,240,0,'l'],hyehwa:['혜화',548,272,1,'l'],
-danggogae:['당고개',765,55,0,'r'],seokgye:['석계',660,225,1,'r'],cheongnyangni:['청량리',685,285,1,'r'],jegi:['제기동',650,300,0,'r'],
-dongmyo:['동묘앞',622,320,0,'b'],jongno5:['종로5가',595,312,0,'t'],jongno3:['종로3가',560,305,1,'t'],jonggak:['종각',515,315,0,'t'],
-sicheong:['시청',490,330,1,'l'],seoul:['서울역',470,375,1,'l'],yongsan:['용산',485,420,0,'l'],noryangjin:['노량진',430,480,0,'l'],
-yeongdeungpo:['영등포',345,500,0,'b'],sindorim:['신도림',315,525,1,'l'],guro:['구로',300,560,0,'l'],gasan:['가산디지털단지',285,600,1,'l'],
-geumcheon:['금천구청',270,645,0,'l'],
-euljiro3:['을지로3가',550,335,1,'b'],dongdaemun:['동대문역사문화공원',610,345,1,'b'],wangsimni:['왕십리',680,355,1,'b'],
-konkuk:['건대입구',750,360,1,'b'],jamsil:['잠실',830,410,1,'r'],samsung:['삼성',800,470,0,'r'],gangnam:['강남',740,520,1,'r'],
-gyodae:['교대',670,545,1,'b'],sadang:['사당',560,575,1,'b'],sillim:['신림',440,595,0,'b'],daerim:['대림',350,565,0,'b'],
-yeongdeungpogu:['영등포구청',295,490,0,'l'],dangsan:['당산',290,450,1,'l'],hapjeong:['합정',320,385,1,'l'],hongdae:['홍대입구',360,360,1,'l'],
-sinchon:['신촌',395,345,0,'t'],chungjeongno:['충정로',440,335,1,'t'],
-daehwa:['대화',170,40,0,'r'],bulgwang:['불광',345,150,0,'l'],yeonsinnae:['연신내',380,180,0,'r'],hongje:['홍제',405,240,0,'l'],
-gyeongbokgung:['경복궁',485,265,0,'l'],chungmuro:['충무로',545,365,1,'l'],dongguk:['동대입구',580,390,0,'r'],yaksu:['약수',610,405,1,'r'],
-oksu:['옥수',640,425,0,'r'],apgujeong:['압구정',690,450,0,'r'],sinsa:['신사',672,482,0,'l'],express:['고속터미널',640,510,1,'l'],
-nambu:['남부터미널',665,580,0,'r'],yangjae:['양재',700,625,0,'r'],dogok:['도곡',755,600,0,'r'],suseo:['수서',820,595,1,'r'],
-garak:['가락시장',860,555,1,'r'],ogeum:['오금',905,535,0,'r'],
-hoehyeon:['회현',505,358,0,'l'],samgakji:['삼각지',490,400,1,'r'],ichon:['이촌',510,440,0,'r'],dongjak:['동작',520,500,1,'l'],
-isu:['이수',540,540,1,'l'],namtae:['남태령',575,620,0,'r'],gwacheon:['과천',600,665,0,'r'],
-banghwa:['방화',110,330,0,'l'],gimpo:['김포공항',165,345,1,'b'],mokdong:['목동',225,385,0,'b'],yeouido:['여의도',330,425,1,'b'],
-gongdeok:['공덕',395,385,1,'b'],gwanghwamun:['광화문',500,295,1,'r'],gunja:['군자',760,330,1,'t'],cheonho:['천호',830,345,1,'t'],
-gangdong:['강동',870,355,0,'r'],olympic:['올림픽공원',890,420,1,'r'],macheon:['마천',880,480,0,'r'],
-eungam:['응암',330,215,0,'l'],dmc:['디지털미디어시티',270,300,1,'l'],itaewon:['이태원',545,435,0,'r'],sindang:['신당',585,365,0,'l'],
-bomun:['보문',610,262,0,'r'],goryeodae:['고려대',632,240,0,'r'],taereung:['태릉입구',720,215,1,'r'],bonghwasan:['봉화산',775,205,0,'r'],
-sangbong:['상봉',800,290,0,'r'],ttukseom:['뚝섬유원지',785,395,0,'r'],cheongdam:['청담',775,430,0,'r'],gangnamgu:['강남구청',738,460,0,'r'],
-nonhyeon:['논현',712,490,0,'r'],naebang:['내방',595,540,0,'b'],soongsil:['숭실대입구',480,548,0,'b'],boramae:['보라매',425,525,0,'l'],
-onsu:['온수',205,615,0,'l'],
-amsa:['암사',885,300,0,'r'],seokchon:['석촌',845,450,1,'r'],songpa:['송파',855,495,0,'r'],munjeong:['문정',880,600,0,'r'],
-bokjeong:['복정',850,650,0,'r'],moran:['모란',790,715,0,'r'],
-gaehwa:['개화',100,390,0,'l'],magok:['마곡나루',215,372,0,'b'],gayang:['가양',250,405,0,'b'],yeomchang:['염창',270,428,0,'l'],
-sinnonhyeon:['신논현',690,505,0,'r'],seonjeongneung:['선정릉',765,482,0,'r'],bohun:['중앙보훈병원',928,395,0,'r']
-};
+var SPEED_KMH=42, DWELL=25; /* 모의 운행 속도·역당 정차 시간 */
 
-/* mult: 노선별 배차 배수(1호선·2호선이 가장 촘촘) */
-var LINES=[
-{n:1,c:'#0052A4',tc:'#fff',mult:1.25,ids:['dobong','changdong','seokgye','cheongnyangni','jegi','dongmyo','jongno5','jongno3','jonggak','sicheong','seoul','yongsan','noryangjin','yeongdeungpo','sindorim','guro','gasan','geumcheon']},
-{n:2,c:'#00A84D',tc:'#fff',mult:1,loop:true,ids:['sicheong','euljiro3','dongdaemun','wangsimni','konkuk','jamsil','samsung','gangnam','gyodae','sadang','sillim','daerim','sindorim','yeongdeungpogu','dangsan','hapjeong','hongdae','sinchon','chungjeongno']},
-{n:3,c:'#EF7C1C',tc:'#fff',mult:1.3,ids:['daehwa','bulgwang','yeonsinnae','hongje','gyeongbokgung','jongno3','euljiro3','chungmuro','dongguk','yaksu','oksu','apgujeong','sinsa','express','gyodae','nambu','yangjae','dogok','suseo','garak','ogeum']},
-{n:4,c:'#00A5DE',tc:'#fff',mult:1.3,ids:['danggogae','nowon','changdong','suyu','mia','seongsin','hyehwa','dongdaemun','chungmuro','hoehyeon','seoul','samgakji','ichon','dongjak','isu','sadang','namtae','gwacheon']},
-{n:5,c:'#996CAC',tc:'#fff',mult:1.25,ids:['banghwa','gimpo','mokdong','yeouido','gongdeok','chungjeongno','gwanghwamun','jongno3','dongdaemun','wangsimni','gunja','cheonho','gangdong','olympic','macheon']},
-{n:6,c:'#CD7C2F',tc:'#fff',mult:1.6,ids:['eungam','dmc','hapjeong','gongdeok','samgakji','itaewon','yaksu','sindang','dongmyo','bomun','goryeodae','seokgye','taereung','bonghwasan']},
-{n:7,c:'#747F00',tc:'#fff',mult:1.3,ids:['jangam','dobong','nowon','taereung','sangbong','gunja','konkuk','ttukseom','cheongdam','gangnamgu','nonhyeon','express','naebang','isu','soongsil','boramae','daerim','gasan','onsu']},
-{n:8,c:'#E6186C',tc:'#fff',mult:1.7,ids:['amsa','cheonho','jamsil','seokchon','songpa','garak','munjeong','bokjeong','moran']},
-{n:9,c:'#BDB092',tc:'#2a2410',mult:1.4,ids:['gaehwa','gimpo','magok','gayang','yeomchang','dangsan','yeouido','noryangjin','dongjak','express','sinnonhyeon','seonjeongneung','seokchon','olympic','bohun']}
-];
-
-function mkTl(ids){
-  var p=ids.map(function(i){return ST[i];}), arr=[0], dep=[0], t=0;
-  for(var i=1;i<p.length;i++){
-    var d=Math.hypot(p[i][1]-p[i-1][1],p[i][2]-p[i-1][2]);
-    t=dep[i-1]+d*SPP; arr.push(t); dep.push(i===p.length-1?t:t+DWELL);
+function hav(a,b){ /* km */
+  var R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180;
+  var la1=a.lat*Math.PI/180,la2=b.lat*Math.PI/180;
+  var h=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
+}
+function bearing(a,b){
+  var dx=(b.lng-a.lng)*Math.cos((a.lat+b.lat)/2*Math.PI/180), dy=-(b.lat-a.lat);
+  return Math.atan2(dy,dx);
+}
+function mkTl(sts){
+  var arr=[0],dep=[0],t=0;
+  for(var i=1;i<sts.length;i++){
+    var d=hav(sts[i-1],sts[i]); t=dep[i-1]+d*(3600/SPEED_KMH);
+    arr.push(t); dep.push(i===sts.length-1?t:t+DWELL);
   }
-  return {ids:ids,p:p,arr:arr,dep:dep,T:t};
+  return {sts:sts,arr:arr,dep:dep,T:t};
 }
 function hw(sec){var h=sec/3600; return h<7?8:h<9.5?4:h<16.5?6.5:h<20?4:h<23?6.5:10;}
-
-LINES.forEach(function(L,li){
-  var ids=L.loop?L.ids.concat(L.ids[0]):L.ids;
-  L.tl=[mkTl(ids),mkTl(ids.slice().reverse())];
-  L.deps=[0,1].map(function(d){
-    var a=[],t=5.5*3600+li*53+d*131;
-    while(t<=24.5*3600){a.push(t);t+=hw(t)*L.mult*60;}
-    return a;
-  });
-  L.on=true;
-});
-
 function posAt(tl,t){
-  var p=tl.p,arr=tl.arr,dep=tl.dep,n=p.length,i=0;
+  var s=tl.sts,arr=tl.arr,dep=tl.dep,n=s.length,i=0;
   while(i<n-1&&arr[i+1]<=t)i++;
-  if(i>=n-1){var a0=p[n-2],b0=p[n-1];return{x:b0[1],y:b0[2],ang:Math.atan2(b0[2]-a0[2],b0[1]-a0[1]),i:n-1,stop:true,next:n-1,eta:0,dwellLeft:0};}
-  var a=p[i],b=p[i+1],ang=Math.atan2(b[2]-a[2],b[1]-a[1]);
-  if(t<dep[i])return{x:a[1],y:a[2],ang:ang,i:i,stop:true,next:i+1,eta:arr[i+1]-t,dwellLeft:dep[i]-t};
+  if(i>=n-1){var a0=s[n-2],b0=s[n-1];return{lat:b0.lat,lng:b0.lng,ang:bearing(a0,b0),i:n-1,stop:true,next:n-1,eta:0,dwellLeft:0};}
+  var a=s[i],b=s[i+1],ang=bearing(a,b);
+  if(t<dep[i])return{lat:a.lat,lng:a.lng,ang:ang,i:i,stop:true,next:i+1,eta:arr[i+1]-t,dwellLeft:dep[i]-t};
   var f=(t-dep[i])/(arr[i+1]-dep[i]); f=f*f*(3-2*f);
-  return{x:a[1]+(b[1]-a[1])*f,y:a[2]+(b[2]-a[2])*f,ang:ang,i:i,stop:false,next:i+1,eta:arr[i+1]-t,dwellLeft:0};
+  return{lat:a.lat+(b.lat-a.lat)*f,lng:a.lng+(b.lng-a.lng)*f,ang:ang,i:i,stop:false,next:i+1,eta:arr[i+1]-t,dwellLeft:0};
 }
 
-/* ---------- DOM ---------- */
 function $(s){return document.querySelector(s);}
-function mk(tag,attrs,parent){
-  var e=document.createElementNS(NS,tag);
-  for(var k in attrs)e.setAttribute(k,attrs[k]);
-  if(parent)parent.appendChild(e);
-  return e;
-}
-var svg=$('#map'),world=$('#world'),gLines=$('#lines'),gSt=$('#stations'),gTr=$('#trains');
-var k=1,tx=0,ty=0,S=1,u=1;
-
-LINES.forEach(function(L){
-  L.g=mk('g',{},gLines);
-  var pts=L.ids.concat(L.loop?[L.ids[0]]:[]).map(function(i){return ST[i][1]+','+ST[i][2];}).join(' ');
-  mk('polyline',{points:pts,fill:'none',stroke:L.c,'stroke-width':4,'stroke-linejoin':'round','stroke-linecap':'round','vector-effect':'non-scaling-stroke'},L.g);
-});
-
-var used={};
-LINES.forEach(function(L){L.ids.forEach(function(i){used[i]=(used[i]||0)+1;});});
-var stList=Object.keys(used).map(function(id){
-  var d=ST[id],g=mk('g',{},gSt);
-  var c=mk('circle',{cx:d[1],cy:d[2],fill:'var(--panel)',stroke:'var(--ink)'},g);
-  var t=mk('text',{'class':'lbl'+(d[3]?'':' minor')},g);
-  t.textContent=d[0];
-  return {id:id,x:d[1],y:d[2],major:d[3],dir:d[4],n:used[id],c:c,t:t};
-});
-
-function layoutStations(){
-  svg.classList.toggle('z',k>=2.4);
-  stList.forEach(function(s){
-    var R=(s.n>1?5.2:3.4)*u, fs=(s.major?11.5:10.5)*u, d=R+4*u, x=s.x,y=s.y,a='start';
-    s.c.setAttribute('r',R); s.c.style.strokeWidth=(s.n>1?2:1.5)*u;
-    s.t.style.fontSize=fs+'px'; s.t.style.strokeWidth=3.4*u;
-    if(s.dir==='r'){x+=d;y+=fs*.35;}
-    else if(s.dir==='l'){x-=d;y+=fs*.35;a='end';}
-    else if(s.dir==='t'){y-=d;a='middle';}
-    else{y+=d+fs*.8;a='middle';}
-    s.t.setAttribute('x',x);s.t.setAttribute('y',y);s.t.setAttribute('text-anchor',a);
-  });
-  var rl=$('#riverLbl');rl.style.fontSize=(11*u)+'px';rl.setAttribute('x',596);rl.setAttribute('y',484);
-}
-function applyWorld(){world.setAttribute('transform','translate('+tx+' '+ty+') scale('+k+')');}
-function updateS(){
-  var r=svg.getBoundingClientRect();
-  S=Math.min(r.width/W,r.height/H)||1; u=1/(S*k);
-}
-function toVB(cx,cy){
-  var r=svg.getBoundingClientRect(),ox=(r.width-W*S)/2,oy=(r.height-H*S)/2;
-  return{x:(cx-r.left-ox)/S,y:(cy-r.top-oy)/S};
-}
-function zoomAt(cx,cy,f){
-  var p=toVB(cx,cy),k2=Math.max(.8,Math.min(8,k*f)),r=k2/k;
-  tx=p.x-(p.x-tx)*r;ty=p.y-(p.y-ty)*r;k=k2;
-  applyWorld();updateS();layoutStations();
-}
-function fit(){
-  var r=svg.getBoundingClientRect();
-  if(r.width<640){k=1.9;tx=500-480*k;ty=380-400*k;}else{k=1;tx=0;ty=0;}
-  applyWorld();updateS();layoutStations();
-}
-var ro=new ResizeObserver(function(){updateS();layoutStations();});
-ro.observe($('#mapwrap'));
-
-/* ---------- 팬/줌 ---------- */
-var pts=new Map(),moved=0,pd=0,follow=false;
-function d2(){var a=Array.from(pts.values());return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);}
-function c2(){var a=Array.from(pts.values());return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2};}
-svg.addEventListener('pointerdown',function(e){
-  pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;
-  if(pts.size===2)pd=d2();
-});
-window.addEventListener('pointermove',function(e){
-  var p=pts.get(e.pointerId);if(!p)return;
-  if(pts.size===1){
-    var dx=e.clientX-p.x,dy=e.clientY-p.y;
-    tx+=dx/S;ty+=dy/S;moved+=Math.abs(dx)+Math.abs(dy);applyWorld();
-    if(moved>6&&follow){follow=false;sheetKey='';}
-  }else if(pts.size===2){
-    p.x=e.clientX;p.y=e.clientY;
-    var d=d2(),c=c2();if(pd>0)zoomAt(c.x,c.y,d/pd);pd=d;moved+=10;
-  }
-  p.x=e.clientX;p.y=e.clientY;
-});
-function up(e){pts.delete(e.pointerId);pd=0;}
-window.addEventListener('pointerup',up);
-window.addEventListener('pointercancel',up);
-svg.addEventListener('wheel',function(e){e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.18:1/1.18);},{passive:false});
-function centerZoom(f){var r=svg.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,f);}
-$('#zin').addEventListener('click',function(){centerZoom(1.4);});
-$('#zout').addEventListener('click',function(){centerZoom(1/1.4);});
-$('#zfit').addEventListener('click',function(){follow=false;sheetKey='';fit();});
-
-/* ---------- 시계 ---------- */
-var scale=10,simBase=Date.now(),realBase=Date.now();
-function simNow(){return simBase+(Date.now()-realBase)*scale;}
-function svcSec(ms){
-  var d=new Date(ms+9*3600000),sod=d.getUTCHours()*3600+d.getUTCMinutes()*60+d.getUTCSeconds()+d.getUTCMilliseconds()/1000;
-  return sod<4*3600?sod+86400:sod;
-}
 function pad(n){return (n<10?'0':'')+n;}
 function hhmm(sec){sec=Math.floor(sec)%86400;return pad(Math.floor(sec/3600))+':'+pad(Math.floor(sec%3600/60));}
 function fmt(s){s=Math.max(0,Math.round(s));var m=Math.floor(s/60),r=s%60;return m?m+'분 '+r+'초':r+'초';}
-function setScale(n){
-  simBase=simNow();realBase=Date.now();scale=n;
-  document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',String(+b.dataset.s===n));});
-}
-document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){setScale(+b.dataset.s);});});
-$('#now').addEventListener('click',function(){simBase=Date.now();realBase=Date.now();});
 
-/* ---------- 노선 칩 ---------- */
-var chips=$('#chips');
+var map=L.map('map',{zoomControl:true,attributionControl:true,minZoom:9,maxZoom:17});
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+map.setView([37.56,126.98],11);
+
+var LINES=[], chips=$('#chips'), trains=new Map(), sel=null, sheetKey='', lastUI=0, total=0, follow=false, curPopup=null;
 var allBtn=document.createElement('button');
 allBtn.type='button';allBtn.className='chip all';allBtn.textContent='전체';
-allBtn.addEventListener('click',function(){LINES.forEach(function(L){L.on=true;});syncChips();});
 chips.appendChild(allBtn);
-LINES.forEach(function(L){
-  var b=document.createElement('button');
-  b.type='button';b.className='chip';b.setAttribute('aria-label',L.n+'호선 표시 전환');
-  b.innerHTML='<span class="d" style="background:'+L.c+';color:'+L.tc+'">'+L.n+'</span><span class="c" id="cnt'+L.n+'">0</span>';
-  b.addEventListener('click',function(){L.on=!L.on;syncChips();});
-  L.chip=b;chips.appendChild(b);
-});
-function syncChips(){
-  LINES.forEach(function(L){L.chip.setAttribute('aria-pressed',String(L.on));L.g.style.display=L.on?'':'none';});
-}
-syncChips();
 
-/* ---------- 열차 ---------- */
-var trains=new Map(),sel=null,sheetKey='',lastUI=0,total=0,sdNow=0;
-function makeTrain(L,d,dep,key){
-  var g=mk('g',{'class':'tr'},gTr);g.dataset.k=key;
-  mk('circle',{r:14,fill:'transparent'},g);
-  mk('circle',{'class':'sel',r:14,fill:'none',stroke:'var(--ink)','stroke-width':2},g);
-  var arrow=mk('g',{},g);
-  /* 열차 몸체: 진행방향(+x)을 바라보는 둥근 코 모양 차량 실루엣 */
-  mk('path',{d:'M-9.5,-4.4 L3,-4.4 Q9.6,-4.4 11.2,0 Q9.6,4.4 3,4.4 L-9.5,4.4 Z',fill:L.c,stroke:'var(--land)','stroke-width':1,'stroke-linejoin':'round'},arrow);
-  mk('rect',{x:-7,y:-2.6,width:2.8,height:5.2,rx:1,fill:'#fff',opacity:.55},arrow);
-  mk('rect',{x:-2.6,y:-2.6,width:2.8,height:5.2,rx:1,fill:'#fff',opacity:.4},arrow);
-  mk('circle',{cx:6,cy:0,r:1.3,fill:'#fff',opacity:.9},arrow);
-  mk('circle',{r:6.6,fill:L.c,stroke:'var(--land)','stroke-width':1.4},g);
-  var t=mk('text',{x:0,y:3.2,'text-anchor':'middle',fill:L.tc,style:'font:600 9px var(--f-display);pointer-events:none'},g);
-  t.textContent=L.n;
-  var r={g:g,arrow:arrow,L:L,d:d,dep:dep,p:null};
+fetch('scripts/data/subway_lines.json').then(function(r){return r.json();}).then(function(data){
+  LINES=data.filter(function(g){return g.stations.length>=2;});
+  LINES.forEach(function(G){G.on=true;});
+  init();
+}).catch(function(e){
+  $('#sheet').innerHTML='<div class="who"><div><strong>노선 데이터를 불러오지 못했어요</strong><span class="s">잠시 뒤 새로고침해 주세요</span></div></div>';
+  console.error(e);
+});
+
+function mkIcon(G,st){
+  var major=/환승/.test(st.xfer||'');
+  return L.circleMarker([st.lat,st.lng],{radius:major?5:3,color:'#12202B',weight:major?1.6:1,fillColor:'#fff',fillOpacity:1,opacity:1});
+}
+
+function init(){
+  var allPts=[];
+  LINES.forEach(function(G,gi){
+    G.tl=[mkTl(G.stations),mkTl(G.stations.slice().reverse())];
+    G.deps=[0,1].map(function(d){
+      var a=[],t=5.5*3600+gi*47+d*131;
+      while(t<=24.5*3600){a.push(t);t+=hw(t)*(G.liveNum?1.3:2.1)*60;}
+      return a;
+    });
+    var latlngs=G.stations.map(function(s){allPts.push([s.lat,s.lng]);return [s.lat,s.lng];});
+    G.polyline=L.polyline(latlngs,{color:G.color,weight:4,opacity:.85,lineJoin:'round',lineCap:'round'}).addTo(map);
+    G.markers=G.stations.map(function(s){
+      var cm=mkIcon(G,s).addTo(map);
+      cm.on('click',function(){showStation(s);});
+      return cm;
+    });
+  });
+  if(allPts.length){try{map.fitBounds(allPts,{padding:[18,18]});}catch(e){}}
+
+  LINES.forEach(function(G){
+    var b=document.createElement('button');
+    b.type='button';b.className='chip';b.setAttribute('aria-label',G.name+' 표시 전환');
+    b.innerHTML='<span class="d" style="background:'+G.color+';color:'+G.textColor+'">'+(G.liveNum||'')+'</span><span class="nm">'+G.name+'</span><span class="c" id="cnt'+G.id+'">0</span>';
+    b.addEventListener('click',function(){G.on=!G.on;syncChips();});
+    G.chip=b;chips.appendChild(b);
+  });
+  allBtn.addEventListener('click',function(){LINES.forEach(function(G){G.on=true;});syncChips();});
+  syncChips();
+  buildLiveIdx();
+  requestAnimationFrame(frame);
+}
+function syncChips(){
+  LINES.forEach(function(G){
+    G.chip.setAttribute('aria-pressed',String(G.on));
+    G.polyline.setStyle({opacity:G.on?.85:0});
+    G.markers.forEach(function(m){m.setStyle({opacity:G.on?1:0,fillOpacity:G.on?1:0});});
+    trains.forEach(function(r){if(r.G===G){var el=r.marker.getElement();if(el)el.style.display=G.on?'':'none';}});
+  });
+}
+
+function showStation(s){
+  var lines=LINES.filter(function(x){return x.stations.some(function(st){return st.name===s.name&&Math.abs(st.lat-s.lat)<.002&&Math.abs(st.lng-s.lng)<.002;});});
+  var html='<div class="st-pop"><b>'+s.name+'</b>'+lines.map(function(x){return '<span class="ln" style="background:'+x.color+';color:'+x.textColor+'">'+x.name+'</span>';}).join('')+'</div>';
+  if(curPopup)map.closePopup(curPopup);
+  curPopup=L.popup({closeButton:true}).setLatLng([s.lat,s.lng]).setContent(html).openOn(map);
+}
+
+/* ---------- 열차 아이콘(SVG, 실제 기차 모양) ---------- */
+function trainSvg(G){
+  return '<svg width="30" height="30" viewBox="-15 -15 30 30" xmlns="http://www.w3.org/2000/svg">'+
+    '<circle class="ring" r="13" fill="none" stroke="var(--ink)" stroke-width="2" opacity="0"/>'+
+    '<g class="rot">'+
+      '<path d="M-9.5,-4.4 L3,-4.4 Q9.6,-4.4 11.2,0 Q9.6,4.4 3,4.4 L-9.5,4.4 Z" fill="'+G.color+'" stroke="var(--land)" stroke-width="1" stroke-linejoin="round"/>'+
+      '<rect x="-7" y="-2.6" width="2.8" height="5.2" rx="1" fill="#fff" opacity=".55"/>'+
+      '<rect x="-2.6" y="-2.6" width="2.8" height="5.2" rx="1" fill="#fff" opacity=".4"/>'+
+      '<circle cx="6" cy="0" r="1.3" fill="#fff" opacity=".9"/>'+
+    '</g>'+
+    '<circle r="6.6" fill="'+G.color+'" stroke="var(--land)" stroke-width="1.4"/>'+
+    '<text x="0" y="3.2" text-anchor="middle" fill="'+G.textColor+'" style="font:600 8.5px var(--f-display);pointer-events:none">'+(G.liveNum||G.name.slice(0,1))+'</text>'+
+  '</svg>';
+}
+function makeTrain(G,d,dep,key){
+  var divIcon=L.divIcon({className:'tricon',html:trainSvg(G),iconSize:[30,30],iconAnchor:[15,15]});
+  var marker=L.marker([0,0],{icon:divIcon,interactive:true,keyboard:false}).addTo(map);
+  marker.on('click',function(){select(key);});
+  var r={marker:marker,G:G,d:d,dep:dep,p:null};
   trains.set(key,r);return r;
 }
+function setTrainPos(r,lat,lng,angDeg){
+  r.marker.setLatLng([lat,lng]);
+  var el=r.marker.getElement();
+  if(el){var rot=el.querySelector('.rot'); if(rot)rot.setAttribute('transform','rotate('+angDeg.toFixed(1)+')');}
+}
 function select(key){
-  if(sel&&trains.has(sel))trains.get(sel).g.classList.remove('on');
+  if(sel&&trains.has(sel)){var pe=trains.get(sel).marker.getElement();if(pe)pe.classList.remove('sel');}
   sel=key;follow=false;sheetKey='';
-  if(sel&&trains.has(sel)){var r=trains.get(sel);r.g.classList.add('on');gTr.appendChild(r.g);}
+  if(sel&&trains.has(sel)){var r=trains.get(sel);var el=r.marker.getElement();if(el)el.classList.add('sel');}
   else sel=null;
 }
-svg.addEventListener('click',function(e){
-  if(moved>6)return;
-  var g=e.target.closest?e.target.closest('.tr'):null;
-  select(g?g.dataset.k:null);
-});
 
 var sheet=$('#sheet');
 function buildSheet(){
   var key=sel?'s:'+sel+':'+follow:'idle';
   if(key===sheetKey)return;sheetKey=key;
   if(sel&&trains.has(sel)){
-    var r=trains.get(sel),L=r.L,tl=L.tl[r.d];
-    var dest=r.live?(r.live.d||'')+'행':(L.loop?(r.d===0?'외선순환':'내선순환'):ST[tl.ids[tl.ids.length-1]][0]+'행');
-    sheet.innerHTML='<div class="who"><span class="dot" style="background:'+L.c+';color:'+L.tc+'">'+L.n+'</span><div><strong>'+L.n+'호선 '+dest+'</strong><span class="s" id="shSub"></span></div></div>'+
+    var r=trains.get(sel),G=r.G,tl=G.tl[r.d];
+    var dest=r.live?(r.live.d||'')+'행':tl.sts[tl.sts.length-1].name+'행';
+    sheet.innerHTML='<div class="who"><span class="dot" style="background:'+G.color+';color:'+G.textColor+'">'+G.name+'</span><div><strong>'+dest+'</strong><span class="s" id="shSub"></span></div></div>'+
       '<div class="acts"><button type="button" class="btn" data-act="follow" aria-pressed="'+follow+'">'+(follow?'따라가는 중':'따라가기')+'</button><button type="button" class="btn" data-act="close">닫기</button></div>';
   }else{
     sheet.innerHTML='<div class="who"><div><strong id="shMain">운행 중 0대</strong><span class="s" id="shSub">열차를 눌러 다음 역과 도착 시간을 확인하세요</span></div></div>';
@@ -419,117 +289,137 @@ function updateSheet(){
     var r=trains.get(sel),p=r.p;
     if(r.live){sub.textContent=r.live.s+' '+(STT[r.live.st]||'')+' · 실시간'+(liveErr?' ('+liveErr+')':'');return;}
     if(!p)return;
-    var tl=r.L.tl[r.d];
-    sub.textContent=(p.stop?ST[tl.ids[p.i]][0]+' 정차 중 · '+Math.ceil(p.dwellLeft)+'초 후 출발':'다음 '+ST[tl.ids[p.next]][0]+' · '+fmt(p.eta)+' 후 도착')+' · '+hhmm(r.dep)+' 출발';
+    var tl=r.G.tl[r.d];
+    sub.textContent=(p.stop?tl.sts[p.i].name+' 정차 중 · '+Math.ceil(p.dwellLeft)+'초 후 출발':'다음 '+tl.sts[p.next].name+' · '+fmt(p.eta)+' 후 도착')+' · '+hhmm(r.dep)+' 출발';
   }else{
     var m=$('#shMain');
-    if(live){m.textContent=liveErr||('실시간 운행 중 '+total+'대');sub.textContent=liveErr?'15초마다 다시 시도해요':'지도에 그린 역 기준 · 그 밖의 역에 있는 열차 '+unmapped+'대는 표시하지 않아요';return;}
+    if(live){m.textContent=liveErr||('실시간 운행 중 '+total+'대');sub.textContent=liveErr?'15초마다 다시 시도해요':'1~9호선은 실시간, 그 밖의 노선은 모의 운행이에요 · 매칭 안 된 열차 '+unmapped+'대';return;}
     if(total>0){m.textContent='운행 중 '+total+'대';sub.textContent='열차를 눌러 다음 역과 도착 시간을 확인하세요';}
     else{m.textContent='지금은 운행 시간이 아니에요';sub.textContent='첫차 05:30 · 막차 24:30 기준';}
   }
 }
 
-/* ---------- 실시간 모드 ---------- */
-var live=false,liveTrains=new Map(),liveErr='',unmapped=0,pollT=0,prevScale=10,liveAt=0;
+/* ---------- 시계 ---------- */
+var scale=10,simBase=Date.now(),realBase=Date.now();
+function simNow(){return simBase+(Date.now()-realBase)*scale;}
+function svcSec(ms){
+  var d=new Date(ms+9*3600000),sod=d.getUTCHours()*3600+d.getUTCMinutes()*60+d.getUTCSeconds()+d.getUTCMilliseconds()/1000;
+  return sod<4*3600?sod+86400:sod;
+}
+function setScale(n){
+  simBase=simNow();realBase=Date.now();scale=n;
+  document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',String(+b.dataset.s===n));});
+}
+document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){setScale(+b.dataset.s);});});
+$('#now').addEventListener('click',function(){simBase=Date.now();realBase=Date.now();});
+
+/* ---------- 실시간 모드(1~9호선) ---------- */
+var live=false,liveTrains=new Map(),liveErr='',unmapped=0,pollT=0,prevScale=10;
 var ALIAS={'총신대입구':'이수'};
 function nm(s){s=String(s||'').replace(/\(.*?\)/g,'').replace(/\s/g,'').replace(/역$/,'');return ALIAS[s]||s;}
-LINES.forEach(function(L){L.nameIdx={};L.ids.forEach(function(id,i){L.nameIdx[nm(ST[id][0])]=i;});});
+var liveIdx={};
 var STT=['진입','도착','출발','전역 출발'];
+function buildLiveIdx(){
+  liveIdx={};
+  LINES.forEach(function(G){
+    if(!G.liveNum)return;
+    G.nameIdx={};
+    G.stations.forEach(function(s,i){G.nameIdx[nm(s.name)]=i;});
+    liveIdx[G.liveNum]=G;
+  });
+}
 function pollLive(){
   if(!live)return;
   fetch(liveUrl(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
     if(j.error)throw 0;
-    liveAt=j.at||0;
-    if(liveAt&&Date.now()-liveAt>300000){liveErr='데이터가 '+Math.round((Date.now()-liveAt)/60000)+'분 전 것이에요';}
+    var at=j.at||0;
+    if(at&&Date.now()-at>300000){liveErr='데이터가 '+Math.round((Date.now()-at)/60000)+'분 전 것이에요';}
     var now=performance.now(),un=0;
     (j.trains||[]).forEach(function(it){
-      var L=LINES[it.l-1];if(!L)return;
-      var key=it.l+'-'+it.t,lt=liveTrains.get(key),i=L.nameIdx[nm(it.s)];
+      var G=liveIdx[it.l];if(!G)return;
+      var key='live-'+it.l+'-'+it.t,lt=liveTrains.get(key),i=G.nameIdx[nm(it.s)];
       if(i===undefined){un++;if(lt)lt.seen=now;return;}
-      var st=ST[L.ids[i]];
-      if(!lt){lt={L:L,x:st[1],y:st[2],tx:st[1],ty:st[2],ang:0};liveTrains.set(key,lt);}
-      else if(lt.tx!==st[1]||lt.ty!==st[2]){lt.ang=Math.atan2(st[2]-lt.ty,st[1]-lt.tx);lt.tx=st[1];lt.ty=st[2];}
+      var st=G.stations[i];
+      if(!lt){lt={G:G,lat:st.lat,lng:st.lng,tlat:st.lat,tlng:st.lng,ang:0};liveTrains.set(key,lt);}
+      else if(lt.tlat!==st.lat||lt.tlng!==st.lng){lt.ang=bearing({lat:lt.tlat,lng:lt.tlng},st);lt.tlat=st.lat;lt.tlng=st.lng;}
       lt.seen=now;lt.s=it.s;lt.d=it.d;lt.st=it.st;
     });
-    unmapped=un;if(!(liveAt&&Date.now()-liveAt>300000))liveErr='';
+    unmapped=un;if(!(at&&Date.now()-at>300000))liveErr='';
   }).catch(function(){liveErr='실시간 데이터를 불러오지 못했어요';});
 }
-function makeLive(lt,key){var r=makeTrain(lt.L,0,0,key);r.live=lt;return r;}
+function makeLive(lt,key){var r=makeTrain(lt.G,0,0,key);r.live=lt;return r;}
 function liveFrame(seen,cnt){
   var tot=0,now=performance.now();
-  LINES.forEach(function(L){cnt[L.n]=0;});
   liveTrains.forEach(function(lt,key){
-    if(now-lt.seen>60000){liveTrains.delete(key);return;}
-    cnt[lt.L.n]++;tot++;
-    if(!lt.L.on)return;
-    lt.x+=(lt.tx-lt.x)*.05;lt.y+=(lt.ty-lt.y)*.05;
+    if(now-lt.seen>60000){liveTrains.delete(key);var old=trains.get(key);if(old){map.removeLayer(old.marker);trains.delete(key);}return;}
+    cnt[lt.G.id]=(cnt[lt.G.id]||0)+1;tot++;
+    if(!lt.G.on)return;
+    lt.lat+=(lt.tlat-lt.lat)*.25;lt.lng+=(lt.tlng-lt.lng)*.25;
     var r=trains.get(key)||makeLive(lt,key);
     seen.add(key);r.p=null;
-    r.g.setAttribute('transform','translate('+lt.x.toFixed(1)+' '+lt.y.toFixed(1)+') scale('+u+')');
-    r.arrow.setAttribute('transform','rotate('+(lt.ang*180/Math.PI).toFixed(1)+')');
+    setTrainPos(r,lt.lat,lt.lng,lt.ang*180/Math.PI);
   });
   return tot;
 }
 var liveBtn=$('#liveBtn');
 liveBtn.disabled=true;liveBtn.textContent='실시간 준비 중';liveBtn.title='실시간 열차 위치가 아직 연결되지 않았어요';
-/* 최근 5분 안에 받은 열차가 있을 때만 버튼을 켠다 */
 fetch(liveUrl(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
   if(j&&!j.error&&j.at&&Date.now()-j.at<300000&&(j.trains||[]).length>0){liveBtn.disabled=false;liveBtn.textContent='실시간';liveBtn.title='';}
 }).catch(function(){});
 function setLive(on){
   if(on===live)return;
   live=on;
-  trains.forEach(function(r){r.g.remove();});trains.clear();liveTrains.clear();select(null);
+  trains.forEach(function(r){map.removeLayer(r.marker);});trains.clear();liveTrains.clear();select(null);
   document.querySelectorAll('.seg button').forEach(function(b){b.disabled=on;});
   liveBtn.setAttribute('aria-pressed',String(on));
   clearInterval(pollT);
-  if(on){prevScale=scale;simBase=Date.now();realBase=Date.now();scale=1;liveErr='';pollLive();pollT=setInterval(pollLive,15000);}
-  else{setScale(prevScale);}
+  if(on){prevScale=scale;liveErr='';pollLive();pollT=setInterval(pollLive,15000);}
   sheetKey='';lastClk='';
 }
 liveBtn.addEventListener('click',function(){if(!liveBtn.disabled)setLive(!live);});
 
+/* ---------- 매 프레임 ---------- */
 var lastClk='';
-function frame(ts){
-  var now=simNow(),sd=svcSec(now);sdNow=sd;
-  var seen=new Set(),cnt={},tot=0;
-  if(live){tot=liveFrame(seen,cnt);}else LINES.forEach(function(L){
-    var c=0;
-    for(var d=0;d<2;d++){
-      var arr=L.deps[d],T=L.tl[d].T;
-      for(var j=0;j<arr.length;j++){
-        var dep=arr[j];if(dep>sd)break;
-        var t=sd-dep;if(t>=T)continue;
-        c++;
-        if(!L.on)continue;
-        var key=L.n+'-'+d+'-'+j,r=trains.get(key)||makeTrain(L,d,dep,key);
-        seen.add(key);
-        var p=posAt(L.tl[d],t);r.p=p;
-        r.g.setAttribute('transform','translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+') scale('+u+')');
-        r.arrow.setAttribute('transform','rotate('+(p.ang*180/Math.PI).toFixed(1)+')');
-      }
+function runSim(G,gid,sd,seen,cnt){
+  var c=0;
+  for(var d=0;d<2;d++){
+    var arr=G.deps[d],T=G.tl[d].T;
+    for(var j=0;j<arr.length;j++){
+      var dep=arr[j];if(dep>sd)break; var t=sd-dep; if(t>=T)continue; c++;
+      if(!G.on)continue;
+      var key=gid+'-'+d+'-'+j,r=trains.get(key)||makeTrain(G,d,dep,key);
+      seen.add(key);
+      var p=posAt(G.tl[d],t);r.p=p; setTrainPos(r,p.lat,p.lng,p.ang*180/Math.PI);
     }
-    cnt[L.n]=c;tot+=c;
-  });
+  }
+  cnt[gid]=c;
+  return c;
+}
+function frame(ts){
+  var now=simNow(),sd=svcSec(now);
+  var seen=new Set(),cnt={},tot=0;
+  if(live){
+    tot+=liveFrame(seen,cnt);
+    LINES.forEach(function(G){ if(!G.liveNum) tot+=runSim(G,G.id,sd,seen,cnt); });
+  }else{
+    LINES.forEach(function(G){ tot+=runSim(G,G.id,sd,seen,cnt); });
+  }
   total=tot;
   trains.forEach(function(r,key){
-    if(!seen.has(key)){r.g.remove();trains.delete(key);if(sel===key){sel=null;follow=false;sheetKey='';}}
+    if(!seen.has(key)){map.removeLayer(r.marker);trains.delete(key);if(sel===key){sel=null;follow=false;sheetKey='';}}
   });
   if(follow&&sel&&trains.has(sel)){
-    var q=trains.get(sel).p;
-    tx+=(500-q.x*k-tx)*.15;ty+=(380-q.y*k-ty)*.15;applyWorld();
+    map.panTo(trains.get(sel).marker.getLatLng(),{animate:false});
   }
   var dt=new Date(now+9*3600000),cl=pad(dt.getUTCHours())+':'+pad(dt.getUTCMinutes())+':'+pad(dt.getUTCSeconds());
   if(cl!==lastClk){lastClk=cl;$('#clk').textContent=cl;$('#clkNote').textContent='KST · '+(live?'실시간 데이터':(scale===1?'실제 속도':'×'+scale+' 배속'));}
   if(ts-lastUI>250){
     lastUI=ts;
-    LINES.forEach(function(L){$('#cnt'+L.n).textContent=cnt[L.n];});
+    LINES.forEach(function(G){var e=$('#cnt'+G.id);if(e)e.textContent=cnt[G.id]||0;});
     updateSheet();
   }
   requestAnimationFrame(frame);
 }
-fit();
-requestAnimationFrame(frame);
 })();
 </script>
 
