@@ -24,6 +24,7 @@ jobs:
       - name: 작년 같은 날 생활인구 받기
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+          PROBE: "20260731,20260701,20260401,20260101,20251231,20251101,20250701,20250101,20240101,20231101,20221231,20220101"
         run: python scripts/history.py
       - name: 올리기
         run: |

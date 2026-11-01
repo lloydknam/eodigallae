@@ -146,6 +146,18 @@ def main():
     if not key:
         sys.exit("SEOUL_API_KEY가 필요해요.")
     today = dt.datetime.now(KST).date()
+    if os.environ.get("PROBE"):   # 자료가 있는 날짜 범위 확인용
+        log = []
+        for ymd in os.environ["PROBE"].split(","):
+            url = API.format(key=key, svc=SERVICES[0], a=1, b=2, day=ymd)
+            try:
+                txt = requests.get(url, timeout=30).text.replace(key, "***")
+            except Exception as e:  # noqa: BLE001
+                txt = str(e).replace(key, "***")
+            log.append(f"{ymd}: {txt[:260]}")
+        (OUT / "probe.json").write_text(json.dumps(log, ensure_ascii=False, indent=1))
+        print("\n".join(log))
+        return
     idx_path = OUT / "index.json"
     idx = json.loads(idx_path.read_text()) if idx_path.exists() else {}
     diag: list[str] = []
