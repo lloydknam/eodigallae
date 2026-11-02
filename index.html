@@ -635,6 +635,8 @@ img { max-width: 100%; }
 .fest-tile .fthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .fest-tile b { font-size: var(--fs-tile-title); font-weight: 700; padding: 6px 7px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.32; min-height: 2.64em; }
 .fest-tile span { font-size: var(--fs-caption); color: var(--muted); padding: 3px 7px 8px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.passport-block .fest-grid { margin-top: 8px; }
+.passport-block .fest-tile { background: var(--paper); box-shadow: none; border: 1px solid var(--line); }
 .fest-map-sec { margin: 14px 0 18px; }
 .fest-map-sec #hotmap { height: min(48vh, 420px); min-height: 260px; }
 .spot.festival-card { flex-direction: row; align-items: stretch; }
@@ -2126,13 +2128,20 @@ img { max-width: 100%; }
     return "";
   }
   function festivalBlockHtml(items) {
+    const show = items.slice(0, 9);
+    const tile = (f) => {
+      const tag = f.homepage ? "a" : "div";
+      const attrs = f.homepage ? ` href="${esc(f.homepage)}" target="_blank" rel="noopener"` : "";
+      return `<${tag} class="fest-tile"${attrs}>
+        <div class="fthumb">${f.image ? `<img src="${esc(f.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.fthumb').classList.add('noimg');this.remove()">` : ""}</div>
+        <b>${esc(f.title)} ${festivalDday(f)}</b>
+        <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
+      </${tag}>`;
+    };
     return `<section class="passport-block">
       <h2>🎪 축제·행사</h2>
       <p class="passport-sub">앞으로 ${items.length}건의 축제·행사가 있어요.</p>
-      ${items.slice(0, 8).map((f) => `<div class="passport-route">
-        <b>${esc(f.title)} ${festivalDday(f)}</b>
-        <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}${f.addr ? ` · ${esc(f.addr)}` : ""}${f.homepage ? ` · <a href="${esc(f.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}</span>
-      </div>`).join("")}
+      <div class="fest-grid">${show.map(tile).join("")}</div>
       <p class="passport-src">출처: 한국관광공사 TourAPI 축제공연행사정보</p>
     </section>`;
   }
