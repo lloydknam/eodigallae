@@ -77,7 +77,7 @@ img { max-width: 100%; }
 .menu-btn:active { transform: scale(.95); }
 .menu-btn:focus-visible { outline: 3px solid var(--celadon-soft); outline-offset: 2px; }
 .menu-btn[aria-expanded="true"] { background: var(--celadon-deep); }
-.menu-drop-top { position: absolute; right: 8px; top: calc(100% - 4px); bottom: auto; }
+.menu-drop-top { position: absolute; right: 8px; top: calc(100% - 4px); }
 /* ── 하단 탭바 ── */
 .bottombar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--surface);
   border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -92,8 +92,9 @@ img { max-width: 100%; }
 .bb-item[aria-current="page"], .bb-item[aria-expanded="true"] { color: var(--celadon); }
 .bb-item:focus-visible { outline: 2px solid var(--celadon); outline-offset: -2px; border-radius: 10px; }
 .bb-more { flex: 1; position: relative; display: flex; }
-.menu-drop { position: absolute; right: -4px; bottom: calc(100% + 10px); z-index: 40; min-width: 300px; max-width: calc(100vw - 32px); padding: 6px; background: var(--surface); border-radius: 16px;
+.menu-drop { z-index: 40; min-width: 300px; max-width: calc(100vw - 32px); padding: 6px; background: var(--surface); border-radius: 16px;
   box-shadow: 0 10px 30px rgba(25,31,40,.16), 0 1px 3px rgba(25,31,40,.08); display: grid; overflow: hidden; }
+.menu-drop-bottom { position: absolute; right: -4px; bottom: calc(100% + 10px); }
 .menu-drop a { display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 10px; text-decoration: none; color: var(--ink); font-size: 15.5px; font-weight: 600; white-space: nowrap; }
 .menu-drop a:hover, .menu-drop a:focus-visible { background: var(--paper); }
 .menu-drop a[aria-current="page"] { color: var(--celadon); background: var(--celadon-soft); }
@@ -674,7 +675,7 @@ img { max-width: 100%; }
     <button class="bb-item" id="menu-btn" aria-haspopup="true" aria-label="더보기 메뉴" aria-expanded="false" aria-controls="menu-drop">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="12" r="1.9" fill="currentColor"/><circle cx="12" cy="12" r="1.9" fill="currentColor"/><circle cx="18.5" cy="12" r="1.9" fill="currentColor"/></svg>
       <span>더보기</span></button>
-    <nav class="menu-drop" id="menu-drop" aria-label="더보기 메뉴" hidden>
+    <nav class="menu-drop menu-drop-bottom" id="menu-drop" aria-label="더보기 메뉴" hidden>
       <a href="#courses" data-view="courses"><span>🏛️</span>국가유산 방문코스 <em>13개 노선</em></a>
       <a href="#cities" data-view="cities"><span>🔍</span>도시 찾기</a>
       <a href="#me" data-view="me"><span>🧳</span>내 여행 <em>코스·도장깨기</em></a>
