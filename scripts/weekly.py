@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """전국 주간 핫플 랭킹 (매주 월요일 새벽).
 
-- 유튜브 이번 주 Top 10: 지난 7일 올라온 국내 여행 영상(검색 10회, 약 1,010 unit)에서
+- 유튜브 이번 주 Top 9: 지난 7일 올라온 국내 여행 영상(검색 10회, 약 1,010 unit)에서
   장소 이름 + 도시 이름이 함께 나온 횟수와 조회수로 점수.
-- 숨은 핫플 Top 10: 관광공사 목록에는 없고 카카오맵에서 찾은 카페·골목·전시 중 영상에 많이 나온 곳.
+- 숨은 핫플 Top 9: 관광공사 목록에는 없고 카카오맵에서 찾은 카페·골목·전시 중 영상에 많이 나온 곳.
   (카카오는 인기 지표를 주지 않으므로 '발견'에만 쓰고, 순위는 유튜브로 매긴다)
-- 꾸준한 인기 Top 10: 도시별로 모아 둔 최근 6개월 유튜브 점수.
-- 급상승 Top 10: 이번 주 언급이 6개월 평균보다 크게 늘어난 곳.
+- 꾸준한 인기 Top 9: 도시별로 모아 둔 최근 6개월 유튜브 점수.
+- 급상승 Top 9: 이번 주 언급이 6개월 평균보다 크게 늘어난 곳.
 지난주 파일과 비교해 순위 변화(▲▼, NEW)를 붙인다. 카카오 좌표·주소는 저장하지 않는다.
 """
 from __future__ import annotations
@@ -149,7 +149,7 @@ def refresh_steady():
     cur["citiesWithData"] = len(with_data)
     cur["updatedAt"] = dt.datetime.now(KST).isoformat(timespec="seconds")
     collect.save_json(DATA / "weekly.json", cur)
-    print("꾸준한 인기·숨은 핫플 갱신:", len(steady), "곳 중 상위 10")
+    print("꾸준한 인기·숨은 핫플 갱신:", len(steady), "곳 중 상위 9")
     build_map()
 
 
@@ -161,7 +161,7 @@ def is_hidden(e: dict) -> bool:
     return e["kind"] == "kakao" and (e.get("cat") == "카페" or bool(HIDDEN_WORDS.search(e["name"])))
 
 
-def top(items, key, n=10):
+def top(items, key, n=9):
     out, seen = [], []
     for e in sorted(items, key=key):
         k = buzz.norm(e["name"])

@@ -211,29 +211,6 @@
     },
     "base_n": 15,
     "change": "new"
-   },
-   {
-    "name": "부석사",
-    "city": "영주시",
-    "province": "경상북도",
-    "cityId": "a35-s14",
-    "spotId": "127669",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 3,
-    "views": 35406,
-    "score": 13.33,
-    "thumb": "https://i.ytimg.com/vi/4DnkLjPN2wc/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/43/3572443_image2_1.JPG",
-    "video": {
-     "id": "4DnkLjPN2wc",
-     "title": "1박하면 차량 + 4끼 식사 + 투어 + 1억 마사지 체험 + 호텔 숙박 + 온천까지 책임지는 국내유일 패키지 투어",
-     "channel": "파파트래블(PAPATRAVEL)",
-     "views": 20289
-    },
-    "base_n": 30,
-    "change": "new"
    }
   ],
   "hidden": [
@@ -425,27 +402,6 @@
      "channel": "두조람 DuJoram",
      "views": 298537
     }
-   },
-   {
-    "name": "용리단길",
-    "city": "용산구",
-    "province": "서울",
-    "cityId": "a1-s21",
-    "spotId": "k1351263673",
-    "kakao": "1351263673",
-    "cat": "관광명소",
-    "kind": "kakao",
-    "n": 6,
-    "views": 36402,
-    "score": 54.76,
-    "thumb": "https://i.ytimg.com/vi/conVPs3NmLo/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/conVPs3NmLo/hqdefault.jpg",
-    "video": {
-     "id": "conVPs3NmLo",
-     "title": "용산 데이트코스 총정리‼️ #용리단길 #용산놀거리",
-     "channel": "윤뽀",
-     "views": 16610
-    }
    }
   ],
   "steady": [
@@ -636,27 +592,6 @@
      "title": "세계 5위 해저터널 뚫었는데 왜 사람은 줄었나, 보령 주민들만 아는 충격적인 진실",
      "channel": "무궁화경제",
      "views": 1469676
-    }
-   },
-   {
-    "name": "다랭이마을",
-    "city": "남해군",
-    "province": "경상남도",
-    "cityId": "a36-s5",
-    "spotId": "127778",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 35,
-    "views": 279670,
-    "score": 805.53,
-    "thumb": "https://i.ytimg.com/vi/cLLRIjlSzXs/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/88/3302988_image2_1.jpg",
-    "video": {
-     "id": "cLLRIjlSzXs",
-     "title": "vlog. 휴가 맞죠..…? | 워커홀릭 22살, 강아지와 첫 남해여행",
-     "channel": "히써니데이 Heesunny Day",
-     "views": 80542
     }
    }
   ],
@@ -876,30 +811,6 @@
     "base_n": 1,
     "ratio": 3.7,
     "change": "new"
-   },
-   {
-    "name": "벽초지수목원",
-    "city": "파주시",
-    "province": "경기도",
-    "cityId": "a31-s27",
-    "spotId": "128626",
-    "kakao": "7892614",
-    "cat": "",
-    "kind": "spot",
-    "n": 2,
-    "views": 45960,
-    "score": 9.77,
-    "thumb": "https://i.ytimg.com/vi/FKh2Ad8i6hQ/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/16/3527116_image2_1.jpg",
-    "video": {
-     "id": "FKh2Ad8i6hQ",
-     "title": "물오른 ‘제철 뚱보’들의 위험한 파주 먹방! (feat. 숨만 쉬어도 살찌는 계절)🍗",
-     "channel": "와일드브로(헌터퐝x까망형)",
-     "views": 37686
-    },
-    "base_n": 1,
-    "ratio": 3.7,
-    "change": "new"
    }
   ],
   "halfprice": [
@@ -1090,27 +1001,6 @@
      "title": "🌿 거창 가볼만한곳 BEST 5경남 거창 여행 꼭 가봐야 할 곳GEOCHANG TRAVEL",
      "channel": "발자국 한스푼",
      "views": 108099
-    }
-   },
-   {
-    "name": "상림공원",
-    "city": "함양군",
-    "province": "경상남도",
-    "cityId": "a36-s20",
-    "spotId": "126861",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 18,
-    "views": 177380,
-    "score": 247.95,
-    "thumb": "https://i.ytimg.com/vi/xKwW80QgbvM/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/08/3522408_image2_1.jpg",
-    "video": {
-     "id": "xKwW80QgbvM",
-     "title": "반값으로 갈 수 있는 함양여행?! 해발 1,915m 지리산이 보이는 “산 속에 있는 한옥호텔”에서 하룻밤",
-     "channel": "찬고리 Changori",
-     "views": 94563
     }
    }
   ]

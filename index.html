@@ -1333,7 +1333,7 @@ img { max-width: 100%; }
     app.innerHTML = `
       <section class="page-head">
         <h1>${mz("🧭", "flip left")}도시 찾기</h1>
-        <p>도시를 고르면 유튜브 조회수 Top 10, 추천 코스, 이동시간, 맛집을 보여드려요.</p>
+        <p>도시를 고르면 유튜브 조회수 Top 9, 추천 코스, 이동시간, 맛집을 보여드려요.</p>
       </section>
       <section class="intro" style="padding-top:6px">
         <label class="search" for="q">
@@ -2274,14 +2274,14 @@ img { max-width: 100%; }
           <button type="button" class="audio-btn" style="margin-left:6px;padding:3px 8px;font-size:11.5px" data-audio-kw="${esc(s.name.split(/\s+/).slice(-1)[0])}" data-audio-name="${esc(s.name)}">🎧</button></span></li>`).join("")}</ul></section>`).join("")}
       <p class="credit">출처: 국가유산청 방문 캠페인 (kh.or.kr) · 방문자 여권 도장은 직접 현장에서 찍어야 해요.</p>`;
   }
-  // 도시별 유튜브 조회수 Top 10 (최근 6개월 영상 중 그 장소가 나온 영상들의 조회수 합)
+  // 도시별 유튜브 조회수 Top 9 (최근 6개월 영상 중 그 장소가 나온 영상들의 조회수 합) — 3x3 그리드에 맞춤
   function cityTop10(d) {
-    const top = d.spots.filter((s) => s.yt && s.yt.views > 0).sort((a, b) => b.yt.views - a.yt.views).slice(0, 10);
+    const top = d.spots.filter((s) => s.yt && s.yt.views > 0).sort((a, b) => b.yt.views - a.yt.views).slice(0, 9);
     if (top.length < 3) return "";
     const at = (d.ytAt || d.updatedAt || "").slice(0, 10).replace(/-/g, ".");
     return `<section class="weekly city-top">
       <div class="weekly-head">
-        <h2>${mz("📺", "flip left")}유튜브 조회수 Top 10</h2>
+        <h2>${mz("📺", "flip left")}유튜브 조회수 Top 9</h2>
         <span class="wk">${esc(at)} 기준</span>
       </div>
       <p class="weekly-desc">최근 6개월 ${esc(baseCity(d.name))} 여행 영상에 나온 장소를, 그 영상들의 조회수 합으로 줄 세웠어요.</p>
