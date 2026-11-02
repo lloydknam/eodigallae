@@ -12,7 +12,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css">
 <style>
 /* Layout: 한 손으로 쓰는 세로 앱. 마스코트 '어디냥'(위치 핀을 꽂은 크림색 고양이)이 브랜드.
    색은 아이콘에서: 청록 바탕, 크림 얼굴, 핀 코럴, 볼터치 핑크. 둥글고 말랑한 카드. */
@@ -30,7 +31,7 @@
   --vermilion: #E4503A;
   --blush: #F7A39A;
   --ochre: #B7791F;
-  --font-display: "Gowun Batang", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-display: "SUIT", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --radius: 22px;
   --shadow: 0 1px 3px rgba(25, 31, 40, .04);
@@ -1393,8 +1394,8 @@ img { max-width: 100%; }
     const grad = g.createLinearGradient(0, 0, W * 0.4, H);
     grad.addColorStop(0, "#22B79A"); grad.addColorStop(0.55, "#12907A"); grad.addColorStop(1, "#0B6E61");
     g.fillStyle = grad; g.fillRect(0, 0, W, H);
-    await document.fonts.load('700 80px "Gowun Batang"').catch(() => {});
-    const font = (px) => `700 ${px}px "Gowun Batang", "Apple SD Gothic Neo", sans-serif`;
+    await document.fonts.load('700 80px "SUIT"').catch(() => {});
+    const font = (px) => `700 ${px}px "SUIT", "Apple SD Gothic Neo", sans-serif`;
     g.fillStyle = "#fff"; g.font = font(64); g.fillText("나의 국내여행 도장깨기", 80, 140);
     g.font = font(220); g.fillText(String(n), 80, 400);
     const w = g.measureText(String(n)).width;
