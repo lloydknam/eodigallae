@@ -1,226 +1,1200 @@
 {
- "updatedAt": "2026-11-02T04:46:55+09:00",
+ "updatedAt": "2026-11-03T00:24:19+09:00",
  "cities": [
   {
-   "id": "a1",
-   "name": "서울",
+   "id": "a1-s1",
+   "name": "강남구",
    "province": "서울",
    "areaCode": "1",
-   "sigunguCode": null,
+   "sigunguCode": "1",
    "ldong": [
-    "11110",
-    "11140",
-    "11170",
-    "11200",
-    "11215",
-    "11230",
-    "11260",
-    "11290",
-    "11305",
-    "11320",
-    "11350",
-    "11380",
-    "11410",
-    "11440",
-    "11470",
-    "11500",
-    "11530",
-    "11545",
-    "11560",
-    "11590",
-    "11620",
-    "11650",
-    "11680",
-    "11710",
+    "11680"
+   ],
+   "hasData": true,
+   "spotCount": 36,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/29/3515029_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:16:05+09:00",
+   "center": [
+    37.50925,
+    127.05105
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s2",
+   "name": "강동구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "2",
+   "ldong": [
     "11740"
    ],
    "hasData": true,
-   "spotCount": 54,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/98/3487598_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:45:38+09:00",
+   "spotCount": 28,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/11/3393811_image3_1.JPG",
+   "updatedAt": "2026-11-03T00:16:18+09:00",
    "center": [
-    37.57066,
-    126.98818
+    37.54661,
+    127.13851
    ],
-   "v": 4
+   "v": "light"
   },
   {
-   "id": "a2",
-   "name": "인천",
+   "id": "a1-s3",
+   "name": "강북구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "3",
+   "ldong": [
+    "11305"
+   ],
+   "hasData": true,
+   "spotCount": 32,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/09/3558609_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:16:31+09:00",
+   "center": [
+    37.64056,
+    127.03391
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s4",
+   "name": "강서구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "4",
+   "ldong": [
+    "11500"
+   ],
+   "hasData": true,
+   "spotCount": 33,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/23/4078223_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:16:40+09:00",
+   "center": [
+    37.5665,
+    126.82896
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s5",
+   "name": "관악구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "5",
+   "ldong": [
+    "11620"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/63/3503463_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:16:48+09:00",
+   "center": [
+    37.46967,
+    126.94483
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s6",
+   "name": "광진구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "6",
+   "ldong": [
+    "11215"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/61/3534561_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:16:57+09:00",
+   "center": [
+    37.54631,
+    127.08427
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s7",
+   "name": "구로구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "7",
+   "ldong": [
+    "11530"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/27/3400227_image3_1.JPG",
+   "updatedAt": "2026-11-03T00:17:04+09:00",
+   "center": [
+    37.49759,
+    126.86673
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s8",
+   "name": "금천구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "8",
+   "ldong": [
+    "11545"
+   ],
+   "hasData": true,
+   "spotCount": 24,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/48/3573148_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:17:13+09:00",
+   "center": [
+    37.46241,
+    126.90018
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s9",
+   "name": "노원구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "9",
+   "ldong": [
+    "11350"
+   ],
+   "hasData": true,
+   "spotCount": 36,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/79/4077779_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:17:26+09:00",
+   "center": [
+    37.64877,
+    127.07858
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s10",
+   "name": "도봉구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "10",
+   "ldong": [
+    "11320"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/75/4126275_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:17:35+09:00",
+   "center": [
+    37.66846,
+    127.03325
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s11",
+   "name": "동대문구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "11",
+   "ldong": [
+    "11230"
+   ],
+   "hasData": true,
+   "spotCount": 27,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/29/3526829_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:17:43+09:00",
+   "center": [
+    37.58366,
+    127.04498
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s12",
+   "name": "동작구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "12",
+   "ldong": [
+    "11590"
+   ],
+   "hasData": true,
+   "spotCount": 27,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/47/3516647_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:17:51+09:00",
+   "center": [
+    37.50487,
+    126.94633
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s13",
+   "name": "마포구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "13",
+   "ldong": [
+    "11440"
+   ],
+   "hasData": true,
+   "spotCount": 33,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/11/3509911_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:18:04+09:00",
+   "center": [
+    37.55937,
+    126.90346
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s14",
+   "name": "서대문구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "14",
+   "ldong": [
+    "11410"
+   ],
+   "hasData": true,
+   "spotCount": 33,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/29/3520329_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:18:13+09:00",
+   "center": [
+    37.57294,
+    126.94295
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s15",
+   "name": "서초구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "15",
+   "ldong": [
+    "11650",
+    "11680"
+   ],
+   "hasData": true,
+   "spotCount": 33,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/07/4061307_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:18:22+09:00",
+   "center": [
+    37.49396,
+    127.02245
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s16",
+   "name": "성동구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "16",
+   "ldong": [
+    "11200"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/59/3414159_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:18:31+09:00",
+   "center": [
+    37.54909,
+    127.04568
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s17",
+   "name": "성북구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "17",
+   "ldong": [
+    "11290"
+   ],
+   "hasData": true,
+   "spotCount": 35,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/72/3376572_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:18:44+09:00",
+   "center": [
+    37.59766,
+    127.0062
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s18",
+   "name": "송파구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "18",
+   "ldong": [
+    "11710"
+   ],
+   "hasData": true,
+   "spotCount": 34,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/33/4129633_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:18:54+09:00",
+   "center": [
+    37.50827,
+    127.11479
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s19",
+   "name": "양천구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "19",
+   "ldong": [
+    "11470"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/87/4002487_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:19:02+09:00",
+   "center": [
+    37.52481,
+    126.86188
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s20",
+   "name": "영등포구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "20",
+   "ldong": [
+    "11560"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/89/3544389_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:19:11+09:00",
+   "center": [
+    37.52285,
+    126.91482
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s21",
+   "name": "용산구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "21",
+   "ldong": [
+    "11170"
+   ],
+   "hasData": true,
+   "spotCount": 34,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/12/3495012_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:19:22+09:00",
+   "center": [
+    37.53421,
+    126.97689
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s22",
+   "name": "은평구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "22",
+   "ldong": [
+    "11380"
+   ],
+   "hasData": true,
+   "spotCount": 33,
+   "image": "https://tong.visitkorea.or.kr/cms/resource_photo/90/3525890_image3_1.JPG",
+   "updatedAt": "2026-11-03T00:19:35+09:00",
+   "center": [
+    37.61553,
+    126.92436
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s23",
+   "name": "종로구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "23",
+   "ldong": [
+    "11110"
+   ],
+   "hasData": true,
+   "spotCount": 42,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/02/2991502_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:19:47+09:00",
+   "center": [
+    37.58332,
+    126.98093
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s24",
+   "name": "중구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "24",
+   "ldong": [
+    "11140"
+   ],
+   "hasData": true,
+   "spotCount": 37,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/50/3590450_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:20:01+09:00",
+   "center": [
+    37.56195,
+    126.98711
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a1-s25",
+   "name": "중랑구",
+   "province": "서울",
+   "areaCode": "1",
+   "sigunguCode": "25",
+   "ldong": [
+    "11260"
+   ],
+   "hasData": true,
+   "spotCount": 26,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/93/4095993_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:20:11+09:00",
+   "center": [
+    37.59758,
+    127.09361
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s1",
+   "name": "강화군",
    "province": "인천",
    "areaCode": "2",
-   "sigunguCode": null,
+   "sigunguCode": "1",
    "ldong": [
-    "28125",
-    "28155",
-    "28177",
-    "28185",
-    "28200",
-    "28237",
-    "28245",
+    "28710"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/03/3497303_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:20:24+09:00",
+   "center": [
+    37.70818,
+    126.40088
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s2",
+   "name": "계양구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "2",
+   "ldong": [
+    "28245"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/94/3542094_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:20:32+09:00",
+   "center": [
+    37.55032,
+    126.72877
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s3",
+   "name": "미추홀구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "3",
+   "ldong": [
+    "28177"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/15/4102915_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:20:40+09:00",
+   "center": [
+    37.45126,
+    126.66865
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s4",
+   "name": "남동구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "4",
+   "ldong": [
+    "28200"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/65/4039065_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:20:49+09:00",
+   "center": [
+    37.43168,
+    126.72861
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s5",
+   "name": "동구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "5",
+   "ldong": [
+    "28125"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/94/3518594_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:21:08+09:00",
+   "center": [
+    37.47088,
+    126.61394
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s6",
+   "name": "부평구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "6",
+   "ldong": [
+    "28237"
+   ],
+   "hasData": true,
+   "spotCount": 28,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/16/4116616_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:21:16+09:00",
+   "center": [
+    37.49835,
+    126.72161
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s7",
+   "name": "서구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "7",
+   "ldong": [
     "28275",
-    "28290",
-    "28710",
+    "28290"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/15/4123315_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:21:30+09:00",
+   "center": [
+    37.54258,
+    126.6468
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s8",
+   "name": "연수구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "8",
+   "ldong": [
+    "28185"
+   ],
+   "hasData": true,
+   "spotCount": 32,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/19/3512919_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:21:41+09:00",
+   "center": [
+    37.39893,
+    126.64655
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a2-s9",
+   "name": "옹진군",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "9",
+   "ldong": [
     "28720"
    ],
    "hasData": true,
-   "spotCount": 51,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/49/3537549_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:45:47+09:00",
+   "spotCount": 39,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/44/4132544_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:21:53+09:00",
    "center": [
-    37.53309,
-    126.53388
+    37.42195,
+    126.12321
    ],
-   "v": 4
+   "v": "light"
   },
   {
-   "id": "a3",
-   "name": "대전",
+   "id": "a2-s10",
+   "name": "중구",
+   "province": "인천",
+   "areaCode": "2",
+   "sigunguCode": "10",
+   "ldong": [
+    "28125",
+    "28155"
+   ],
+   "hasData": true,
+   "spotCount": 34,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/94/3518594_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:22:05+09:00",
+   "center": [
+    37.46574,
+    126.55786
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a3-s1",
+   "name": "대덕구",
    "province": "대전",
    "areaCode": "3",
-   "sigunguCode": null,
+   "sigunguCode": "1",
    "ldong": [
-    "30110",
-    "30140",
-    "30170",
-    "30200",
     "30230"
    ],
    "hasData": true,
-   "spotCount": 50,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/72/4108472_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:45:51+09:00",
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/44/3033644_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:22:12+09:00",
    "center": [
-    36.33785,
-    127.42497
+    36.40016,
+    127.44218
    ],
-   "v": 4
+   "v": "light"
   },
   {
-   "id": "a4",
-   "name": "대구",
+   "id": "a3-s2",
+   "name": "동구",
+   "province": "대전",
+   "areaCode": "3",
+   "sigunguCode": "2",
+   "ldong": [
+    "30110"
+   ],
+   "hasData": true,
+   "spotCount": 31,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/55/3320755_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:22:25+09:00",
+   "center": [
+    36.32762,
+    127.45941
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a3-s3",
+   "name": "서구",
+   "province": "대전",
+   "areaCode": "3",
+   "sigunguCode": "3",
+   "ldong": [
+    "30170"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/72/4108472_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:22:34+09:00",
+   "center": [
+    36.33454,
+    127.37191
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a3-s4",
+   "name": "유성구",
+   "province": "대전",
+   "areaCode": "3",
+   "sigunguCode": "4",
+   "ldong": [
+    "30200"
+   ],
+   "hasData": true,
+   "spotCount": 33,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/52/4057052_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:22:45+09:00",
+   "center": [
+    36.36896,
+    127.35573
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a3-s5",
+   "name": "중구",
+   "province": "대전",
+   "areaCode": "3",
+   "sigunguCode": "5",
+   "ldong": [
+    "30140"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/97/3513197_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:22:57+09:00",
+   "center": [
+    36.30885,
+    127.41513
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s1",
+   "name": "남구",
    "province": "대구",
    "areaCode": "4",
-   "sigunguCode": null,
+   "sigunguCode": "1",
    "ldong": [
-    "27110",
-    "27140",
-    "27170",
-    "27200",
-    "27230",
-    "27260",
-    "27290",
-    "27710",
+    "27200"
+   ],
+   "hasData": true,
+   "spotCount": 29,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/70/3569970_image3_1.JPG",
+   "updatedAt": "2026-11-03T00:23:10+09:00",
+   "center": [
+    35.83893,
+    128.58611
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s2",
+   "name": "달서구",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "2",
+   "ldong": [
+    "27290"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/29/3573529_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:15+09:00",
+   "center": [
+    35.83707,
+    128.52848
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s3",
+   "name": "달성군",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "3",
+   "ldong": [
+    "27710"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource_photo/00/2951800_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:20+09:00",
+   "center": [
+    35.76193,
+    128.51584
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s4",
+   "name": "동구",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "4",
+   "ldong": [
+    "27140"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/85/3576785_image3_1.JPG",
+   "updatedAt": "2026-11-03T00:23:24+09:00",
+   "center": [
+    35.93413,
+    128.66405
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s5",
+   "name": "북구",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "5",
+   "ldong": [
+    "27230"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/40/3521240_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:29+09:00",
+   "center": [
+    35.91957,
+    128.58206
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s6",
+   "name": "서구",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "6",
+   "ldong": [
+    "27170"
+   ],
+   "hasData": true,
+   "spotCount": 21,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/76/4087776_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:34+09:00",
+   "center": [
+    35.87147,
+    128.5576
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s7",
+   "name": "수성구",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "7",
+   "ldong": [
+    "27260"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/73/3422773_image3_1.png",
+   "updatedAt": "2026-11-03T00:23:39+09:00",
+   "center": [
+    35.8421,
+    128.65028
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s8",
+   "name": "중구",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "8",
+   "ldong": [
+    "27110"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/94/3350494_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:43+09:00",
+   "center": [
+    35.86819,
+    128.59023
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a4-s9",
+   "name": "군위군",
+   "province": "대구",
+   "areaCode": "4",
+   "sigunguCode": "9",
+   "ldong": [
     "27720"
    ],
    "hasData": true,
-   "spotCount": 54,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/95/2947395_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:45:59+09:00",
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource_photo/29/3495829_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:48+09:00",
    "center": [
-    35.86773,
-    128.59046
+    36.12885,
+    128.67891
    ],
-   "v": 4
+   "v": "light"
   },
   {
-   "id": "a5",
-   "name": "광주",
+   "id": "a5-s1",
+   "name": "광산구",
    "province": "광주",
    "areaCode": "5",
-   "sigunguCode": null,
+   "sigunguCode": "1",
    "ldong": [
-    "12210",
-    "12240",
-    "12270",
-    "12300",
     "12330"
    ],
    "hasData": true,
-   "spotCount": 50,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/54/4118454_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:46:03+09:00",
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/78/3366478_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:54+09:00",
    "center": [
-    35.1538,
-    126.89218
+    35.1766,
+    126.78739
    ],
-   "v": 4
+   "v": "light"
   },
   {
-   "id": "a6",
-   "name": "부산",
+   "id": "a5-s2",
+   "name": "남구",
+   "province": "광주",
+   "areaCode": "5",
+   "sigunguCode": "2",
+   "ldong": [
+    "12270"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/15/4063615_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:23:59+09:00",
+   "center": [
+    35.11786,
+    126.88411
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a5-s3",
+   "name": "동구",
+   "province": "광주",
+   "areaCode": "5",
+   "sigunguCode": "3",
+   "ldong": [
+    "12210"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/17/4109317_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:24:04+09:00",
+   "center": [
+    35.13529,
+    126.94288
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a5-s4",
+   "name": "북구",
+   "province": "광주",
+   "areaCode": "5",
+   "sigunguCode": "4",
+   "ldong": [
+    "12300"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/79/3351379_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:24:08+09:00",
+   "center": [
+    35.1857,
+    126.92329
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a5-s5",
+   "name": "서구",
+   "province": "광주",
+   "areaCode": "5",
+   "sigunguCode": "5",
+   "ldong": [
+    "12240"
+   ],
+   "hasData": true,
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/96/3516496_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:24:14+09:00",
+   "center": [
+    35.14714,
+    126.86137
+   ],
+   "v": "light"
+  },
+  {
+   "id": "a6-s1",
+   "name": "강서구",
    "province": "부산",
    "areaCode": "6",
-   "sigunguCode": null,
+   "sigunguCode": "1",
    "ldong": [
-    "26110",
-    "26140",
-    "26170",
-    "26200",
-    "26230",
-    "26260",
-    "26290",
-    "26320",
-    "26350",
-    "26380",
-    "26410",
-    "26440",
-    "26470",
-    "26500",
-    "26530",
-    "26710"
+    "26440"
    ],
    "hasData": true,
-   "spotCount": 50,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/47/4105447_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:46:20+09:00",
+   "spotCount": 30,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/43/3491943_image3_1.jpg",
+   "updatedAt": "2026-11-03T00:24:19+09:00",
    "center": [
-    35.13568,
-    129.06663
+    35.09197,
+    128.87821
    ],
-   "v": 4
+   "v": "light"
   },
   {
-   "id": "a7",
-   "name": "울산",
+   "id": "a6-s2",
+   "name": "금정구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "2"
+  },
+  {
+   "id": "a6-s3",
+   "name": "기장군",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "3"
+  },
+  {
+   "id": "a6-s4",
+   "name": "남구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "4"
+  },
+  {
+   "id": "a6-s5",
+   "name": "동구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "5"
+  },
+  {
+   "id": "a6-s6",
+   "name": "동래구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "6"
+  },
+  {
+   "id": "a6-s7",
+   "name": "부산진구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "7"
+  },
+  {
+   "id": "a6-s8",
+   "name": "북구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "8"
+  },
+  {
+   "id": "a6-s9",
+   "name": "사상구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "9"
+  },
+  {
+   "id": "a6-s10",
+   "name": "사하구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "10"
+  },
+  {
+   "id": "a6-s11",
+   "name": "서구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "11"
+  },
+  {
+   "id": "a6-s12",
+   "name": "수영구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "12"
+  },
+  {
+   "id": "a6-s13",
+   "name": "연제구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "13"
+  },
+  {
+   "id": "a6-s14",
+   "name": "영도구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "14"
+  },
+  {
+   "id": "a6-s15",
+   "name": "중구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "15"
+  },
+  {
+   "id": "a6-s16",
+   "name": "해운대구",
+   "province": "부산",
+   "areaCode": "6",
+   "sigunguCode": "16"
+  },
+  {
+   "id": "a7-s1",
+   "name": "중구",
    "province": "울산",
    "areaCode": "7",
-   "sigunguCode": null,
-   "ldong": [
-    "31110",
-    "31140",
-    "31170",
-    "31200",
-    "31710"
-   ],
-   "hasData": true,
-   "spotCount": 50,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/62/3055562_image3_1.jpg",
-   "updatedAt": "2026-11-02T04:46:24+09:00",
-   "center": [
-    35.53916,
-    129.31928
-   ],
-   "v": 4
+   "sigunguCode": "1"
   },
   {
-   "id": "a8",
+   "id": "a7-s2",
+   "name": "남구",
+   "province": "울산",
+   "areaCode": "7",
+   "sigunguCode": "2"
+  },
+  {
+   "id": "a7-s3",
+   "name": "동구",
+   "province": "울산",
+   "areaCode": "7",
+   "sigunguCode": "3"
+  },
+  {
+   "id": "a7-s4",
+   "name": "북구",
+   "province": "울산",
+   "areaCode": "7",
+   "sigunguCode": "4"
+  },
+  {
+   "id": "a7-s5",
+   "name": "울주군",
+   "province": "울산",
+   "areaCode": "7",
+   "sigunguCode": "5"
+  },
+  {
+   "id": "a8-s1",
    "name": "세종특별자치시",
    "province": "세종특별자치시",
    "areaCode": "8",
-   "sigunguCode": null,
-   "ldong": [
-    "36110"
-   ],
-   "hasData": true,
-   "spotCount": 18,
-   "image": "https://i.ytimg.com/vi/tJQQJpsIyd8/hqdefault.jpg",
-   "updatedAt": "2026-11-02T04:46:25+09:00",
-   "center": [
-    36.54756,
-    127.25202
-   ],
-   "v": 4
+   "sigunguCode": "1"
   },
   {
    "id": "a31-s1",
