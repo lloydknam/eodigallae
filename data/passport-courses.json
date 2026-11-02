@@ -197,8 +197,8 @@
     },
     {
      "name": "달성 도동서원",
-     "cityId": "a4",
-     "city": "대구"
+     "cityId": "a4-s3",
+     "city": "달성군"
     },
     {
      "name": "안동 도산서원",
@@ -367,13 +367,13 @@
     },
     {
      "name": "종묘",
-     "cityId": "a1",
-     "city": "서울"
+     "cityId": "a1-s23",
+     "city": "종로구"
     },
     {
      "name": "창덕궁",
-     "cityId": "a1",
-     "city": "서울"
+     "cityId": "a1-s23",
+     "city": "종로구"
     },
     {
      "name": "화성 융릉과 건릉",
@@ -382,18 +382,18 @@
     },
     {
      "name": "강화 고인돌 유적",
-     "cityId": "a2",
-     "city": "인천"
+     "cityId": "a2-s1",
+     "city": "강화군"
     },
     {
      "name": "강화 전등사",
-     "cityId": "a2",
-     "city": "인천"
+     "cityId": "a2-s1",
+     "city": "강화군"
     },
     {
      "name": "경복궁",
-     "cityId": "a1",
-     "city": "서울"
+     "cityId": "a1-s23",
+     "city": "종로구"
     },
     {
      "name": "김포 장릉",
@@ -402,13 +402,13 @@
     },
     {
      "name": "한국의집",
-     "cityId": "a1",
-     "city": "서울"
+     "cityId": "a1-s23",
+     "city": "종로구"
     },
     {
      "name": "강화역사박물관",
-     "cityId": "a2",
-     "city": "인천"
+     "cityId": "a2-s1",
+     "city": "강화군"
     }
    ]
   },
