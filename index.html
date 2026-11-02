@@ -71,6 +71,13 @@ img { max-width: 100%; }
 .topbar .sub { color: var(--muted); font-size: 14px; margin-left: auto; white-space: nowrap; }
 .topbar .inner { position: relative; }
 .tb-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
+.menu-btn { flex: none; width: 62px; height: 38px; margin-right: 0; border: 0; border-radius: 12px; background: var(--celadon); color: var(--celadon-ink); display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(18,144,122,.35); -webkit-tap-highlight-color: transparent; }
+.menu-btn svg { width: 26px; height: 26px; }
+.menu-btn:active { transform: scale(.95); }
+.menu-btn:focus-visible { outline: 3px solid var(--celadon-soft); outline-offset: 2px; }
+.menu-btn[aria-expanded="true"] { background: var(--celadon-deep); }
+.menu-drop-top { position: absolute; right: 8px; top: calc(100% - 4px); bottom: auto; }
 /* ── 하단 탭바 ── */
 .bottombar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--surface);
   border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -85,7 +92,7 @@ img { max-width: 100%; }
 .bb-item[aria-current="page"], .bb-item[aria-expanded="true"] { color: var(--celadon); }
 .bb-item:focus-visible { outline: 2px solid var(--celadon); outline-offset: -2px; border-radius: 10px; }
 .bb-more { flex: 1; position: relative; display: flex; }
-.menu-drop { position: absolute; right: -4px; bottom: calc(100% + 10px); z-index: 40; min-width: 230px; padding: 6px; background: var(--surface); border-radius: 16px;
+.menu-drop { position: absolute; right: -4px; bottom: calc(100% + 10px); z-index: 40; min-width: 266px; padding: 6px; background: var(--surface); border-radius: 16px;
   box-shadow: 0 10px 30px rgba(25,31,40,.16), 0 1px 3px rgba(25,31,40,.08); display: grid; }
 .menu-drop a { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: var(--ink); font-size: 15.5px; font-weight: 600; }
 .menu-drop a:hover, .menu-drop a:focus-visible { background: var(--paper); }
@@ -631,7 +638,23 @@ img { max-width: 100%; }
 </style>
 </head>
 <body>
-<header class="topbar"><div class="inner"><div class="tb-main" id="topbar"></div></div></header>
+<header class="topbar"><div class="inner"><div class="tb-main" id="topbar"></div>
+  <button class="menu-btn" id="menu-btn-top" aria-label="전체 메뉴" aria-expanded="false" aria-controls="menu-drop-top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+  <nav class="menu-drop menu-drop-top" id="menu-drop-top" aria-label="전체 메뉴" hidden>
+    <a href="#" data-view="home"><span>🏠</span>홈</a>
+    <a href="#map" data-view="map"><span>📍</span>핫플 지도</a>
+    <a href="#crowd" data-view="crowd"><span>👥</span>인파지도 <em>서울 실시간</em></a>
+    <a href="rail.html"><span>🚆</span>열차정보 <em>지하철·국철</em></a>
+    <a href="#courses" data-view="courses"><span>🏛️</span>국가유산 방문코스 <em>13개 노선</em></a>
+    <a href="#festivals" data-view="festivals"><span>🎪</span>전국 축제 <em>다가오는 행사</em></a>
+    <a href="#cities" data-view="cities"><span>🔍</span>도시 찾기</a>
+    <a href="#me" data-view="me"><span>🧳</span>내 여행 <em>코스·도장깨기</em></a>
+    <hr>
+    <a href="#video"><span>🎬</span>영상 그대로 여행</a>
+    <a href="#report"><span>📮</span>숨은 핫플 제보</a>
+    <a href="#about" data-view="about"><span>📋</span>더보기 <em>앱 정보·방문 통계</em></a>
+  </nav></div></header>
 <main class="wrap" id="app"><p class="loading"><img src="icons/mascot-160.png" alt="">어디냥이 길을 찾는 중이에요…</p></main>
 <footer class="wrap site-foot"><div class="maker"><a class="lab" href="https://lloydknam.github.io/showcase/" target="_blank" rel="noopener" title="Lloyd’s Balcony Lab 프로젝트 모음"><img src="icons/brand/lockup-light.svg" alt="Lloyd's Balcony Lab · with claude · GitHub(@lloydknam)"></a></div></footer>
 <nav class="bottombar" aria-label="하단 메뉴"><div class="bb-inner">
@@ -1208,7 +1231,7 @@ img { max-width: 100%; }
   // ── 메뉴(하단 바): 홈 · 핫플 지도 · 도시 찾기 · 더보기 ──
   const VIEWS = ["map", "crowd", "cities", "about", "me", "courses", "festivals"];
   function setTabbar(view) {
-    document.querySelectorAll(".bb-item[data-view], #menu-drop [data-view]").forEach((b) => {
+    document.querySelectorAll(".bb-item[data-view], #menu-drop [data-view], #menu-drop-top [data-view]").forEach((b) => {
       if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
   }
@@ -2420,14 +2443,19 @@ img { max-width: 100%; }
       </article>`).join("")}</div>`;
   }
 
-  // ── 오른쪽 위 전체 메뉴 ──
-  const menuBtn = document.getElementById("menu-btn"), menuDrop = document.getElementById("menu-drop");
-  const setMenu = (open) => { menuDrop.hidden = !open; menuBtn.setAttribute("aria-expanded", open); };
-  menuBtn.addEventListener("click", (e) => { e.stopPropagation(); setMenu(menuDrop.hidden); });
-  document.addEventListener("click", (e) => { if (!menuDrop.hidden && !e.target.closest("#menu-drop, #menu-btn")) setMenu(false); }, true);
-  menuDrop.addEventListener("click", () => setTimeout(() => setMenu(false)));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menuDrop.hidden) { setMenu(false); menuBtn.focus(); } });
-  window.addEventListener("hashchange", () => setMenu(false));
+  // ── 전체 메뉴(오른쪽 위 햄버거 + 하단 '더보기') ──
+  function wireMenu(btnId, dropId) {
+    const btn = document.getElementById(btnId), drop = document.getElementById(dropId);
+    if (!btn || !drop) return;
+    const setOpen = (open) => { drop.hidden = !open; btn.setAttribute("aria-expanded", open); };
+    btn.addEventListener("click", (e) => { e.stopPropagation(); setOpen(drop.hidden); });
+    document.addEventListener("click", (e) => { if (!drop.hidden && !e.target.closest(`#${dropId}, #${btnId}`)) setOpen(false); }, true);
+    drop.addEventListener("click", () => setTimeout(() => setOpen(false)));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !drop.hidden) { setOpen(false); btn.focus(); } });
+    window.addEventListener("hashchange", () => setOpen(false));
+  }
+  wireMenu("menu-btn-top", "menu-drop-top");
+  wireMenu("menu-btn", "menu-drop");
 
   // 오디오 가이드 버튼 (좌표 또는 검색어로 연다)
   document.addEventListener("click", (e) => {
