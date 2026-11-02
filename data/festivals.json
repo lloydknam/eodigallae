@@ -1,6 +1,6 @@
 {
  "updatedAt": "2026-11-02",
- "count": 152,
+ "count": 156,
  "items": [
   {
    "id": "tour-3481597",
@@ -1098,6 +1098,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-2997830",
+   "title": "제주 반려동물 문화산업 한마당",
+   "start": "20261106",
+   "end": "20261108",
+   "addr": "제주특별자치도 제주시 서광로2길 24 (오라일동)",
+   "tel": "064-711-1002",
+   "lat": 33.4950628705,
+   "lng": 126.5187972389,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/13/4132213_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a39-s4",
+   "city": "제주시",
+   "source": "tour"
+  },
+  {
    "id": "tour-3563389",
    "title": "죽변항 수산물축제",
    "start": "20261106",
@@ -1443,6 +1458,21 @@
    "source": "std"
   },
   {
+   "id": "tour-4142164",
+   "title": "양동 백투더 장(BACK TO THE 장) 홍탁페스타",
+   "start": "20261112",
+   "end": "20261114",
+   "addr": "전남광주통합특별시 서구 천변좌로 238 (양동)",
+   "tel": "062-413-1271",
+   "lat": 35.1538794581,
+   "lng": 126.9025802615,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/65/4142165_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a5-s5",
+   "city": "서구",
+   "source": "tour"
+  },
+  {
    "id": "tour-2995190",
    "title": "누들대전축제",
    "start": "20261113",
@@ -1478,10 +1508,10 @@
    "start": "20261113",
    "end": "20261114",
    "addr": "경상남도 창원시 마산합포구 돝섬1길 275 (월영동)",
-   "tel": "0507-1393-7113",
+   "tel": "02-6953-7101",
    "lat": 35.1782828634,
    "lng": 128.5809535308,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/84/4113384_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/96/4142596_image2_1.jpg",
    "homepage": null,
    "cityId": "a36-s16",
    "city": "창원시",
@@ -1500,6 +1530,21 @@
    "homepage": null,
    "cityId": "a1-s23",
    "city": "종로구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3545306",
+   "title": "포천펫스타",
+   "start": "20261114",
+   "end": "20261114",
+   "addr": "경기도 포천시 신북면 아트밸리로 234",
+   "tel": "0502-1949-0514",
+   "lat": 37.9234466507,
+   "lng": 127.236500949,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/07/4133507_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a31-s29",
+   "city": "포천시",
    "source": "tour"
   },
   {
@@ -1594,7 +1639,7 @@
   },
   {
    "id": "tour-506627",
-   "title": "최남단 방어 축제",
+   "title": "최남단방어축제",
    "start": "20261119",
    "end": "20261122",
    "addr": "제주특별자치도 서귀포시 대정읍 최남단해안로 66",
@@ -2236,6 +2281,21 @@
    "cityId": "a32-s17",
    "city": "화천군",
    "source": "std"
+  },
+  {
+   "id": "tour-1882134",
+   "title": "철원 한탄강 얼음트레킹 축제",
+   "start": "20270116",
+   "end": "20270214",
+   "addr": "강원특별자치도 철원군 동송읍 장흥리 725",
+   "tel": "033-455-7072",
+   "lat": 38.2034447208,
+   "lng": 127.2700362977,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/18/4016918_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a32-s12",
+   "city": "철원군",
+   "source": "tour"
   },
   {
    "id": "std-3350000-2027정월대보름달집태우기행사-20270221",
