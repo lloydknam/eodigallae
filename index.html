@@ -623,6 +623,12 @@ img { max-width: 100%; }
 .fest-search input { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15px; }
 .fest-group { font-size: 14px; margin: 18px 0 8px; }
 .fest-group em { font-style: normal; font-weight: 500; color: var(--muted); font-size: 12px; margin-left: 4px; }
+.fest-map-sec { margin: 14px 0 18px; }
+.fest-map-sec #hotmap { height: min(48vh, 420px); min-height: 260px; }
+.spot.festival-card { flex-direction: row; align-items: stretch; }
+.spot.festival-card .body { flex: 1; min-width: 0; padding: 12px 10px 12px 14px; }
+.spot.festival-card .fthumb { flex: none; width: 84px; margin: 10px 10px 10px 0; border-radius: 10px; overflow: hidden; background: var(--celadon-soft); align-self: center; }
+.spot.festival-card .fthumb img { width: 100%; height: 84px; object-fit: cover; display: block; }
 .audio-btn { margin-top: 8px; padding: 8px 12px; border: 0; border-radius: 10px; background: var(--celadon-soft); color: var(--celadon); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .audio-ov { position: fixed; inset: 0; z-index: 3000; background: rgba(10,20,18,.45); display: flex; align-items: flex-end; justify-content: center; }
 .audio-card { width: min(520px, 100%); max-height: 82vh; overflow: auto; background: var(--paper); color: var(--ink); border-radius: 18px 18px 0 0; padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 30px rgba(0,0,0,.25); }
@@ -648,7 +654,7 @@ img { max-width: 100%; }
     <a href="#crowd" data-view="crowd"><span>👥</span>인파지도 <em>서울 실시간</em></a>
     <a href="rail.html"><span>🚆</span>열차정보 <em>지하철·국철</em></a>
     <a href="#courses" data-view="courses"><span>🏛️</span>국가유산 방문코스 <em>13개 노선</em></a>
-    <a href="#festivals" data-view="festivals"><span>🎪</span>전국 축제 <em>다가오는 행사</em></a>
+    <a href="#festivals" data-view="festivals"><span>🎪</span>축제지도 <em>다가오는 행사</em></a>
     <a href="#cities" data-view="cities"><span>🔍</span>도시 찾기</a>
     <a href="#me" data-view="me"><span>🧳</span>내 여행 <em>코스·도장깨기</em></a>
     <hr>
@@ -2144,11 +2150,43 @@ img { max-width: 100%; }
     });
   }
 
-  // 전국 축제 모아보기 페이지
+  // 전국 축제 지도 위 마커 (진행 중 = 주황, 예정 = 청록)
+  async function renderFestivalMap(items) {
+    const box = document.getElementById("hotmap");
+    if (!box) return;
+    const pts = items.filter((f) => typeof f.lat === "number" && typeof f.lng === "number");
+    if (!pts.length) { const sec = box.closest(".fest-map-sec"); if (sec) sec.hidden = true; return; }
+    try { await loadLeaflet(); } catch { box.innerHTML = `<p class="map-wait">지도를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p>`; return; }
+    if (!document.body.contains(box)) return;
+    box.innerHTML = "";
+    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15, dragging: true })
+      .fitBounds([[33.1, 125.0], [38.6, 130.0]]);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
+    }).addTo(map);
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const css = getComputedStyle(document.documentElement);
+    const teal = css.getPropertyValue("--celadon").trim() || "#12907A";
+    const amber = "#C96F22";
+    for (const f of pts) {
+      const ongoing = f.start <= today && (!f.end || f.end >= today);
+      const color = ongoing ? amber : teal;
+      L.circleMarker([f.lat, f.lng], { radius: 7, color, weight: 2, fillColor: color, fillOpacity: 0.55 })
+        .addTo(map)
+        .bindPopup(`<div class="mpop">
+          ${f.image ? `<img src="${esc(f.image)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+          <b>${esc(f.title)} ${festivalDday(f)}</b>
+          <span>${esc(f.city)}${f.addr ? ` · ${esc(f.addr)}` : ""}</span>
+          <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
+          ${f.homepage ? `<a href="${esc(f.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}</div>`, { maxWidth: 240 });
+    }
+  }
+
+  // 축제지도 — 전국 축제·행사 모아보기 페이지
   async function showFestivalsPage() {
     state.city = null;
-    app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎪 전국 축제</h1>
-      <span class="meta">다가오는 축제와 행사를 한눈에 모았어요</span></section><p class="loading">불러오는 중…</p>`;
+    app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎪 축제지도</h1>
+      <span class="meta">다가오는 축제와 행사를 지도와 목록으로 모았어요</span></section><p class="loading">불러오는 중…</p>`;
     const data = await loadFestivals();
     const items = data.items || [];
     if (!items.length) { app.innerHTML = `<p class="loading">축제 정보를 불러오지 못했어요. 잠시 뒤 다시 해 주세요.</p>`; return; }
@@ -2167,17 +2205,23 @@ img { max-width: 100%; }
             <div class="links"><a href="#${encodeURIComponent(f.cityId)}">${esc(f.city)} 둘러보기 →</a>
               ${f.homepage ? `<a href="${esc(f.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}</div>
           </div>
+          ${f.image ? `<div class="fthumb"><img src="${esc(f.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.fthumb').remove()"></div>` : ""}
         </article>`).join("")}</div>`;
       document.getElementById("fest-list").innerHTML = group("진행 중", filt(ongoing)) + group("다가오는 축제", filt(upcoming))
         || `<p class="loading">검색 결과가 없어요.</p>`;
     };
-    app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎪 전국 축제</h1>
+    app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎪 축제지도</h1>
       <span class="meta">진행 중 ${ongoing.length}건 · 다가오는 축제 ${upcoming.length}건 · ${esc((data.updatedAt || "").slice(0, 10))} 기준</span></section>
+      <section class="weekly map-sec fest-map-sec">
+        <div class="weekly-head"><span class="wk">🟠 진행 중 · 🟢 예정</span></div>
+        <div id="hotmap" class="hotmap" role="region" aria-label="전국 축제 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      </section>
       <div class="fest-search"><input type="search" id="fest-q" placeholder="축제 이름, 지역으로 찾기" aria-label="축제 검색"></div>
       <div id="fest-list"></div>
       <p class="credit">출처: 한국관광공사 TourAPI 축제공연행사정보</p>`;
     render("");
     document.getElementById("fest-q").addEventListener("input", (e) => render(e.target.value));
+    renderFestivalMap(items);
   }
 
   // ── 국가유산 방문코스 (국가유산청 방문 캠페인, 노선 13개) ──
