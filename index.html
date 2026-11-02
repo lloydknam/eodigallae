@@ -12,7 +12,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <style>
 /* Layout: 한 손으로 쓰는 세로 앱. 마스코트 '어디냥'(위치 핀을 꽂은 크림색 고양이)이 브랜드.
    색은 아이콘에서: 청록 바탕, 크림 얼굴, 핀 코럴, 볼터치 핑크. 둥글고 말랑한 카드. */
@@ -30,7 +31,7 @@
   --vermilion: #E4503A;
   --blush: #F7A39A;
   --ochre: #B7791F;
-  --font-display: "Jua", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-display: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --radius: 22px;
   --shadow: 0 1px 3px rgba(25, 31, 40, .04);
@@ -65,7 +66,7 @@ img { max-width: 100%; }
   padding-left: max(12px, env(safe-area-inset-left, 0px));
   padding-right: max(12px, env(safe-area-inset-right, 0px));
 }
-.brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 26px; text-decoration: none; color: var(--celadon); }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 700; font-size: 26px; text-decoration: none; color: var(--celadon); }
 .brand img { width: 36px; height: auto; display: block; }
 .brand img.clerk { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--celadon-soft); box-shadow: 0 1px 4px rgba(25,31,40,.15); }
 .topbar .sub { color: var(--muted); font-size: 14px; margin-left: auto; white-space: nowrap; }
@@ -112,14 +113,14 @@ img { max-width: 100%; }
 }
 .hero-card::before { content: ""; position: absolute; right: -40px; bottom: -60px; width: 220px; height: 220px; border-radius: 50%; background: var(--celadon-soft); pointer-events: none; }
 .hero-card h1 em { font-style: normal; color: var(--celadon); }
-.hero-card h1 { position: relative; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 8.4vw, 40px); line-height: 1.2; margin: 0 0 8px; text-wrap: balance; }
+.hero-card h1 { position: relative; font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 8.4vw, 40px); line-height: 1.2; margin: 0 0 8px; text-wrap: balance; }
 .hero-card p { position: relative; margin: 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
 .hero-card .mascot { position: absolute; right: 6px; bottom: -12px; width: 126px; height: auto; filter: drop-shadow(0 6px 10px rgba(25,31,40,.12)); transform-origin: 50% 90%; }
 @media (prefers-reduced-motion: no-preference) {
   .hero-card .mascot { animation: bob 3.2s ease-in-out infinite; }
   @keyframes bob { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(3deg) translateY(-4px); } }
 }
-.intro h1 { font-family: var(--font-display); font-size: clamp(30px, 8vw, 38px); line-height: 1.3; margin: 0 0 6px; text-wrap: balance; font-weight: 400; }
+.intro h1 { font-family: var(--font-display); font-size: clamp(30px, 8vw, 38px); line-height: 1.3; margin: 0 0 6px; text-wrap: balance; font-weight: 700; }
 .intro p { margin: 0; color: var(--muted); }
 .search { position: relative; margin-top: 18px; }
 .search input {
@@ -143,12 +144,12 @@ img { max-width: 100%; }
 }
 .city-card:hover .art { filter: saturate(1.15); }
 .city-card .body { padding: 10px 12px 12px; display: grid; gap: 2px; }
-.city-card .name { font-family: var(--font-display); font-weight: 400; font-size: 22px; }
+.city-card .name { font-family: var(--font-display); font-weight: 700; font-size: 22px; }
 .city-card .meta { color: var(--muted); font-size: 13.5px; }
 .art {
   position: relative; aspect-ratio: 4 / 3; width: 100%; max-width: 100%; overflow: hidden;
   display: grid; place-items: center; color: rgba(255,255,255,.92);
-  font-family: var(--font-display); font-weight: 400;
+  font-family: var(--font-display); font-weight: 700;
 }
 .art img:not(.glyph) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .art .glyph, .rthumb .rglyph { width: 34%; max-width: 110px; opacity: .9; filter: drop-shadow(0 4px 10px rgba(0,0,0,.15)); }
@@ -160,7 +161,7 @@ img { max-width: 100%; }
 
 .weekly { margin-top: 16px; }
 .weekly-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.weekly-head h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0; display: flex; align-items: center; gap: 6px; }
+.weekly-head h2 { font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; display: flex; align-items: center; gap: 6px; }
 .weekly-head h2 img { width: 38px; height: auto; }
 .weekly-head h2 { gap: 10px !important; }
 .weekly-head .wk { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -172,7 +173,7 @@ img { max-width: 100%; }
 .rthumb img:not(.rglyph) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 .rthumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, transparent 35%, transparent 70%, rgba(0,0,0,.35) 100%); pointer-events: none; }
-.rthumb .no { position: absolute; left: 12px; top: 6px; z-index: 1; font-family: var(--font-display); font-weight: 400; font-size: 38px; line-height: 1.2; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.45); font-variant-numeric: tabular-nums; }
+.rthumb .no { position: absolute; left: 12px; top: 6px; z-index: 1; font-family: var(--font-display); font-weight: 700; font-size: 38px; line-height: 1.2; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.45); font-variant-numeric: tabular-nums; }
 .rthumb .chg { position: absolute; right: 8px; top: 10px; z-index: 1; margin: 0; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,.92); }
 .rplay { position: absolute; right: 8px; bottom: 8px; z-index: 1; width: 30px; height: 30px; border-radius: 50%; background: rgba(10,16,15,.7); color: #fff; display: grid; place-items: center; }
 .rplay svg { width: 13px; height: 13px; }
@@ -181,7 +182,7 @@ img { max-width: 100%; }
 #app.wrap { padding-bottom: 8px !important; }
 .site-foot.wrap { padding-top: 0; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important; }
 .page-head { padding-block: 14px 2px; }
-.page-head h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 8vw, 38px); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+.page-head h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 8vw, 38px); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
 .page-head h1 img { width: 52px; height: auto; }
 .page-head h1 { gap: 12px !important; }
 .page-head p { margin: 0; color: var(--muted); }
@@ -214,10 +215,10 @@ img { max-width: 100%; }
 .stamp-btn.on img { filter: none; }
 .stamp-hero { margin-top: 14px; padding: 20px; border-radius: 24px; color: #fff; display: grid; gap: 8px;
   background: linear-gradient(160deg, #22B79A 0%, #12907A 55%, #0B6E61 100%); box-shadow: var(--shadow); }
-.stamp-count { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); }
+.stamp-count { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); font-weight: 700; }
 .stamp-count b { font-weight: 400; font-size: 64px; line-height: 1; }
 .stamp-count span { font-size: 22px; opacity: .85; }
-.stamp-level { font-family: var(--font-display); font-size: 24px; color: #FFF3DC; display: grid; }
+.stamp-level { font-family: var(--font-display); font-weight: 700; font-size: 24px; color: #FFF3DC; display: grid; }
 .stamp-level small { font-family: var(--font-body); font-size: 14px; color: #fff; opacity: .85; }
 .stamp-bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,.25); overflow: hidden; }
 .stamp-bar span { display: block; height: 100%; background: #FFF3DC; border-radius: 999px; }
@@ -251,7 +252,7 @@ img { max-width: 100%; }
 .plan-actions { display: flex; align-items: center; gap: 14px; margin: 10px 0 6px; flex-wrap: wrap; }
 .plan-city { margin-top: 10px; padding: 12px 12px 2px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
 .plan-city h3 { margin: 0 0 10px; font-size: 18px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-.plan-city h3 a { color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 400; font-size: 22px; }
+.plan-city h3 a { color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 22px; }
 .plan-city h3 small { color: var(--muted); font-weight: 500; font-size: 14px; }
 .plan-note { margin: 4px 0; font-size: 13px; color: var(--muted); }
 .plan-extras { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
@@ -343,7 +344,7 @@ img { max-width: 100%; }
 .hotmap.dark-tiles .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6); }
 .map-wait { margin: 0; padding: 40px 16px; text-align: center; color: var(--muted); }
 .mpin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermilion); color: #fff;
-  font: 400 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+  font: 700 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
 .mpin.top { width: 34px; height: 34px; margin: -2px; font-size: 18px; }
 .mpop { display: grid; gap: 2px; font: 13px/1.35 var(--font-body); color: #1C2422; min-width: 180px; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
@@ -488,7 +489,7 @@ img { max-width: 100%; }
 /* ── 도시 ── */
 .hero { padding-block: 14px 4px; display: grid; gap: 4px; }
 .hero .prov { color: var(--muted); font-size: 13px; letter-spacing: .04em; }
-.hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 9vw, 46px); line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
+.hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 9vw, 46px); line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
 .hero .meta { color: var(--muted); font-size: 13.5px; font-variant-numeric: tabular-nums; }
 .notice {
   margin-top: 12px; padding: 10px 12px; border-radius: 10px; font-size: 13.5px;
@@ -1393,8 +1394,8 @@ img { max-width: 100%; }
     const grad = g.createLinearGradient(0, 0, W * 0.4, H);
     grad.addColorStop(0, "#22B79A"); grad.addColorStop(0.55, "#12907A"); grad.addColorStop(1, "#0B6E61");
     g.fillStyle = grad; g.fillRect(0, 0, W, H);
-    await document.fonts.load('80px "Jua"').catch(() => {});
-    const font = (px) => `${px}px "Jua", "Apple SD Gothic Neo", sans-serif`;
+    await document.fonts.load('700 80px "Pretendard"').catch(() => {});
+    const font = (px) => `700 ${px}px "Pretendard", "Apple SD Gothic Neo", sans-serif`;
     g.fillStyle = "#fff"; g.font = font(64); g.fillText("나의 국내여행 도장깨기", 80, 140);
     g.font = font(220); g.fillText(String(n), 80, 400);
     const w = g.measureText(String(n)).width;

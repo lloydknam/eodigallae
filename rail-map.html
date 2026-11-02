@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#E7EDF1">
 <title>전국 철도 열차지도 | 어디갈래</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
   --bg:#E7EDF1; --land:#F7F8F4; --panel:#FFFFFF; --ink:#12202B; --muted:#586977; --rule:#CFD8DF; --water:#CFE3F1; --signal:#E4372B;
-  --f-display:'Jua','Apple SD Gothic Neo','Malgun Gothic',sans-serif; --f-body:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --f-display:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; --f-body:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){--bg:#0B1218;--land:#17242C;--panel:#16222C;--ink:#E7EEF3;--muted:#93A4B1;--rule:#25323D;--water:#0C2438;color-scheme:dark}
@@ -25,12 +26,12 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex:none}
-.top h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:23px;letter-spacing:-.01em}
+.top h1{margin:0;font-family:var(--f-display);font-weight: 700;font-size:23px;letter-spacing:-.01em}
 .back{color:var(--muted);font-size:12px;text-decoration:none;display:inline-block;margin-bottom:2px}
 .back:hover{color:var(--ink)}
 .sub{margin:2px 0 0;color:var(--muted);font-size:12px}
 .clock{text-align:right;flex:none}
-.clock b{display:block;font:400 30px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.clock b{display:block;font: 700 30px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .clock small{color:var(--muted);font-size:11px}
 
 .ctl{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none;flex-wrap:wrap}
