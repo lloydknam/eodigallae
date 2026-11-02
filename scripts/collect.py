@@ -46,7 +46,8 @@ HUB_BASE = "https://apis.data.go.kr/B551011/LocgoHubTarService1"  # 지자체 �
 YT_SEARCH = "https://www.googleapis.com/youtube/v3/search"
 CLAUDE_URL = "https://api.anthropic.com/v1/messages"
 
-# TourAPI 지역코드 1~8은 특별·광역시/세종 → 시 전체를 하나의 '도시'로 다룬다.
+# TourAPI 지역코드 1~8은 특별·광역시/세종. 예전에는 시 전체를 하나의 '도시'로 다뤘지만
+# 지금은 다른 도와 똑같이 구·군 단위까지 쪼갠다(세종처럼 하위 구역이 없는 곳만 시 전체로 남는다).
 METRO_AREA_CODES = {"1", "2", "3", "4", "5", "6", "7", "8"}
 
 CT_SPOT, CT_CULTURE, CT_FOOD = "12", "14", "39"
@@ -194,17 +195,17 @@ class TourAPI:
 
 
 def build_city_list(api: TourAPI) -> list[dict]:
-    """TourAPI 지역코드로 전국 '도시' 목록 생성: 특별·광역시는 시 단위, 도는 시·군 단위."""
+    """TourAPI 지역코드로 전국 '도시' 목록 생성: 전국 229개 시·군·구 전부 구·군 단위까지 쪼갠다
+    (특별·광역시도 자치구·군 단위). 세종처럼 하위 구역이 없는 곳만 시 전체 1곳으로 남는다."""
     cities = []
     for area in api.get("areaCode2", numOfRows=50):
         acode, aname = str(area["code"]), area["name"]
-        if acode in METRO_AREA_CODES:
+        subs = [sg for sg in api.get("areaCode2", areaCode=acode, numOfRows=100) if sg["name"] not in ABOLISHED]
+        if not subs:   # 세종처럼 하위 구역이 없는 곳
             cities.append({"id": f"a{acode}", "name": aname, "province": aname,
                            "areaCode": acode, "sigunguCode": None})
             continue
-        for sg in api.get("areaCode2", areaCode=acode, numOfRows=100):
-            if sg["name"] in ABOLISHED:
-                continue
+        for sg in subs:
             cities.append({"id": f"a{acode}-s{sg['code']}", "name": sg["name"], "province": aname,
                            "areaCode": acode, "sigunguCode": str(sg["code"])})
     return cities
