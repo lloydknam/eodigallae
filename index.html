@@ -623,6 +623,14 @@ img { max-width: 100%; }
 .fest-search input { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15px; }
 .fest-group { font-size: 14px; margin: 18px 0 8px; }
 .fest-group em { font-style: normal; font-weight: 500; color: var(--muted); font-size: 12px; margin-left: 4px; }
+.fest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.fest-tile { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--surface); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.fest-tile .fthumb { aspect-ratio: 1 / 1; background: var(--celadon-soft); display: grid; place-items: center; font-size: 26px; }
+.fest-tile .fthumb:not(.noimg):empty::before { content: "🎪"; opacity: .55; }
+.fest-tile .fthumb.noimg::before { content: "🎪"; opacity: .55; }
+.fest-tile .fthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fest-tile b { font-size: 12px; font-weight: 700; padding: 6px 7px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.32; min-height: 2.64em; }
+.fest-tile span { font-size: 10.5px; color: var(--muted); padding: 3px 7px 8px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fest-map-sec { margin: 14px 0 18px; }
 .fest-map-sec #hotmap { height: min(48vh, 420px); min-height: 260px; }
 .spot.festival-card { flex-direction: row; align-items: stretch; }
@@ -2135,17 +2143,20 @@ img { max-width: 100%; }
       const items = (data.items || []).filter((f) => !f.end || f.end >= today);
       if (!items.length) { box.hidden = true; return; }
       const sorted = [...items].sort((a, b) => (a.start || "").localeCompare(b.start || ""));
-      const show = sorted.slice(0, 6);
+      const show = sorted.slice(0, 9);
       box.hidden = false;
       box.innerHTML = `<section class="passport-block">
         <div class="weekly-head">
           <h2>${mz("🎪", "tilt")}다가오는 축제</h2>
           <a class="wk-link" href="#festivals">전체 보기 →</a>
         </div>
-        ${show.map((f) => `<a class="passport-route" style="text-decoration:none;color:inherit" href="#${enc(f.cityId)}">
+        <div class="fest-grid">
+        ${show.map((f) => `<a class="fest-tile" href="#${enc(f.cityId)}">
+          <div class="fthumb">${f.image ? `<img src="${esc(f.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.fthumb').classList.add('noimg');this.remove()">` : ""}</div>
           <b>${esc(f.title)} ${festivalDday(f)}</b>
-          <span>${esc(f.city)} · ${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
+          <span>${esc(f.city)} · ${fmtFDate(f.start)}</span>
         </a>`).join("")}
+        </div>
       </section>`;
     });
   }
