@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-02",
- "count": 156,
+ "updatedAt": "2026-11-03",
+ "count": 171,
  "items": [
   {
    "id": "tour-3481597",
@@ -15,6 +15,21 @@
    "homepage": null,
    "cityId": "a1-s24",
    "city": "중구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-2786391",
+   "title": "광안리 M(Marvelous) 드론 라이트쇼",
+   "start": "20260101",
+   "end": "20261231",
+   "addr": "부산광역시 수영구 광안해변로 219 (광안동)",
+   "tel": "051-610-6518",
+   "lat": 35.1537727886,
+   "lng": 129.1185199367,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/12/3518612_image2_1.jpeg",
+   "homepage": null,
+   "cityId": "a6-s12",
+   "city": "수영구",
    "source": "tour"
   },
   {
@@ -453,6 +468,21 @@
    "source": "std"
   },
   {
+   "id": "tour-1032770",
+   "title": "부산국제매직페스티벌",
+   "start": "20260628",
+   "end": "20261226",
+   "addr": "부산광역시 해운대구 수영강변대로 120 (우동)",
+   "tel": "051-626-7002",
+   "lat": 35.1710365257,
+   "lng": 129.1270845116,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/20/4064420_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s16",
+   "city": "해운대구",
+   "source": "tour"
+  },
+  {
    "id": "std-4181000-제38회춘천인형극제-20260731",
    "title": "제38회 춘천인형극제",
    "start": "20260731",
@@ -573,6 +603,21 @@
    "source": "std"
   },
   {
+   "id": "tour-4109305",
+   "title": "달밤에체조 부산 챌린지",
+   "start": "20260919",
+   "end": "20261107",
+   "addr": "부산광역시 부산진구 시민공원로 73 (범전동)",
+   "tel": "070-8065-4592",
+   "lat": 35.1655426683,
+   "lng": 129.0558397915,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/24/4109324_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s7",
+   "city": "부산진구",
+   "source": "tour"
+  },
+  {
    "id": "tour-3355698",
    "title": "한강수계 걷기행사",
    "start": "20260919",
@@ -600,6 +645,21 @@
    "homepage": null,
    "cityId": "a38-s13",
    "city": "여수시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4108258",
+   "title": "2026 한글문화특별기획전 〈세종과 남준〉",
+   "start": "20261009",
+   "end": "20261108",
+   "addr": "세종특별자치시 중앙공원로 60 (세종동)",
+   "tel": "044-850-8952",
+   "lat": 36.4917742203,
+   "lng": 127.2717369032,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/46/4108746_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a8-s1",
+   "city": "세종특별자치시",
    "source": "tour"
   },
   {
@@ -1053,6 +1113,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-2918621",
+   "title": "2026 울산 스타트업 페스타",
+   "start": "20261105",
+   "end": "20261106",
+   "addr": "울산광역시 울주군 울산역로 255",
+   "tel": "070-5080-2804",
+   "lat": 35.5556172556,
+   "lng": 129.1316534328,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/48/4128848_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a7-s5",
+   "city": "울주군",
+   "source": "tour"
+  },
+  {
    "id": "std-B551011-구미라면축제-20261106",
    "title": "구미라면축제",
    "start": "20261106",
@@ -1081,6 +1156,36 @@
    "cityId": "a36-s4",
    "city": "김해시",
    "source": "std"
+  },
+  {
+   "id": "tour-4143368",
+   "title": "부락페스타",
+   "start": "20261106",
+   "end": "20261108",
+   "addr": "부산광역시 금정구 장전로12번길 55 (장전동)",
+   "tel": "051-714-1469",
+   "lat": 35.2301056519,
+   "lng": 129.0881148708,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/69/4143369_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s2",
+   "city": "금정구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3492576",
+   "title": "부산일러스트레이션페어V.7",
+   "start": "20261106",
+   "end": "20261108",
+   "addr": "부산광역시 해운대구 APEC로 55 (우동)",
+   "tel": "02-2602-8602",
+   "lat": 35.1687048508,
+   "lng": 129.1354937071,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/80/4093280_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s16",
+   "city": "해운대구",
+   "source": "tour"
   },
   {
    "id": "tour-3400809",
@@ -1155,6 +1260,21 @@
    "homepage": null,
    "cityId": "a39-s3",
    "city": "서귀포시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-2868776",
+   "title": "2026 영호남 전통시장 박람회",
+   "start": "20261106",
+   "end": "20261108",
+   "addr": "부산광역시 부산진구 시민공원로 73 (범전동)",
+   "tel": "070-8893-2437",
+   "lat": 35.1652367254,
+   "lng": 129.0566779766,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/63/4142163_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s7",
+   "city": "부산진구",
    "source": "tour"
   },
   {
@@ -1263,6 +1383,21 @@
    "source": "tour"
   },
   {
+   "id": "std-6260000-부산불꽃축제-20261107",
+   "title": "부산불꽃축제",
+   "start": "20261107",
+   "end": "20261107",
+   "addr": "부산광역시 수영구 광안해변로 219",
+   "tel": "051-888-5222",
+   "lat": 35.153773,
+   "lng": 129.11852,
+   "image": null,
+   "homepage": "https://festivalbusan.com/",
+   "cityId": "a6-s12",
+   "city": "수영구",
+   "source": "std"
+  },
+  {
    "id": "tour-4116982",
    "title": "산북AI김장문화축제",
    "start": "20261107",
@@ -1350,21 +1485,6 @@
    "homepage": null,
    "cityId": "a35-s15",
    "city": "영천시",
-   "source": "std"
-  },
-  {
-   "id": "std-6260000-부산불꽃축제-20261107",
-   "title": "부산불꽃축제",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "부산광역시 수영구 광안해변로 219",
-   "tel": "051-888-5222",
-   "lat": 35.153773,
-   "lng": 129.11852,
-   "image": null,
-   "homepage": "https://festivalbusan.com/",
-   "cityId": "a6-s1",
-   "city": "강서구",
    "source": "std"
   },
   {
@@ -1518,6 +1638,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4115096",
+   "title": "달려라부산 러닝페스티벌",
+   "start": "20261114",
+   "end": "20261114",
+   "addr": "부산광역시 동구 이순신대로 164 (초량동)",
+   "tel": "070-4659-0409",
+   "lat": 35.1144041132,
+   "lng": 129.0464193172,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/61/4139461_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s5",
+   "city": "동구",
+   "source": "tour"
+  },
+  {
    "id": "tour-4115275",
    "title": "쿼드, 연극의 질문들：〈화염〉",
    "start": "20261114",
@@ -1545,6 +1680,21 @@
    "homepage": null,
    "cityId": "a31-s29",
    "city": "포천시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4137577",
+   "title": "2026 국민건강 리부트 마음건강 걷기대회",
+   "start": "20261114",
+   "end": "20261114",
+   "addr": "세종특별자치시 중앙공원로 60 (세종동)",
+   "tel": "044-251-7113",
+   "lat": 36.4917742203,
+   "lng": 127.2717369032,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/78/4137578_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a8-s1",
+   "city": "세종특별자치시",
    "source": "tour"
   },
   {
@@ -1623,6 +1773,21 @@
    "source": "std"
   },
   {
+   "id": "tour-3016659",
+   "title": "부산종합민속예술제",
+   "start": "20261115",
+   "end": "20261115",
+   "addr": "부산광역시 부산진구 시민공원로 73 (범전동)",
+   "tel": "051-714-1508",
+   "lat": 35.1654110124,
+   "lng": 129.0572087146,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/75/4113275_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s7",
+   "city": "부산진구",
+   "source": "tour"
+  },
+  {
    "id": "tour-4115201",
    "title": "2026 대전 세계태양광총회 개최 기념 온시민에너지걷기한마당",
    "start": "20261115",
@@ -1635,6 +1800,21 @@
    "homepage": null,
    "cityId": "a3-s3",
    "city": "서구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3360113",
+   "title": "게임문화축제",
+   "start": "20261119",
+   "end": "20261122",
+   "addr": "부산광역시 해운대구 APEC로 30 (우동)",
+   "tel": "02-546-7378",
+   "lat": 35.1657825587,
+   "lng": 129.1350266435,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/26/4135926_image2_1.png",
+   "homepage": null,
+   "cityId": "a6-s16",
+   "city": "해운대구",
    "source": "tour"
   },
   {
@@ -1848,6 +2028,21 @@
    "source": "std"
   },
   {
+   "id": "tour-3437916",
+   "title": "크리스마스 빌리지 부산 2026",
+   "start": "20261126",
+   "end": "20261225",
+   "addr": "부산광역시 해운대구 수영강변대로 120 (우동)",
+   "tel": "070-4680-1718",
+   "lat": 35.1709631305,
+   "lng": 129.1270422473,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/49/4130849_image2_1.png",
+   "homepage": null,
+   "cityId": "a6-s16",
+   "city": "해운대구",
+   "source": "tour"
+  },
+  {
    "id": "tour-2853386",
    "title": "2026 단단단페스티벌",
    "start": "20261126",
@@ -1993,8 +2188,8 @@
    "lng": 129.0314651,
    "image": null,
    "homepage": null,
-   "cityId": "a6-s1",
-   "city": "강서구",
+   "cityId": "a6-s15",
+   "city": "중구",
    "source": "std"
   },
   {
@@ -2010,6 +2205,21 @@
    "homepage": null,
    "cityId": "a1-s13",
    "city": "마포구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4095478",
+   "title": "부산브릿지마라톤",
+   "start": "20261206",
+   "end": "20261206",
+   "addr": "부산광역시 해운대구 APEC로 55 (우동)",
+   "tel": "070-4111-5620",
+   "lat": 35.1690637155,
+   "lng": 129.1360182683,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/64/4095564_image2_1.png",
+   "homepage": null,
+   "cityId": "a6-s16",
+   "city": "해운대구",
    "source": "tour"
   },
   {
@@ -2158,8 +2368,8 @@
    "lng": 129.032278,
    "image": null,
    "homepage": "https://festivalbusan.com/",
-   "cityId": "a6-s1",
-   "city": "강서구",
+   "cityId": "a6-s15",
+   "city": "중구",
    "source": "std"
   },
   {
@@ -2221,6 +2431,21 @@
    "cityId": "a34-s4",
    "city": "당진시",
    "source": "std"
+  },
+  {
+   "id": "tour-386053",
+   "title": "평창송어축제",
+   "start": "20270101",
+   "end": "20270131",
+   "addr": "강원특별자치도 평창군 진부면 경강로 3562",
+   "tel": "033-336-4000",
+   "lat": 37.633179513,
+   "lng": 128.5569912325,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/81/4002581_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a32-s15",
+   "city": "평창군",
+   "source": "tour"
   },
   {
    "id": "std-3430000-해맞이축제-20270101",
@@ -2308,8 +2533,8 @@
    "lng": 129.0924585,
    "image": null,
    "homepage": null,
-   "cityId": "a36-s10",
-   "city": "양산시",
+   "cityId": "a6-s2",
+   "city": "금정구",
    "source": "std"
   },
   {
