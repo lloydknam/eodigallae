@@ -354,9 +354,9 @@ img { max-width: 100%; }
 .hotmap .leaflet-tile-pane { filter: saturate(.75) brightness(1.03); }
 .hotmap.dark-tiles .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6); }
 .map-wait { margin: 0; padding: 40px 16px; text-align: center; color: var(--muted); }
-.mpin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--vermilion); color: #fff;
-  font: 700 16px/1 var(--font-display); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
-.mpin.top { width: 34px; height: 34px; margin: -2px; font-size: 18px; }
+.mpin { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--vermilion); color: #fff;
+  font: 700 10.5px/1 var(--font-display); border: 1.5px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+.mpin.top { width: 24px; height: 24px; margin: -2px; font-size: 12px; }
 .mpop { display: grid; gap: 2px; font: 13px/1.35 var(--font-body); color: #1C2422; min-width: 180px; }
 .mpop img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
 .mpop b { font-size: var(--fs-body); }
@@ -1521,15 +1521,15 @@ img { max-width: 100%; }
     const css = getComputedStyle(document.documentElement);
     const teal = css.getPropertyValue("--celadon").trim() || "#12907A";
     for (const c of mapData.cities) {
-      const r = 10 + 30 * Math.sqrt((c.views || 0) / maxV);
-      L.circleMarker([c.lat, c.lng], { radius: r, color: teal, weight: 2, fillColor: teal, fillOpacity: 0.28 })
+      const r = 5 + 13 * Math.sqrt((c.views || 0) / maxV);
+      L.circleMarker([c.lat, c.lng], { radius: r, color: teal, weight: 1.5, fillColor: teal, fillOpacity: 0.22 })
         .addTo(map)
         .bindPopup(`<div class="mpop"><b>${esc(c.name)}</b><span>최근 6개월 영상 조회 ${fmtViews(c.views || 0)}회</span>
           ${c.top.length ? `<span>요즘 뜨는 곳: ${c.top.map(esc).join(", ")}</span>` : ""}
           <a href="#${enc(c.id)}" data-city="${esc(c.id)}">도시 보기 →</a></div>`);
     }
     const pins = mapData.spots.map((s, i) => {
-      const icon = L.divIcon({ className: "", iconSize: [30, 30], iconAnchor: [15, 15],
+      const icon = L.divIcon({ className: "", iconSize: [20, 20], iconAnchor: [10, 10],
         html: `<span class="mpin${i < 3 ? " top" : ""}">${i + 1}</span>` });
       return L.marker([s.lat, s.lng], { icon, zIndexOffset: 1000 - i, title: s.name })
         .bindPopup(`<div class="mpop">
@@ -1540,9 +1540,9 @@ img { max-width: 100%; }
           <a href="#${enc(s.cityId)}" data-city="${esc(s.cityId)}">도시 보기 →</a></span></div>`, { maxWidth: 240 });
     });
     const layer = L.layerGroup().addTo(map);
-    const sync = () => {   // 멀리서는 상위 15곳만, 확대하면 60곳 전부
+    const sync = () => {   // 멀리서도 상위 50곳까지, 확대하면 전부(최대 60곳)
       layer.clearLayers();
-      const n = map.getZoom() >= 9 ? pins.length : 15;
+      const n = map.getZoom() >= 9 ? pins.length : Math.min(50, pins.length);
       pins.slice(0, n).forEach((m) => layer.addLayer(m));
     };
     map.on("zoomend", sync);
