@@ -642,8 +642,6 @@ img { max-width: 100%; }
 .passport-block .fest-tile { background: var(--paper); box-shadow: none; border: 1px solid var(--line); }
 .fest-map-sec { margin: 14px 0 18px; }
 .fest-map-sec #hotmap { height: min(48vh, 420px); min-height: 260px; }
-#city-hotmap { aspect-ratio: 4 / 3; max-height: 42vh; margin: 0 0 14px; }
-.sketch #course-hotmap { aspect-ratio: 4 / 3; max-height: 42vh; }
 .spot.festival-card { flex-direction: row; align-items: stretch; }
 .spot.festival-card .body { flex: 1; min-width: 0; padding: 12px 10px 12px 14px; }
 .spot.festival-card .fthumb { flex: none; width: 84px; margin: 10px 10px 10px 0; border-radius: 10px; overflow: hidden; background: var(--celadon-soft); align-self: center; }
@@ -1512,11 +1510,10 @@ img { max-width: 100%; }
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15,
       dragging: true })
       .fitBounds([[33.1, 125.0], [38.6, 130.0]]);
-    // 바탕지도: 위키미디어 지도 타일(OSM 데이터 기반, 키 불필요, 출처 표시 필수).
-    // tile.openstreetmap.org → CARTO → Esri 순으로 모두 같은 파랑·노랑 차단 타일을 내려보내 위키미디어로 교체함. 어두운 모드는 색을 뒤집어 맞춘다.
-    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
+    // 바탕지도: 오픈스트리트맵 공식 타일 (키 불필요, 출처 표시 필수). 어두운 모드는 색을 뒤집어 맞춘다.
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: 'Wikimedia maps | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
     }).addTo(map);
     box.classList.toggle("dark-tiles", dark);
     const maxV = Math.max(...mapData.cities.map((c) => c.views || 0), 1);
@@ -1679,8 +1676,8 @@ img { max-width: 100%; }
     box.innerHTML = "";
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, minZoom: 10, maxZoom: 16, dragging: true });
     map.on("zoomstart", () => map.closePopup()); // 확대·축소 버튼을 누르면 열린 장소 팝업 닫기
-    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19, attribution: 'Wikimedia maps | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>',
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자 · <a href="https://data.seoul.go.kr" target="_blank" rel="noopener">data.seoul.go.kr</a>',
     }).addTo(map);
     const ps = liveData.places.filter((p) => p.lat != null);
     const maxP = Math.max(...ps.map((p) => p.max || 0), 1);
@@ -2192,8 +2189,8 @@ img { max-width: 100%; }
     const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 15, dragging: true })
       .fitBounds([[33.1, 125.0], [38.6, 130.0]]);
     map.setZoom(map.getZoom() + 2);   // 전국이 다 보이는 기본 줌보다 두 단계 더 확대해서 시작
-    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19, attribution: 'Wikimedia maps | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
     }).addTo(map);
     const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const css = getComputedStyle(document.documentElement);
@@ -2210,36 +2207,6 @@ img { max-width: 100%; }
           <span>${esc(f.city)}${f.addr ? ` · ${esc(f.addr)}` : ""}</span>
           <span>${fmtFDate(f.start)}${f.end && f.end !== f.start ? ` ~ ${fmtFDate(f.end)}` : ""}</span>
           ${f.homepage ? `<a href="${esc(f.homepage)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}</div>`, { maxWidth: 240 });
-    }
-  }
-
-  // 도시 상세 '관광지' 탭 위 지도: 그 도시 관광지만 모아 보여준다 (요즘 뜨는 곳 = 주황, 그 외 = 청록)
-  async function renderCitySpotMap(d) {
-    const box = document.getElementById("city-hotmap");
-    if (!box || !d) return;
-    const pts = d.spots.filter((s) => typeof s.lat === "number" && typeof s.lng === "number");
-    if (!pts.length) { box.hidden = true; return; }
-    try { await loadLeaflet(); } catch { box.innerHTML = `<p class="map-wait">지도를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p>`; return; }
-    if (!document.body.contains(box) || state.city !== d || state.tab !== "spots") return;
-    box.innerHTML = "";
-    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 18, dragging: true });
-    if (pts.length === 1) map.setView([pts[0].lat, pts[0].lng], 14);
-    else map.fitBounds(pts.map((p) => [p.lat, p.lng]), { padding: [24, 24] });
-    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19, attribution: 'Wikimedia maps | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
-    }).addTo(map);
-    const css = getComputedStyle(document.documentElement);
-    const teal = css.getPropertyValue("--celadon").trim() || "#12907A";
-    const amber = "#C96F22";
-    for (const s of pts) {
-      const color = s.hot ? amber : teal;
-      L.circleMarker([s.lat, s.lng], { radius: 7, color, weight: 2, fillColor: color, fillOpacity: 0.55 })
-        .addTo(map)
-        .bindPopup(`<div class="mpop">
-          ${s.image ? `<img src="${esc(s.image)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
-          <b>${esc(s.name)}</b>
-          ${s.cat ? `<span>${esc(s.cat)}</span>` : ""}
-          <div class="mlinks"><a href="${kakaoPin(s)}" target="_blank" rel="noopener">지도 ↗</a></div></div>`, { maxWidth: 220 });
     }
   }
 
@@ -2355,20 +2322,18 @@ img { max-width: 100%; }
 
   function renderPanel() {
     const p = document.getElementById("panel");
-    if (state.tab === "course") { p.innerHTML = coursePanel(); renderCourseMap(lastCourseStops); }
-    else if (state.tab === "spots") { p.innerHTML = spotsPanel(); renderCitySpotMap(state.city); }
+    if (state.tab === "course") p.innerHTML = coursePanel();
+    else if (state.tab === "spots") p.innerHTML = spotsPanel();
     else p.innerHTML = foodPanel();
   }
 
   // 코스 패널: 노선도 + 동선 스케치
-  let lastCourseStops = null;
   function coursePanel() {
     const d = state.city;
-    if (!d.courses.length) { lastCourseStops = null; return `<div class="empty-card"><h4>아직 추천 코스가 없어요</h4><p>관광지 탭에서 가고 싶은 곳을 먼저 둘러보세요.</p></div>`; }
+    if (!d.courses.length) return `<div class="empty-card"><h4>아직 추천 코스가 없어요</h4><p>관광지 탭에서 가고 싶은 곳을 먼저 둘러보세요.</p></div>`;
     const c = d.courses[Math.min(state.course, d.courses.length - 1)];
     const day = c.days[Math.min(state.day, c.days.length - 1)];
     const stops = resolveStops(day.stops);
-    lastCourseStops = stops;
     return `
       <div class="course-pick" role="group" aria-label="코스">${d.courses.map((x, i) =>
         `<button class="chip" data-course="${i}" aria-pressed="${i === state.course}">${esc(x.title)}</button>`).join("")}</div>
@@ -2377,7 +2342,7 @@ img { max-width: 100%; }
         `<button data-day="${i}" aria-pressed="${i === state.day}">${esc(x.label)}</button>`).join("")}</div>` : ""}
       <div class="course-grid">
         <ol class="line">${lineHTML(stops)}</ol>
-        ${courseMapHTML(stops)}
+        ${sketchHTML(stops)}
       </div>`;
   }
 
@@ -2444,53 +2409,39 @@ img { max-width: 100%; }
     return html;
   }
 
-  // 코스 지도 틀: 실제 지도는 renderCourseMap()이 Leaflet으로 채운다
-  function courseMapHTML(stops) {
+  // 동선 스케치: 위경도를 화면 좌표로 바로 투영한 SVG (지도 타일 없이 동선의 모양만)
+  function sketchHTML(stops) {
     const pts = []; const seen = new Set();
     let n = 0;
     for (const s of stops) {
       if (s.kind === "spot") { n++; if (!seen.has(s.spot.id)) { seen.add(s.spot.id); pts.push({ ...s.spot, n }); } }
     }
     if (pts.length < 2) return "";
+    const W = 240, H = 200, pad = 22;
     const lat0 = pts.reduce((a, p) => a + p.lat, 0) / pts.length;
     const k = Math.cos(lat0 * Math.PI / 180);
     const xs = pts.map((p) => p.lng * k), ys = pts.map((p) => p.lat);
     const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const span = Math.max(maxX - minX, maxY - minY, 0.002);
+    const sc = Math.min((W - pad * 2) / Math.max(maxX - minX, span * 0.35), (H - pad * 2) / Math.max(maxY - minY, span * 0.35));
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    const P = pts.map((p) => ({ x: W / 2 + (p.lng * k - cx) * sc, y: H / 2 - (p.lat - cy) * sc, n: p.n, name: p.name }));
     const spanKm = km({ lat: minY, lng: minX / k }, { lat: maxY, lng: maxX / k });
+    const grid = [];
+    for (let gx = 20; gx < W; gx += 20) grid.push(`<line x1="${gx}" y1="0" x2="${gx}" y2="${H}"/>`);
+    for (let gy = 20; gy < H; gy += 20) grid.push(`<line x1="0" y1="${gy}" x2="${W}" y2="${gy}"/>`);
     const first = pts[0], last = pts[pts.length - 1];
     return `<figure class="sketch" style="margin:0">
-      <div id="course-hotmap" class="hotmap" role="region" aria-label="코스 동선 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="코스 동선 스케치">
+        <g stroke="var(--line)" stroke-width="1" fill="none">${grid.join("")}</g>
+        <polyline points="${P.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ")}" fill="none" stroke="var(--celadon)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${P.map((p) => `<g><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9" fill="var(--surface)" stroke="var(--celadon)" stroke-width="3"/>
+          <text x="${p.x.toFixed(1)}" y="${(p.y + 3.6).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink)" font-family="IBM Plex Sans KR, sans-serif">${p.n}</text></g>`).join("")}
+        <text x="${W - 6}" y="14" text-anchor="end" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans KR, sans-serif">N ↑</text>
+      </svg>
       <figcaption class="cap"><span>동선 범위 약 ${fmtKm(spanKm)}</span>
         <a href="${kakaoRoute(first, last)}" target="_blank" rel="noopener">카카오맵으로 보기 ↗</a></figcaption>
     </figure>`;
-  }
-
-  // 코스 지도: 번호 핀 + 동선(폴리라인)을 얹은 실제 지도
-  async function renderCourseMap(stops) {
-    const box = document.getElementById("course-hotmap");
-    if (!box || !stops) return;
-    const pts = []; const seen = new Set();
-    let n = 0;
-    for (const s of stops) {
-      if (s.kind === "spot") { n++; if (!seen.has(s.spot.id)) { seen.add(s.spot.id); pts.push({ ...s.spot, n }); } }
-    }
-    if (pts.length < 2) { box.hidden = true; return; }
-    try { await loadLeaflet(); } catch { box.innerHTML = `<p class="map-wait">지도를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p>`; return; }
-    if (!document.body.contains(box) || state.tab !== "course" || lastCourseStops !== stops) return;
-    box.innerHTML = "";
-    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 18, dragging: true })
-      .fitBounds(pts.map((p) => [p.lat, p.lng]), { padding: [28, 28] });
-    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19, attribution: 'Wikimedia maps | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
-    }).addTo(map);
-    const teal = getComputedStyle(document.documentElement).getPropertyValue("--celadon").trim() || "#12907A";
-    L.polyline(pts.map((p) => [p.lat, p.lng]), { color: teal, weight: 3.5, opacity: .85, lineJoin: "round" }).addTo(map);
-    for (const p of pts) {
-      const icon = L.divIcon({ className: "", iconSize: [20, 20], iconAnchor: [10, 10], html: `<span class="mpin">${p.n}</span>` });
-      L.marker([p.lat, p.lng], { icon, title: p.name, zIndexOffset: 1000 - p.n })
-        .addTo(map)
-        .bindPopup(`<div class="mpop"><b>${p.n}. ${esc(p.name)}</b></div>`);
-    }
   }
 
   // 관광지 패널: 사진을 누르면 영상으로
@@ -2505,10 +2456,7 @@ img { max-width: 100%; }
         <button class="chip" data-sort="hot" aria-pressed="${sort === "hot"}">요즘 뜨는 순</button>
         <button class="chip" data-sort="rank" aria-pressed="${sort === "rank"}">대표 명소 순</button></div>
       ${sort === "hot" ? `<p class="course-summary" style="margin:-4px 0 14px">최근 6개월 유튜브 여행 영상에 많이 나오고 많이 본 곳 순서예요.</p>` : ""}` : "";
-    const mapSec = d.spots.some((s) => typeof s.lat === "number" && typeof s.lng === "number")
-      ? `<div id="city-hotmap" class="hotmap" role="region" aria-label="${esc(d.name)} 관광지 지도"><p class="map-wait">지도를 불러오는 중…</p></div>`
-      : "";
-    return `${mapSec}${toggle}<div class="spots">${list.map((s) => {
+    return `${toggle}<div class="spots">${list.map((s) => {
       const v = s.videos || [];
       const href = v[0] ? ytWatch(v[0].id) : ytSearch(d.name, s.name);
       const foods = (s.foods || []).map((id) => d.foodMap.get(id)).filter(Boolean);
