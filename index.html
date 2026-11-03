@@ -643,6 +643,7 @@ img { max-width: 100%; }
 .fest-map-sec { margin: 14px 0 18px; }
 .fest-map-sec #hotmap { height: min(48vh, 420px); min-height: 260px; }
 #city-hotmap { aspect-ratio: 4 / 3; max-height: 42vh; margin: 0 0 14px; }
+.sketch #course-hotmap { aspect-ratio: 4 / 3; max-height: 42vh; }
 .spot.festival-card { flex-direction: row; align-items: stretch; }
 .spot.festival-card .body { flex: 1; min-width: 0; padding: 12px 10px 12px 14px; }
 .spot.festival-card .fthumb { flex: none; width: 84px; margin: 10px 10px 10px 0; border-radius: 10px; overflow: hidden; background: var(--celadon-soft); align-self: center; }
@@ -2353,18 +2354,20 @@ img { max-width: 100%; }
 
   function renderPanel() {
     const p = document.getElementById("panel");
-    if (state.tab === "course") p.innerHTML = coursePanel();
+    if (state.tab === "course") { p.innerHTML = coursePanel(); renderCourseMap(lastCourseStops); }
     else if (state.tab === "spots") { p.innerHTML = spotsPanel(); renderCitySpotMap(state.city); }
     else p.innerHTML = foodPanel();
   }
 
   // 코스 패널: 노선도 + 동선 스케치
+  let lastCourseStops = null;
   function coursePanel() {
     const d = state.city;
-    if (!d.courses.length) return `<div class="empty-card"><h4>아직 추천 코스가 없어요</h4><p>관광지 탭에서 가고 싶은 곳을 먼저 둘러보세요.</p></div>`;
+    if (!d.courses.length) { lastCourseStops = null; return `<div class="empty-card"><h4>아직 추천 코스가 없어요</h4><p>관광지 탭에서 가고 싶은 곳을 먼저 둘러보세요.</p></div>`; }
     const c = d.courses[Math.min(state.course, d.courses.length - 1)];
     const day = c.days[Math.min(state.day, c.days.length - 1)];
     const stops = resolveStops(day.stops);
+    lastCourseStops = stops;
     return `
       <div class="course-pick" role="group" aria-label="코스">${d.courses.map((x, i) =>
         `<button class="chip" data-course="${i}" aria-pressed="${i === state.course}">${esc(x.title)}</button>`).join("")}</div>
@@ -2373,7 +2376,7 @@ img { max-width: 100%; }
         `<button data-day="${i}" aria-pressed="${i === state.day}">${esc(x.label)}</button>`).join("")}</div>` : ""}
       <div class="course-grid">
         <ol class="line">${lineHTML(stops)}</ol>
-        ${sketchHTML(stops)}
+        ${courseMapHTML(stops)}
       </div>`;
   }
 
@@ -2440,39 +2443,53 @@ img { max-width: 100%; }
     return html;
   }
 
-  // 동선 스케치: 위경도를 화면 좌표로 바로 투영한 SVG (지도 타일 없이 동선의 모양만)
-  function sketchHTML(stops) {
+  // 코스 지도 틀: 실제 지도는 renderCourseMap()이 Leaflet으로 채운다
+  function courseMapHTML(stops) {
     const pts = []; const seen = new Set();
     let n = 0;
     for (const s of stops) {
       if (s.kind === "spot") { n++; if (!seen.has(s.spot.id)) { seen.add(s.spot.id); pts.push({ ...s.spot, n }); } }
     }
     if (pts.length < 2) return "";
-    const W = 240, H = 200, pad = 22;
     const lat0 = pts.reduce((a, p) => a + p.lat, 0) / pts.length;
     const k = Math.cos(lat0 * Math.PI / 180);
     const xs = pts.map((p) => p.lng * k), ys = pts.map((p) => p.lat);
     const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-    const span = Math.max(maxX - minX, maxY - minY, 0.002);
-    const sc = Math.min((W - pad * 2) / Math.max(maxX - minX, span * 0.35), (H - pad * 2) / Math.max(maxY - minY, span * 0.35));
-    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
-    const P = pts.map((p) => ({ x: W / 2 + (p.lng * k - cx) * sc, y: H / 2 - (p.lat - cy) * sc, n: p.n, name: p.name }));
     const spanKm = km({ lat: minY, lng: minX / k }, { lat: maxY, lng: maxX / k });
-    const grid = [];
-    for (let gx = 20; gx < W; gx += 20) grid.push(`<line x1="${gx}" y1="0" x2="${gx}" y2="${H}"/>`);
-    for (let gy = 20; gy < H; gy += 20) grid.push(`<line x1="0" y1="${gy}" x2="${W}" y2="${gy}"/>`);
     const first = pts[0], last = pts[pts.length - 1];
     return `<figure class="sketch" style="margin:0">
-      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="코스 동선 스케치">
-        <g stroke="var(--line)" stroke-width="1" fill="none">${grid.join("")}</g>
-        <polyline points="${P.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ")}" fill="none" stroke="var(--celadon)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
-        ${P.map((p) => `<g><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9" fill="var(--surface)" stroke="var(--celadon)" stroke-width="3"/>
-          <text x="${p.x.toFixed(1)}" y="${(p.y + 3.6).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink)" font-family="IBM Plex Sans KR, sans-serif">${p.n}</text></g>`).join("")}
-        <text x="${W - 6}" y="14" text-anchor="end" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans KR, sans-serif">N ↑</text>
-      </svg>
+      <div id="course-hotmap" class="hotmap" role="region" aria-label="코스 동선 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
       <figcaption class="cap"><span>동선 범위 약 ${fmtKm(spanKm)}</span>
         <a href="${kakaoRoute(first, last)}" target="_blank" rel="noopener">카카오맵으로 보기 ↗</a></figcaption>
     </figure>`;
+  }
+
+  // 코스 지도: 번호 핀 + 동선(폴리라인)을 얹은 실제 지도
+  async function renderCourseMap(stops) {
+    const box = document.getElementById("course-hotmap");
+    if (!box || !stops) return;
+    const pts = []; const seen = new Set();
+    let n = 0;
+    for (const s of stops) {
+      if (s.kind === "spot") { n++; if (!seen.has(s.spot.id)) { seen.add(s.spot.id); pts.push({ ...s.spot, n }); } }
+    }
+    if (pts.length < 2) { box.hidden = true; return; }
+    try { await loadLeaflet(); } catch { box.innerHTML = `<p class="map-wait">지도를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p>`; return; }
+    if (!document.body.contains(box) || state.tab !== "course" || lastCourseStops !== stops) return;
+    box.innerHTML = "";
+    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 18, dragging: true })
+      .fitBounds(pts.map((p) => [p.lat, p.lng]), { padding: [28, 28] });
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
+    }).addTo(map);
+    const teal = getComputedStyle(document.documentElement).getPropertyValue("--celadon").trim() || "#12907A";
+    L.polyline(pts.map((p) => [p.lat, p.lng]), { color: teal, weight: 3.5, opacity: .85, lineJoin: "round" }).addTo(map);
+    for (const p of pts) {
+      const icon = L.divIcon({ className: "", iconSize: [20, 20], iconAnchor: [10, 10], html: `<span class="mpin">${p.n}</span>` });
+      L.marker([p.lat, p.lng], { icon, title: p.name, zIndexOffset: 1000 - p.n })
+        .addTo(map)
+        .bindPopup(`<div class="mpop"><b>${p.n}. ${esc(p.name)}</b></div>`);
+    }
   }
 
   // 관광지 패널: 사진을 누르면 영상으로
