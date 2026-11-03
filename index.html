@@ -642,6 +642,7 @@ img { max-width: 100%; }
 .passport-block .fest-tile { background: var(--paper); box-shadow: none; border: 1px solid var(--line); }
 .fest-map-sec { margin: 14px 0 18px; }
 .fest-map-sec #hotmap { height: min(48vh, 420px); min-height: 260px; }
+#city-hotmap { aspect-ratio: 4 / 3; max-height: 42vh; margin: 0 0 14px; }
 .spot.festival-card { flex-direction: row; align-items: stretch; }
 .spot.festival-card .body { flex: 1; min-width: 0; padding: 12px 10px 12px 14px; }
 .spot.festival-card .fthumb { flex: none; width: 84px; margin: 10px 10px 10px 0; border-radius: 10px; overflow: hidden; background: var(--celadon-soft); align-self: center; }
@@ -2210,6 +2211,36 @@ img { max-width: 100%; }
     }
   }
 
+  // 도시 상세 '관광지' 탭 위 지도: 그 도시 관광지만 모아 보여준다 (요즘 뜨는 곳 = 주황, 그 외 = 청록)
+  async function renderCitySpotMap(d) {
+    const box = document.getElementById("city-hotmap");
+    if (!box || !d) return;
+    const pts = d.spots.filter((s) => typeof s.lat === "number" && typeof s.lng === "number");
+    if (!pts.length) { box.hidden = true; return; }
+    try { await loadLeaflet(); } catch { box.innerHTML = `<p class="map-wait">지도를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p>`; return; }
+    if (!document.body.contains(box) || state.city !== d || state.tab !== "spots") return;
+    box.innerHTML = "";
+    const map = L.map(box, { zoomControl: true, scrollWheelZoom: false, attributionControl: true, minZoom: 6, maxZoom: 18, dragging: true });
+    if (pts.length === 1) map.setView([pts[0].lat, pts[0].lng], 14);
+    else map.fitBounds(pts.map((p) => [p.lat, p.lng]), { padding: [24, 24] });
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
+    }).addTo(map);
+    const css = getComputedStyle(document.documentElement);
+    const teal = css.getPropertyValue("--celadon").trim() || "#12907A";
+    const amber = "#C96F22";
+    for (const s of pts) {
+      const color = s.hot ? amber : teal;
+      L.circleMarker([s.lat, s.lng], { radius: 7, color, weight: 2, fillColor: color, fillOpacity: 0.55 })
+        .addTo(map)
+        .bindPopup(`<div class="mpop">
+          ${s.image ? `<img src="${esc(s.image)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+          <b>${esc(s.name)}</b>
+          ${s.cat ? `<span>${esc(s.cat)}</span>` : ""}
+          <div class="mlinks"><a href="${kakaoPin(s)}" target="_blank" rel="noopener">지도 ↗</a></div></div>`, { maxWidth: 220 });
+    }
+  }
+
   // 축제지도 — 전국 축제·행사 모아보기 페이지
   async function showFestivalsPage() {
     state.city = null;
@@ -2323,7 +2354,7 @@ img { max-width: 100%; }
   function renderPanel() {
     const p = document.getElementById("panel");
     if (state.tab === "course") p.innerHTML = coursePanel();
-    else if (state.tab === "spots") p.innerHTML = spotsPanel();
+    else if (state.tab === "spots") { p.innerHTML = spotsPanel(); renderCitySpotMap(state.city); }
     else p.innerHTML = foodPanel();
   }
 
@@ -2456,7 +2487,10 @@ img { max-width: 100%; }
         <button class="chip" data-sort="hot" aria-pressed="${sort === "hot"}">요즘 뜨는 순</button>
         <button class="chip" data-sort="rank" aria-pressed="${sort === "rank"}">대표 명소 순</button></div>
       ${sort === "hot" ? `<p class="course-summary" style="margin:-4px 0 14px">최근 6개월 유튜브 여행 영상에 많이 나오고 많이 본 곳 순서예요.</p>` : ""}` : "";
-    return `${toggle}<div class="spots">${list.map((s) => {
+    const mapSec = d.spots.some((s) => typeof s.lat === "number" && typeof s.lng === "number")
+      ? `<div id="city-hotmap" class="hotmap" role="region" aria-label="${esc(d.name)} 관광지 지도"><p class="map-wait">지도를 불러오는 중…</p></div>`
+      : "";
+    return `${mapSec}${toggle}<div class="spots">${list.map((s) => {
       const v = s.videos || [];
       const href = v[0] ? ytWatch(v[0].id) : ytSearch(d.name, s.name);
       const foods = (s.foods || []).map((id) => d.foodMap.get(id)).filter(Boolean);
