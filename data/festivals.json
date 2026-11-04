@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-03",
- "count": 171,
+ "updatedAt": "2026-11-04",
+ "count": 173,
  "items": [
   {
    "id": "tour-3481597",
@@ -1353,21 +1353,6 @@
    "source": "std"
   },
   {
-   "id": "tour-3401306",
-   "title": "김포 해병대 문화축제 in 대명항",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "경기도 김포시 대곶면 대명항1로 110-36",
-   "tel": "031-980-5110",
-   "lat": 37.6400140918,
-   "lng": 126.539451725,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/71/4131171_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a31-s8",
-   "city": "김포시",
-   "source": "tour"
-  },
-  {
    "id": "tour-4127761",
    "title": "마산야외도서관 [오롯이 마도로]",
    "start": "20261107",
@@ -1455,6 +1440,21 @@
    "homepage": null,
    "cityId": "a31-s16",
    "city": "안성시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4144229",
+   "title": "MATERIALISM｜비야케 잉겔스 그룹 기획 전시",
+   "start": "20261107",
+   "end": "20270228",
+   "addr": "서울특별시 중구 세종대로 119 (태평로1가)",
+   "tel": "070-7178-5840",
+   "lat": 37.5668837502,
+   "lng": 126.9767024196,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/31/4144231_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s24",
+   "city": "중구",
    "source": "tour"
   },
   {
@@ -1695,6 +1695,21 @@
    "homepage": null,
    "cityId": "a8-s1",
    "city": "세종특별자치시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3557873",
+   "title": "2026 은행나무길 거리예술제  〈아트 스트리트：Art Street〉",
+   "start": "20261114",
+   "end": "20261115",
+   "addr": "충청남도 아산시 염치읍 은행나무길 293",
+   "tel": "041-540-2428",
+   "lat": 36.8005410219,
+   "lng": 127.0187977731,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/37/4144137_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a34-s9",
+   "city": "아산시",
    "source": "tour"
   },
   {
@@ -2026,6 +2041,21 @@
    "cityId": "a36-s3",
    "city": "고성군",
    "source": "std"
+  },
+  {
+   "id": "tour-3396705",
+   "title": "울산문화박람회",
+   "start": "20261126",
+   "end": "20261129",
+   "addr": "울산광역시 울주군 삼남읍 울산역로 255",
+   "tel": "052-255-1946",
+   "lat": 35.5556181512,
+   "lng": 129.1316552505,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/24/4144124_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a7-s5",
+   "city": "울주군",
+   "source": "tour"
   },
   {
    "id": "tour-3437916",
