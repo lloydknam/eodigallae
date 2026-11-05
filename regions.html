@@ -8,12 +8,12 @@
   :root { --fg:#1f1f1d; --muted:#6b6a64; --line:#e4e2da; --bg:#fbfaf7; }
   * { box-sizing: border-box; }
   body { margin:0; font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color:var(--fg); background:var(--bg); }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 16px 16px 40px; }
+  .wrap { max-width: none; margin: 0; padding: 12px 10px 24px; }
   .back { display:inline-block; font-size:14px; color:var(--muted); text-decoration:none; margin-bottom:12px; }
   h1 { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
   .sub { font-size: 13px; color: var(--muted); margin: 0 0 16px; line-height: 1.6; }
-  #mapwrap { position: relative; background:#fff; border:1px solid var(--line); border-radius:12px; padding:8px; }
-  #map { display:block; width:100%; height:auto; }
+  #mapwrap { position: relative; background:#fff; border:1px solid var(--line); border-radius:12px; padding:4px; }
+  #map { display:block; width:100%; height:78vh; min-height:420px; }
   #map path { stroke:#fff; stroke-width:0.4; transition: opacity .15s; }
   #map path:hover { opacity:.75; }
   #tip { position:absolute; pointer-events:none; background:#1f1f1d; color:#fff; font-size:13px; padding:6px 9px; border-radius:6px; white-space:nowrap; display:none; transform: translate(-50%, -120%); }
