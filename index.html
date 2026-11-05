@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Jua&display=swap">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css">
 <style>
 /* Layout: 한 손으로 쓰는 세로 앱. 마스코트 '어디냥'(위치 핀을 꽂은 크림색 고양이)이 브랜드.
@@ -77,7 +77,16 @@ img { max-width: 100%; }
   padding-left: max(12px, env(safe-area-inset-left, 0px));
   padding-right: max(12px, env(safe-area-inset-right, 0px));
 }
-.brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 700; font-size: 26px; text-decoration: none; color: var(--celadon); }
+.brand { display: inline-flex; align-items: center; gap: 8px; flex: none; font-family: "Jua", var(--font-display); font-weight: 400; font-size: 24px; text-decoration: none; color: var(--celadon);
+  background: var(--celadon-soft); padding: 4px 14px 4px 6px; border-radius: 999px; box-shadow: 0 2px 0 rgba(18,144,122,.25); }
+.tb-search { position: relative; flex: 1; min-width: 0; }
+.tb-search input { width: 100%; height: 36px; box-sizing: border-box; border: 1.5px solid var(--celadon-soft); border-radius: 12px; padding: 0 12px; background: #fff; font: inherit; font-size: 16px; color: var(--ink); }
+.tb-search input:focus { outline: none; border-color: var(--celadon); }
+.tb-results { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 60; background: #fff; border-radius: 12px; padding: 6px; box-shadow: 0 8px 24px rgba(25,31,40,.18); max-height: 60vh; overflow-y: auto; }
+.tb-results a { display: block; padding: 8px 10px; border-radius: 8px; color: var(--ink); text-decoration: none; font-size: var(--fs-meta); }
+.tb-results a:hover, .tb-results a:focus { background: var(--celadon-soft); outline: none; }
+.tb-results a em { color: var(--muted); font-style: normal; font-size: var(--fs-caption); margin-left: 6px; }
+.tb-results p { margin: 0; padding: 8px 10px; color: var(--muted); font-size: var(--fs-meta); }
 .brand img { width: 36px; height: auto; display: block; }
 .brand img.clerk { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--celadon-soft); box-shadow: 0 1px 4px rgba(25,31,40,.15); }
 .topbar .sub { color: var(--muted); font-size: var(--fs-label); margin-left: auto; white-space: nowrap; }
@@ -1264,7 +1273,30 @@ img { max-width: 100%; }
     });
   }
   function homeTopbar() {
-    topbar.innerHTML = `<a class="brand" href="#" data-home><img class="clerk" src="icons/clerk.jpg" alt="클사무관" width="36" height="36">어디갈래</a>`;
+    topbar.innerHTML = `<a class="brand" href="#" data-home><img class="clerk" src="icons/clerk.jpg" alt="클사무관" width="36" height="36">어디갈래</a>
+      <div class="tb-search" role="search">
+        <input type="search" id="tb-q" placeholder="도시 검색" aria-label="도시 검색" autocomplete="off">
+        <div class="tb-results" id="tb-results" hidden></div>
+      </div>`;
+    const q = document.getElementById("tb-q");
+    const box = document.getElementById("tb-results");
+    const pool = () => state.index.cities.filter((c) => !(c.updatedAt && !c.hasData));
+    const draw = () => {
+      const qq = q.value.trim();
+      if (!qq) { box.hidden = true; box.innerHTML = ""; return; }
+      const hits = pool().filter((c) => c.name.includes(qq) || (c.province || "").includes(qq)).slice(0, 8);
+      box.hidden = false;
+      box.innerHTML = hits.length
+        ? hits.map((c) => `<a href="#${enc(c.id)}">${esc(c.name)}<em>${esc(c.province || "")}</em></a>`).join("")
+        : `<p>검색 결과가 없어요</p>`;
+    };
+    q.addEventListener("input", draw);
+    q.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { const first = box.querySelector("a"); if (first) { e.preventDefault(); first.click(); q.blur(); } }
+      if (e.key === "Escape") { q.value = ""; draw(); q.blur(); }
+    });
+    q.addEventListener("blur", () => setTimeout(() => { box.hidden = true; }, 150));
+    q.addEventListener("focus", draw);
   }
   function showHome(view = "home") {
     state.city = null;
