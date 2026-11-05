@@ -58,8 +58,14 @@ def pick(it: dict, key: str):
 def call(key: str, frm: str, to: str, page: int) -> str:
     q = {"serviceKey": key, "from": frm, "to": to, "cPage": str(page), "rows": "100"}
     url = f"{BASE}?{urllib.parse.urlencode(q)}"
-    with urllib.request.urlopen(url, timeout=30) as r:
-        return r.read().decode("utf-8", "replace")
+    try:
+        with urllib.request.urlopen(url, timeout=30) as r:
+            return r.read().decode("utf-8", "replace")
+    except urllib.error.HTTPError as e:
+        # 400/401 본문에 원인(키 미등록·파라미터 오류 등)이 들어 있어서 함께 남긴다
+        body = e.read().decode("utf-8", "replace")[:500]
+        log(f"API 오류 {e.code} 응답 본문:", body)
+        raise
 
 
 def parse(body: str) -> list[dict]:
