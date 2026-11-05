@@ -14,7 +14,6 @@ from datetime import date, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import collect
 import festival  # 주소 → 도시 매칭 로직(PROV_SHORT, build_addr_index, match_by_address) 재사용
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,6 +38,13 @@ FIELD_MAP = {
 
 def log(*a):
     print(*a, file=sys.stderr)
+
+
+def save_json(path: Path, obj, compact=False):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    txt = json.dumps(obj, ensure_ascii=False, separators=(",", ":") if compact else None,
+                     indent=None if compact else 1)
+    path.write_text(txt, encoding="utf-8")
 
 
 def pick(it: dict, key: str):
@@ -133,7 +139,7 @@ def main():
         out.append(to_entry(it, city))
 
     payload = {"updatedAt": date.today().isoformat(), "count": len(out), "items": out}
-    collect.save_json(ROOT / "data" / "culture.json", payload, compact=True)
+    save_json(ROOT / "data" / "culture.json", payload, compact=True)
     log(f"문체부 문화행사 {len(out)}건 저장 (전체 {len(raw)}건, 도시 매칭 실패 {unmatched}건)")
 
 
