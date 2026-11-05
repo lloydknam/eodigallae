@@ -2300,11 +2300,16 @@ img { max-width: 100%; }
     };
     app.innerHTML = `<section class="hero"><span class="prov">전국</span><h1>🎭 문화행사</h1>
       <span class="meta">진행 중 ${ongoing.length}건 · 다가오는 문화행사 ${upcoming.length}건 · ${esc((data.updatedAt || "").slice(0, 10))} 기준</span></section>
+      <section class="weekly map-sec fest-map-sec">
+        <div class="weekly-head"><span class="wk">🟠 진행 중 · 🟢 예정</span></div>
+        <div id="hotmap" class="hotmap" role="region" aria-label="전국 문화행사 지도"><p class="map-wait">지도를 불러오는 중…</p></div>
+      </section>
       <div class="fest-search"><input type="search" id="culture-q" placeholder="공연·전시 이름, 지역으로 찾기" aria-label="문화행사 검색"></div>
       <div id="culture-list"></div>
       <p class="credit">출처: 한국문화정보원 한눈에보는문화정보조회서비스</p>`;
     render("");
     document.getElementById("culture-q").addEventListener("input", (e) => render(e.target.value));
+    renderFestivalMap(items);   // 축제지도와 같은 지도 — 좌표가 있는 행사만 점으로 표시
   }
 
   // ── 국가유산 방문코스 (국가유산청 방문 캠페인, 노선 13개) ──
