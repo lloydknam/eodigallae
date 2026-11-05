@@ -122,6 +122,8 @@ def fetch_all(key: str) -> list[dict]:
     out, page, logged_keys = [], 1, False
     while True:
         body = call(key, today, end, page)
+        if not logged_keys:
+            log("응답 원본(앞 1500자):", body[:1500])
         items = parse(body)
         if items and not logged_keys:
             log("응답 원본 키 목록(첫 항목):", sorted(items[0].keys()))
