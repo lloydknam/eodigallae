@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-04",
- "count": 173,
+ "updatedAt": "2026-11-05",
+ "count": 174,
  "items": [
   {
    "id": "tour-3481597",
@@ -1008,21 +1008,6 @@
    "source": "std"
   },
   {
-   "id": "tour-2622167",
-   "title": "2026 경북사과홍보행사",
-   "start": "20261102",
-   "end": "20261104",
-   "addr": "서울특별시 중구 을지로 지하12 (을지로1가)",
-   "tel": "대경사과원예농협 053-740-3033경상북도 스마트농업혁신과 054-880-3376",
-   "lat": 37.565448355,
-   "lng": 126.9787818353,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/12/4132112_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a1-s24",
-   "city": "중구",
-   "source": "tour"
-  },
-  {
    "id": "std-5160000-청송사과축제-20261104",
    "title": "청송사과축제",
    "start": "20261104",
@@ -1353,6 +1338,21 @@
    "source": "std"
   },
   {
+   "id": "tour-3401306",
+   "title": "김포 해병대 문화축제 in 대명항",
+   "start": "20261107",
+   "end": "20261107",
+   "addr": "경기도 김포시 대곶면 대명항1로 110-36",
+   "tel": "031-980-5110",
+   "lat": 37.6400140918,
+   "lng": 126.539451725,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/71/4131171_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a31-s8",
+   "city": "김포시",
+   "source": "tour"
+  },
+  {
    "id": "tour-4127761",
    "title": "마산야외도서관 [오롯이 마도로]",
    "start": "20261107",
@@ -1395,6 +1395,21 @@
    "homepage": null,
    "cityId": "a31-s20",
    "city": "여주시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3555835",
+   "title": "안산사이언스밸리(ASV) 과학축제",
+   "start": "20261107",
+   "end": "20261108",
+   "addr": "경기도 안산시 상록구 한양대학로 55 (사동)",
+   "tel": "02-780-6881",
+   "lat": 37.3001630571,
+   "lng": 126.8377108256,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/13/4133513_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a31-s15",
+   "city": "안산시",
    "source": "tour"
   },
   {
@@ -1608,6 +1623,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-2613615",
+   "title": "영주 사과축제",
+   "start": "20261113",
+   "end": "20261115",
+   "addr": "서울 중구 태평로1가 1",
+   "tel": "054-630-8706",
+   "lat": 37.5690746935,
+   "lng": 126.977592121,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/79/4139579_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s24",
+   "city": "중구",
+   "source": "tour"
+  },
+  {
    "id": "tour-2769990",
    "title": "2026 대한민국 우리술 대축제",
    "start": "20261113",
@@ -1620,21 +1650,6 @@
    "homepage": null,
    "cityId": "a1-s15",
    "city": "서초구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-4113301",
-   "title": "2026 렉키의 수상한 피크닉",
-   "start": "20261113",
-   "end": "20261114",
-   "addr": "경상남도 창원시 마산합포구 돝섬1길 275 (월영동)",
-   "tel": "02-6953-7101",
-   "lat": 35.1782828634,
-   "lng": 128.5809535308,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/96/4142596_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a36-s16",
-   "city": "창원시",
    "source": "tour"
   },
   {
@@ -1695,6 +1710,21 @@
    "homepage": null,
    "cityId": "a8-s1",
    "city": "세종특별자치시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4113301",
+   "title": "2026 렉키의 수상한 피크닉",
+   "start": "20261114",
+   "end": "20261115",
+   "addr": "경상남도 창원시 마산합포구 돝섬1길 275 (월영동)",
+   "tel": "02-6953-7101",
+   "lat": 35.1782828634,
+   "lng": 128.5809535308,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/96/4142596_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a36-s16",
+   "city": "창원시",
    "source": "tour"
   },
   {
@@ -1830,21 +1860,6 @@
    "homepage": null,
    "cityId": "a6-s16",
    "city": "해운대구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-506627",
-   "title": "최남단방어축제",
-   "start": "20261119",
-   "end": "20261122",
-   "addr": "제주특별자치도 서귀포시 대정읍 최남단해안로 66",
-   "tel": "064-794-8032",
-   "lat": 33.2144983016,
-   "lng": 126.2520492078,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/12/4141112_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a39-s3",
-   "city": "서귀포시",
    "source": "tour"
   },
   {
