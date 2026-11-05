@@ -8,7 +8,7 @@ data/culture.json에 저장한다. 축제지도(TourAPI/전국문화축제표준
 발급받아 처음 실행하면 로그에 첫 응답의 원본 키 목록을 찍어 두니, 실제 필드명이 다르면
 그 로그를 보고 FIELD_MAP만 고치면 된다.
 """
-import json, os, sys, urllib.parse, urllib.request
+import json, os, sys, urllib.error, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 from datetime import date, timedelta
 from pathlib import Path
@@ -17,7 +17,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import festival  # 주소 → 도시 매칭 로직(PROV_SHORT, build_addr_index, match_by_address) 재사용
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/period"
+# 공공데이터포털 상세페이지 기준 base는 cultureinfo. 오퍼레이션 경로(period2 등)는 확실치 않아
+# 후보를 순서대로 시도해서 "해당 오픈API 서비스 없음"(NO_OPENAPI_SERVICE_ERROR)이 아닌 첫 경로를 쓴다.
+BASE_CANDIDATES = [
+    "https://apis.data.go.kr/B553457/cultureinfo/period2",
+    "https://apis.data.go.kr/B553457/cultureinfo/period",
+    "https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/period",
+]
+BASE = BASE_CANDIDATES[0]
 DAYS_AHEAD = 120
 
 # 이 API가 실제로 쓰는 필드명으로 보이는 후보들(여러 변형을 같이 받아 가장 먼저 걸리는 걸 쓴다).
@@ -56,8 +63,29 @@ def pick(it: dict, key: str):
 
 
 def call(key: str, frm: str, to: str, page: int) -> str:
+    global BASE
     q = {"serviceKey": key, "from": frm, "to": to, "cPage": str(page), "rows": "100"}
-    url = f"{BASE}?{urllib.parse.urlencode(q)}"
+    try:
+        return _get(BASE, q)
+    except urllib.error.HTTPError as e:
+        if e.code != 400 or "NO_OPENAPI_SERVICE_ERROR" not in e.read().decode("utf-8", "replace"):
+            raise
+    # 경로가 틀린 경우에만 다른 후보로 넘어간다
+    for cand in BASE_CANDIDATES:
+        if cand == BASE:
+            continue
+        try:
+            body = _get(cand, q)
+        except urllib.error.HTTPError:
+            continue
+        BASE = cand
+        log("사용할 엔드포인트:", cand)
+        return body
+    raise RuntimeError("모든 엔드포인트 후보가 실패했어요")
+
+
+def _get(base: str, q: dict) -> str:
+    url = f"{base}?{urllib.parse.urlencode(q)}"
     try:
         with urllib.request.urlopen(url, timeout=30) as r:
             return r.read().decode("utf-8", "replace")
