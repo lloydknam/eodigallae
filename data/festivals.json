@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-05",
- "count": 174,
+ "updatedAt": "2026-11-06",
+ "count": 175,
  "items": [
   {
    "id": "tour-3481597",
@@ -771,12 +771,12 @@
    "id": "tour-4124907",
    "title": "2026 쉬엄쉬엄모닝",
    "start": "20261018",
-   "end": "20261129",
+   "end": "20261122",
    "addr": "서울특별시 강동구 선사로 83-19 (천호동)",
    "tel": "1644-6155",
    "lat": 37.5452481279,
    "lng": 127.1179813872,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/08/4124908_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/63/4147163_image2_1.jpg",
    "homepage": null,
    "cityId": "a1-s2",
    "city": "강동구",
@@ -1668,6 +1668,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4147845",
+   "title": "순천 올랑가 일일마켓",
+   "start": "20261114",
+   "end": "20261114",
+   "addr": "전남광주통합특별시 순천시 별미길 18 (남내동)",
+   "tel": "070-4902-8266",
+   "lat": 34.9536637379,
+   "lng": 127.4851328015,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/46/4147846_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a38-s11",
+   "city": "순천시",
+   "source": "tour"
+  },
+  {
    "id": "tour-4115275",
    "title": "쿼드, 연극의 질문들：〈화염〉",
    "start": "20261114",
@@ -1860,21 +1875,6 @@
    "homepage": null,
    "cityId": "a6-s16",
    "city": "해운대구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-3301415",
-   "title": "무안 YD 페스티벌",
-   "start": "20261120",
-   "end": "20261122",
-   "addr": "전남광주통합특별시 무안군 삼향읍 대죽서로16번길 16",
-   "tel": "061-450-5474",
-   "lat": 34.8111428583,
-   "lng": 126.4628109019,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/08/4131308_image2_1.JPG",
-   "homepage": null,
-   "cityId": "a38-s9",
-   "city": "무안군",
    "source": "tour"
   },
   {
@@ -2280,6 +2280,21 @@
    "homepage": null,
    "cityId": "a1-s23",
    "city": "종로구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-1095732",
+   "title": "서울빛초롱축제",
+   "start": "20261211",
+   "end": "20270131",
+   "addr": "서울특별시 중구 태평로1가",
+   "tel": "02-3788-8168",
+   "lat": 37.569204,
+   "lng": 126.977633,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/35/4147235_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s24",
+   "city": "중구",
    "source": "tour"
   },
   {
