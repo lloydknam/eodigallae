@@ -1,6 +1,6 @@
 {
  "week": "2026-W45",
- "updatedAt": "2026-11-07T05:57:22+09:00",
+ "updatedAt": "2026-11-08T04:32:33+09:00",
  "videos": 408,
  "citiesWithData": 229,
  "lists": {
@@ -223,16 +223,16 @@
     "kakao": "838616894",
     "cat": "관광명소",
     "kind": "kakao",
-    "n": 13,
-    "views": 1008276,
-    "score": 257.16,
+    "n": 14,
+    "views": 1030570,
+    "score": 273.89,
     "thumb": "https://i.ytimg.com/vi/tkEm4HEYeeM/hqdefault.jpg",
     "image": "https://i.ytimg.com/vi/tkEm4HEYeeM/hqdefault.jpg",
     "video": {
      "id": "tkEm4HEYeeM",
      "title": "요즘 다들 여기 간다는데 - 수도권에서 가장 아름다운 바닷길 -황금해안길",
      "channel": "곰슨의바깥세상",
-     "views": 289421
+     "views": 311897
     }
    },
    {
@@ -341,27 +341,6 @@
     }
    },
    {
-    "name": "티하우스에덴",
-    "city": "이천시",
-    "province": "경기도",
-    "cityId": "a31-s26",
-    "spotId": "k1373543489",
-    "kakao": "1373543489",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 8,
-    "views": 141349,
-    "score": 59.73,
-    "thumb": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/OKp_QKvZoH0/hqdefault.jpg",
-    "video": {
-     "id": "OKp_QKvZoH0",
-     "title": "이천에서 쌀밥과 도자기만 보고 오면 아쉬운 이유｜이천 하루코스",
-     "channel": "가희드 gahiiide",
-     "views": 64502
-    }
-   },
-   {
     "name": "무우루",
     "city": "구례군",
     "province": "전라남도",
@@ -401,6 +380,27 @@
      "title": "[Vlog] 구례, 하동에서 혼자 보낸 여름휴가🍋‍🟩 | 뚜벅이 1박2일 코스 | 인생 프토 발견 | 구례 책방 | 하동 산속 소품샵",
      "channel": "두조람 DuJoram",
      "views": 298537
+    }
+   },
+   {
+    "name": "흰다정",
+    "city": "속초시",
+    "province": "강원특별자치도",
+    "cityId": "a32-s5",
+    "spotId": "k1420541725",
+    "kakao": "1420541725",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 6,
+    "views": 290683,
+    "score": 53.13,
+    "thumb": "https://i.ytimg.com/vi/dOrwsJHEXBk/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/dOrwsJHEXBk/hqdefault.jpg",
+    "video": {
+     "id": "dOrwsJHEXBk",
+     "title": "속초 얏호! 속초에서 유명한 거는 다 먹은 나 혼자 속초 여행🍦 (육구방앗간 찹쌀떡, 강릉막걸리술빵, 북청닭강정, 흰다정, 속초옥수수소금빵, 타이그랜파, 속초맛집)",
+     "channel": "나나 Nanasserie",
+     "views": 143874
     }
    }
   ],
