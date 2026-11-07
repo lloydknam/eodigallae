@@ -354,12 +354,19 @@ function loadArr(){
       if(!x.ok||x.j.error){arrBody.innerHTML='<div class="arr-empty">'+esc(x.j.error||'열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요.')+'</div>';return;}
       arrFetchedAt=Date.now();
       renderArr(x.j);
+      loadPos();
     })
     .catch(function(){
       if(tok===arrTok)arrBody.innerHTML='<div class="arr-empty">열차 정보를 가져오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';
     });
 }
-var arrData=null,arrLine=null,arrFetchedAt=0,arrTick=0;
+var arrData=null,arrLine=null,arrFetchedAt=0,arrTick=0,arrPos=[];
+function loadPos(){
+  if(!API)return;
+  fetch(API+'/subway',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+    if(j&&j.trains)arrPos=j.trains;
+  }).catch(function(){});
+}
 function arrRem(t){return Math.max(0,(+t.sec||0)-(Date.now()-arrFetchedAt)/1000);}
 function routeStrip(G,t,st){
   if(!G||!G.branches||!st)return '';
@@ -371,14 +378,25 @@ function routeStrip(G,t,st){
   var sign=di>ti?1:-1, prev=ti-sign, rem=arrRem(t);
   var f=rem<=0?1:Math.min(.95,1-rem/300);
   var lo=Math.max(0,ti-3), hi=Math.min(b.length-1,ti+3), n=Math.max(1,hi-lo);
+  /* 실시간 열차 위치: 같은 노선·같은 행선지 열차 중 이 역 바로 앞에 있는 열차 */
+  var livePos=null;
+  arrPos.forEach(function(tr){
+    if(+tr.l!==+G.liveNum||nm(tr.d)!==nm(t.dest))return;
+    var si=b.findIndex(function(x){return nm(x.name)===nm(tr.s);});
+    if(si<0)return;
+    var pos=(tr.st===2||tr.st===3)?si+sign*0.5:si;
+    if((pos-ti)*sign>=0||pos<lo||pos>hi)return;
+    if(livePos===null||(pos-livePos)*sign>0)livePos=pos;
+  });
   function X(k){return (k-lo)/n*100;}
   var tp=(prev>=0&&prev<b.length)?X(prev)+f*(X(ti)-X(prev)):X(ti);
+  if(livePos!==null)tp=X(livePos);
   var info=lineInfo(G.id);
   var h='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
   for(var k=lo;k<=hi;k++){
     h+='<div class="rnode'+(k===ti?' cur':'')+'" style="left:'+X(k)+'%"><i></i><span>'+esc(b[k].name)+'</span></div>';
   }
-  h+='<div class="rtrain" style="left:'+tp+'%;background:'+info.bg+';color:'+info.fg+'">'+(sign>0?'▶':'◀')+' 열차</div></div></div>';
+  h+='<div class="rtrain" style="left:'+tp+'%;background:'+info.bg+';color:'+info.fg+'">'+(sign>0?'▶':'◀')+(livePos!==null?' 실시간':' 열차')+'</div></div></div>';
   return h;
 }
 function congLevel(v){v=String(v||'');return /혼잡/.test(v)?'h':/보통/.test(v)?'m':'l';}
