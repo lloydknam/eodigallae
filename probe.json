@@ -1,0 +1,285 @@
+{
+ "at": 1794078003445,
+ "key_source": "SEOUL_SUBWAY_KEY",
+ "key_len": 30,
+ "ok_lines": 4,
+ "total": 10,
+ "per_line": [
+  {
+   "line": 1,
+   "http": 200,
+   "code": "INFO-200",
+   "message": "해당하는 데이터가 없습니다."
+  },
+  {
+   "line": 2,
+   "http": 200,
+   "code": "INFO-200",
+   "message": "해당하는 데이터가 없습니다."
+  },
+  {
+   "line": 3,
+   "http": 200,
+   "code": "INFO-200",
+   "message": "해당하는 데이터가 없습니다."
+  },
+  {
+   "line": 4,
+   "http": 200,
+   "code": "INFO-200",
+   "message": "해당하는 데이터가 없습니다."
+  },
+  {
+   "line": 5,
+   "http": 200,
+   "status": 200,
+   "code": "INFO-000",
+   "message": "정상 처리되었습니다.",
+   "count": 4,
+   "fields": [
+    "beginRow",
+    "curPage",
+    "directAt",
+    "endRow",
+    "lastRecptnDt",
+    "lstcarAt",
+    "pageRow",
+    "recptnDt",
+    "rowNum",
+    "selectedCount",
+    "statnId",
+    "statnNm",
+    "statnTid",
+    "statnTnm",
+    "subwayId",
+    "subwayNm",
+    "totalCount",
+    "trainNo",
+    "trainSttus",
+    "updnLine"
+   ],
+   "first": {
+    "beginRow": "None",
+    "endRow": "None",
+    "curPage": "None",
+    "pageRow": "None",
+    "totalCount": "4",
+    "rowNum": "1",
+    "selectedCount": "4",
+    "subwayId": "1005",
+    "subwayNm": "5호선",
+    "statnId": "1005080555",
+    "statnNm": "마천",
+    "trainNo": "5607",
+    "lastRecptnDt": "20261108",
+    "recptnDt": "2026-11-08 04:00:02",
+    "updnLine": "1",
+    "statnTid": "1005080555",
+    "statnTnm": "마천",
+    "trainSttus": "1",
+    "directAt": "0",
+    "lstcarAt": "0"
+   },
+   "updnLine_values": [
+    "0",
+    "1"
+   ],
+   "trainSttus_values": [
+    "1"
+   ],
+   "directAt_values": [
+    "0"
+   ]
+  },
+  {
+   "line": 6,
+   "http": 200,
+   "status": 200,
+   "code": "INFO-000",
+   "message": "정상 처리되었습니다.",
+   "count": 1,
+   "fields": [
+    "beginRow",
+    "curPage",
+    "directAt",
+    "endRow",
+    "lastRecptnDt",
+    "lstcarAt",
+    "pageRow",
+    "recptnDt",
+    "rowNum",
+    "selectedCount",
+    "statnId",
+    "statnNm",
+    "statnTid",
+    "statnTnm",
+    "subwayId",
+    "subwayNm",
+    "totalCount",
+    "trainNo",
+    "trainSttus",
+    "updnLine"
+   ],
+   "first": {
+    "beginRow": "None",
+    "endRow": "None",
+    "curPage": "None",
+    "pageRow": "None",
+    "totalCount": "1",
+    "rowNum": "1",
+    "selectedCount": "1",
+    "subwayId": "1006",
+    "subwayNm": "6호선",
+    "statnId": "1006000648",
+    "statnNm": "신내",
+    "trainNo": "6237",
+    "lastRecptnDt": "20261108",
+    "recptnDt": "2026-11-08 04:00:02",
+    "updnLine": "1",
+    "statnTid": "1006000648",
+    "statnTnm": "신내",
+    "trainSttus": "3",
+    "directAt": "0",
+    "lstcarAt": "0"
+   },
+   "updnLine_values": [
+    "1"
+   ],
+   "trainSttus_values": [
+    "3"
+   ],
+   "directAt_values": [
+    "0"
+   ]
+  },
+  {
+   "line": 7,
+   "http": 200,
+   "status": 200,
+   "code": "INFO-000",
+   "message": "정상 처리되었습니다.",
+   "count": 3,
+   "fields": [
+    "beginRow",
+    "curPage",
+    "directAt",
+    "endRow",
+    "lastRecptnDt",
+    "lstcarAt",
+    "pageRow",
+    "recptnDt",
+    "rowNum",
+    "selectedCount",
+    "statnId",
+    "statnNm",
+    "statnTid",
+    "statnTnm",
+    "subwayId",
+    "subwayNm",
+    "totalCount",
+    "trainNo",
+    "trainSttus",
+    "updnLine"
+   ],
+   "first": {
+    "beginRow": "None",
+    "endRow": "None",
+    "curPage": "None",
+    "pageRow": "None",
+    "totalCount": "3",
+    "rowNum": "1",
+    "selectedCount": "3",
+    "subwayId": "1007",
+    "subwayNm": "7호선",
+    "statnId": "1007000735",
+    "statnNm": "내방",
+    "trainNo": "7327",
+    "lastRecptnDt": "20261108",
+    "recptnDt": "2026-11-08 04:00:02",
+    "updnLine": "1",
+    "statnTid": "1007000735",
+    "statnTnm": "내방",
+    "trainSttus": "1",
+    "directAt": "0",
+    "lstcarAt": "0"
+   },
+   "updnLine_values": [
+    "1"
+   ],
+   "trainSttus_values": [
+    "1"
+   ],
+   "directAt_values": [
+    "0"
+   ]
+  },
+  {
+   "line": 8,
+   "http": 200,
+   "status": 200,
+   "code": "INFO-000",
+   "message": "정상 처리되었습니다.",
+   "count": 2,
+   "fields": [
+    "beginRow",
+    "curPage",
+    "directAt",
+    "endRow",
+    "lastRecptnDt",
+    "lstcarAt",
+    "pageRow",
+    "recptnDt",
+    "rowNum",
+    "selectedCount",
+    "statnId",
+    "statnNm",
+    "statnTid",
+    "statnTnm",
+    "subwayId",
+    "subwayNm",
+    "totalCount",
+    "trainNo",
+    "trainSttus",
+    "updnLine"
+   ],
+   "first": {
+    "beginRow": "None",
+    "endRow": "None",
+    "curPage": "None",
+    "pageRow": "None",
+    "totalCount": "2",
+    "rowNum": "1",
+    "selectedCount": "2",
+    "subwayId": "1008",
+    "subwayNm": "8호선",
+    "statnId": "1008000810",
+    "statnNm": "암사",
+    "trainNo": "8240",
+    "lastRecptnDt": "20261108",
+    "recptnDt": "2026-11-08 04:00:02",
+    "updnLine": "0",
+    "statnTid": "1008000804",
+    "statnTnm": "별내",
+    "trainSttus": "1",
+    "directAt": "0",
+    "lstcarAt": "0"
+   },
+   "updnLine_values": [
+    "0",
+    "1"
+   ],
+   "trainSttus_values": [
+    "1"
+   ],
+   "directAt_values": [
+    "0"
+   ]
+  },
+  {
+   "line": 9,
+   "http": 200,
+   "code": "INFO-200",
+   "message": "해당하는 데이터가 없습니다."
+  }
+ ]
+}
