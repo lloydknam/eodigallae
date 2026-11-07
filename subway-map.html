@@ -82,6 +82,37 @@ body{padding-top:max(12px,env(safe-area-inset-top,0px));padding-bottom:max(12px,
 html.embed .top>div:first-child,html.embed .maker{display:none}
 html.embed .top{justify-content:flex-end}
 html.embed body{padding-top:8px;padding-bottom:8px}
+
+/* 역 도착정보 화면(역명 클릭) */
+.arr{position:fixed;inset:0;z-index:2000;display:none;background:#0A1119;color:#EEF3F7;overflow-y:auto;font-family:var(--f-body);-webkit-overflow-scrolling:touch}
+.arr.open{display:block}
+.arr-in{max-width:620px;margin:0 auto;padding:max(16px,env(safe-area-inset-top,0px)) 18px max(28px,env(safe-area-inset-bottom,0px))}
+.arr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;border-bottom:1px solid #1E2C38}
+.arr-title{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+.arr-title .sn{font:700 22px/1.2 var(--f-display);white-space:nowrap;margin-right:4px}
+.arr-title .sep{width:1px;height:18px;background:#2A3A47;margin:0 4px}
+.arr-x{flex:none;border:1px solid #2A3A47;background:transparent;color:#EEF3F7;border-radius:999px;width:36px;height:36px;cursor:pointer;font-size:14px}
+.badge{flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:999px;display:inline-grid;place-items:center;font:700 12px var(--f-body);box-sizing:border-box}
+.hero{margin-top:20px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #1E6FA8;border-radius:999px;padding:4px 12px;color:#5DB8F2;font-size:13px}
+.pill i{width:7px;height:7px;border-radius:50%;background:#2F9BE8;box-shadow:0 0 0 3px rgba(47,155,232,.25)}
+.hero-main{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:16px}
+.hero-dest{font:800 clamp(40px,12vw,64px)/1.05 var(--f-display);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.hero-cd{flex:none;text-align:right;font:800 clamp(60px,18vw,96px)/.95 var(--f-display);font-variant-numeric:tabular-nums}
+.hero-cd small{font-size:24px;color:#3AA6F0;margin-left:4px;font-weight:700}
+.hero-lbl{color:#7E8F9C;font-size:12px;text-align:right;margin-bottom:2px}
+.hero-sub{color:#7E8F9C;font-size:13px;margin-top:8px}
+.lines-h{margin:26px 0 8px;color:#7E8F9C;font-size:12px;letter-spacing:.06em}
+.ln-block{border:1px solid #1E2C38;border-radius:12px;padding:10px 12px;margin-bottom:10px;background:#101A23}
+.ln-head{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:2px}
+.dir{color:#7E8F9C;font-size:12px;margin:10px 0 2px}
+.trow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #1B2935;font-size:14px}
+.trow:first-of-type{border-top:0}
+.trow .d{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow .m{color:#93A4B1;font-size:12px;flex:none}
+.trow .c{flex:none;min-width:84px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.arr-foot{margin-top:18px;color:#7E8F9C;font-size:12px;line-height:1.6}
+.arr-empty{padding:48px 0;text-align:center;color:#93A4B1;line-height:1.7}
 </style>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script>
 </head>
@@ -114,6 +145,16 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 <section class="sheet" id="sheet" aria-live="polite"></section>
 
 <footer class="maker"><a class="lab" href="https://lloydknam.github.io/showcase/" target="_blank" rel="noopener" title="Lloyd’s Balcony Lab 프로젝트 모음"><img src="icons/brand/lockup-light.svg" alt="Lloyd's Balcony Lab · with claude · GitHub(@lloydknam)"></a></footer>
+
+<div class="arr" id="arr" role="dialog" aria-modal="true" aria-label="역 도착 정보">
+  <div class="arr-in">
+    <header class="arr-top">
+      <div class="arr-title" id="arrTitle"></div>
+      <button type="button" class="arr-x" id="arrClose" aria-label="닫기">✕</button>
+    </header>
+    <div id="arrBody"><div class="arr-empty">불러오는 중…</div></div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
@@ -237,12 +278,85 @@ function syncChips(){
   });
 }
 
-function showStation(s){
-  var lines=LINES.filter(function(x){return x.stations.some(function(st){return st.name===s.name&&Math.abs(st.lat-s.lat)<.002&&Math.abs(st.lng-s.lng)<.002;});});
-  var html='<div class="st-pop"><b>'+s.name+'</b>'+lines.map(function(x){return '<span class="ln" style="background:'+x.color+';color:'+x.textColor+'">'+x.name+'</span>';}).join('')+'</div>';
-  if(curPopup)map.closePopup(curPopup);
-  curPopup=L.popup({closeButton:true}).setLatLng([s.lat,s.lng]).setContent(html).openOn(map);
+/* ---------- 역 도착정보 화면 ---------- */
+var arrEl=$('#arr'),arrBody=$('#arrBody'),arrTimer=0,arrTok=0,arrStation=null;
+var SUBWAY_NAME={1032:'GTX-A',1063:'경의중앙',1065:'공항철도',1067:'경춘',1075:'수인분당',1077:'신분당',1092:'우이신설',1094:'신림'};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function lineInfo(id){
+  var n=+id-1000;
+  if(n>=1&&n<=9){
+    var G=LINES.filter(function(g){return +g.liveNum===n;})[0];
+    if(G)return {label:String(n),name:n+'호선',bg:G.color,fg:G.textColor};
+  }
+  var nmx=SUBWAY_NAME[+id]||'기타';
+  return {label:nmx.slice(0,2),name:nmx,bg:'#5B6B78',fg:'#fff'};
 }
+function fmtArr(sec){sec=Math.max(0,+sec||0);return sec<60?sec+'초':Math.floor(sec/60)+'분 '+(sec%60)+'초';}
+function stationLines(s){
+  return LINES.filter(function(x){return x.stations.some(function(st){return st.name===s.name&&Math.abs(st.lat-s.lat)<.002&&Math.abs(st.lng-s.lng)<.002;});});
+}
+function showStation(s){
+  arrStation=s;
+  var lines=stationLines(s);
+  $('#arrTitle').innerHTML='<span class="sn">'+esc(s.name)+'</span>'+
+    lines.map(function(x){var lb=x.liveNum||x.name.replace(/\s/g,'').slice(0,2);return '<span class="badge" style="background:'+x.color+';color:'+x.textColor+'">'+esc(lb)+'</span>';}).join('');
+  arrBody.innerHTML='<div class="arr-empty">불러오는 중…</div>';
+  arrEl.classList.add('open');
+  arrEl.scrollTop=0;
+  loadArr();
+  clearInterval(arrTimer);arrTimer=setInterval(loadArr,20000);
+}
+function closeArr(){
+  arrEl.classList.remove('open');clearInterval(arrTimer);arrTimer=0;arrTok++;
+}
+function loadArr(){
+  var tok=++arrTok;
+  if(!API){arrBody.innerHTML='<div class="arr-empty">실시간 도착정보 서버가 아직 연결되지 않았어요.<br>연결되면 이 역의 다음 열차가 바로 표시돼요.</div>';return;}
+  fetch(API+'/subway?station='+encodeURIComponent(nm(arrStation.name)),{cache:'no-store'})
+    .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};},function(){return {ok:r.ok,j:{}};});})
+    .then(function(x){
+      if(tok!==arrTok)return;
+      if(!x.ok||x.j.error){arrBody.innerHTML='<div class="arr-empty">'+esc(x.j.error||'열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요.')+'</div>';return;}
+      renderArr(x.j);
+    })
+    .catch(function(){
+      if(tok===arrTok)arrBody.innerHTML='<div class="arr-empty">열차 정보를 가져오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';
+    });
+}
+function renderArr(j){
+  var groups=j.lines||[],all=[],html='';
+  groups.forEach(function(L){
+    var info=lineInfo(L.id);
+    L.dirs.forEach(function(D){D.trains.forEach(function(t){all.push({info:info,dir:D.name,t:t});});});
+  });
+  all.sort(function(a,b){return a.t.sec-b.t.sec;});
+  if(!all.length){
+    html='<div class="arr-empty">지금 도착 예정인 열차 정보가 없어요.<br>첫차 전이거나 운행이 끝났을 수 있어요.</div>';
+  }else{
+    var h=all[0],sec=h.t.sec;
+    var cd=sec<60?sec+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
+    html+='<div class="hero"><span class="pill"><i></i>'+esc(h.t.msg||'도착 정보')+'</span>'+
+      '<div class="hero-main"><div class="hero-dest">'+esc(h.t.dest?h.t.dest+'행':h.dir)+'</div>'+
+      '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
+      '<div class="hero-sub">'+esc(h.info.name)+' · '+esc(h.dir)+(sec>=60?' · '+(sec%60)+'초':'')+'</div></div>';
+    html+='<div class="lines-h">호선별 도착 정보</div>';
+    groups.forEach(function(L){
+      var info=lineInfo(L.id);
+      html+='<div class="ln-block"><div class="ln-head"><span class="badge" style="background:'+info.bg+';color:'+info.fg+'">'+esc(info.label)+'</span>'+esc(info.name)+'</div>';
+      L.dirs.forEach(function(D){
+        html+='<div class="dir">'+esc(D.name)+'</div>';
+        D.trains.forEach(function(t){
+          html+='<div class="trow"><span class="d">'+esc(t.dest?t.dest+'행':'')+'</span><span class="m">'+esc(t.msg)+'</span><span class="c">'+fmtArr(t.sec)+'</span></div>';
+        });
+      });
+      html+='</div>';
+    });
+  }
+  html+='<div class="arr-foot">'+(j.updated?'기준 '+esc(j.updated)+' · ':'')+'20초마다 자동으로 새로 고쳐요. 서울 열린데이터광장 실시간 도착정보이며 실제와 차이가 있을 수 있어요.</div>';
+  arrBody.innerHTML=html;
+}
+$('#arrClose').addEventListener('click',closeArr);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&arrEl.classList.contains('open'))closeArr();});
 
 /* ---------- 열차 아이콘(SVG, 실제 기차 모양) ---------- */
 function trainSvg(G){
