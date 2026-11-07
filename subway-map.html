@@ -161,7 +161,7 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 (function(){
 'use strict';
 /* 실시간 중계 서버(Cloudflare Worker) 주소. 비워 두면 '실시간' 버튼이 꺼져 있어요. */
-var WORKER='';
+var WORKER='https://eodigallae.lloydnam.workers.dev';
 var API=(new URLSearchParams(location.search).get('api')||WORKER).replace(/\/$/,'');
 /* 중계 서버가 없으면 GitHub Actions가 30초마다 올리는 스냅샷을 읽는다 */
 var SNAP='https://raw.githubusercontent.com/lloydknam/eodigallae/live-data/subway.json';
