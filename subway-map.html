@@ -113,6 +113,31 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .trow .c{flex:none;min-width:84px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
 .arr-foot{margin-top:18px;color:#7E8F9C;font-size:12px;line-height:1.6}
 .arr-empty{padding:48px 0;text-align:center;color:#93A4B1;line-height:1.7}
+
+/* 노선 탭 · 상하행 두 열 · 칸별 혼잡도 */
+.ltabs{display:flex;gap:6px;overflow-x:auto;margin:16px 0 12px;scrollbar-width:none}
+.ltabs::-webkit-scrollbar{display:none}
+.ltab{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid #2A3A47;background:transparent;color:#EEF3F7;border-radius:999px;padding:4px 12px 4px 4px;cursor:pointer;font-size:13px}
+.ltab[aria-pressed="true"]{background:#EEF3F7;color:#0A1119;border-color:#EEF3F7}
+.ltab[aria-pressed="true"] .badge{box-shadow:0 0 0 2px #0A1119}
+.ltab .badge{min-width:24px;height:24px;padding:0 5px;font-size:11px}
+.dircols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dcol{border:1px solid #1E2C38;border-radius:12px;padding:10px;background:#101A23;min-width:0}
+.dhead{font-weight:700;font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dhead small{display:block;color:#7E8F9C;font-weight:500;font-size:12px;margin-top:2px}
+.tr{padding:8px 0;border-top:1px solid #1B2935}
+.tr:first-of-type{border-top:0}
+.tr .cd{font-weight:800;font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tr .mg{color:#93A4B1;font-size:12px;margin-top:2px}
+.dnone{color:#7E8F9C;font-size:13px;padding:14px 0}
+.cars{margin-top:10px;border-top:1px solid #1B2935;padding-top:8px}
+.cars-h{color:#7E8F9C;font-size:11px;margin-bottom:6px}
+.carrow{display:grid;grid-template-columns:repeat(10,1fr);gap:2px}
+.car{border-radius:4px;height:28px;display:grid;place-items:center;font-size:9px;font-weight:700;color:#0A1119}
+.car.l{background:#3DDC97}.car.m{background:#F5C542}.car.h{background:#F0524B}
+.cars-legend{display:flex;gap:10px;margin-top:6px;color:#93A4B1;font-size:11px}
+.cars-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+@media (max-width:360px){.trow .c{min-width:70px}.tr .cd{font-size:17px}}
 </style>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script>
 </head>
@@ -296,7 +321,7 @@ function stationLines(s){
   return LINES.filter(function(x){return x.stations.some(function(st){return st.name===s.name&&Math.abs(st.lat-s.lat)<.002&&Math.abs(st.lng-s.lng)<.002;});});
 }
 function showStation(s){
-  arrStation=s;
+  arrStation=s;arrLine=null;arrData=null;
   var lines=stationLines(s);
   $('#arrTitle').innerHTML='<span class="sn">'+esc(s.name)+'</span>'+
     lines.map(function(x){var lb=x.liveNum||x.name.replace(/\s/g,'').slice(0,2);return '<span class="badge" style="background:'+x.color+';color:'+x.textColor+'">'+esc(lb)+'</span>';}).join('');
@@ -323,38 +348,61 @@ function loadArr(){
       if(tok===arrTok)arrBody.innerHTML='<div class="arr-empty">열차 정보를 가져오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';
     });
 }
+var arrData=null,arrLine=null;
+function congLevel(v){v=String(v||'');return /혼잡/.test(v)?'h':/보통/.test(v)?'m':'l';}
+function carsBlock(cars){
+  if(!cars||!cars.length)return '';
+  return '<div class="cars"><div class="cars-h">칸별 혼잡도</div><div class="carrow">'+
+    cars.slice(0,10).map(function(c){return '<div class="car '+congLevel(c.lvl)+'" title="'+esc(c.lvl)+'">'+esc(c.no)+'</div>';}).join('')+
+    '</div><div class="cars-legend"><span><i style="background:#3DDC97"></i>여유</span><span><i style="background:#F5C542"></i>보통</span><span><i style="background:#F0524B"></i>혼잡</span></div></div>';
+}
+function dirOrder(D){return /상행|내선/.test(D.name)?0:1;}
 function renderArr(j){
-  var groups=j.lines||[],all=[],html='';
-  groups.forEach(function(L){
-    var info=lineInfo(L.id);
-    L.dirs.forEach(function(D){D.trains.forEach(function(t){all.push({info:info,dir:D.name,t:t});});});
-  });
-  all.sort(function(a,b){return a.t.sec-b.t.sec;});
-  if(!all.length){
-    html='<div class="arr-empty">지금 도착 예정인 열차 정보가 없어요.<br>첫차 전이거나 운행이 끝났을 수 있어요.</div>';
-  }else{
-    var h=all[0],sec=h.t.sec;
-    var cd=sec<60?sec+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
-    html+='<div class="hero"><span class="pill"><i></i>'+esc(h.t.msg||'도착 정보')+'</span>'+
-      '<div class="hero-main"><div class="hero-dest">'+esc(h.t.dest?h.t.dest+'행':h.dir)+'</div>'+
-      '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-sub">'+esc(h.info.name)+' · '+esc(h.dir)+(sec>=60?' · '+(sec%60)+'초':'')+'</div></div>';
-    html+='<div class="lines-h">호선별 도착 정보</div>';
-    groups.forEach(function(L){
-      var info=lineInfo(L.id);
-      html+='<div class="ln-block"><div class="ln-head"><span class="badge" style="background:'+info.bg+';color:'+info.fg+'">'+esc(info.label)+'</span>'+esc(info.name)+'</div>';
-      L.dirs.forEach(function(D){
-        html+='<div class="dir">'+esc(D.name)+'</div>';
-        D.trains.forEach(function(t){
-          html+='<div class="trow"><span class="d">'+esc(t.dest?t.dest+'행':'')+'</span><span class="m">'+esc(t.msg)+'</span><span class="c">'+fmtArr(t.sec)+'</span></div>';
-        });
-      });
-      html+='</div>';
-    });
+  if(j)arrData=j;
+  var groups=(arrData&&arrData.lines)||[];
+  if(!groups.length){
+    arrBody.innerHTML='<div class="arr-empty">지금 도착 예정인 열차 정보가 없어요.<br>첫차 전이거나 운행이 끝났을 수 있어요.</div>';return;
   }
-  html+='<div class="arr-foot">'+(j.updated?'기준 '+esc(j.updated)+' · ':'')+'20초마다 자동으로 새로 고쳐요. 서울 열린데이터광장 실시간 도착정보이며 실제와 차이가 있을 수 있어요.</div>';
+  if(!arrLine||!groups.some(function(L){return L.id===arrLine;}))arrLine=groups[0].id;
+  var G=groups.filter(function(L){return L.id===arrLine;})[0];
+  var info=lineInfo(G.id);
+  var html='';
+  if(groups.length>1){
+    html+='<div class="ltabs" role="group" aria-label="노선 선택">'+groups.map(function(L){
+      var li=lineInfo(L.id);
+      return '<button type="button" class="ltab" data-line="'+esc(L.id)+'" aria-pressed="'+(L.id===arrLine)+'"><span class="badge" style="background:'+li.bg+';color:'+li.fg+'">'+esc(li.label)+'</span>'+esc(li.name)+'</button>';
+    }).join('')+'</div>';
+  }
+  var dirs=G.dirs.slice().sort(function(a,b){return dirOrder(a)-dirOrder(b);});
+  var all=[];
+  dirs.forEach(function(D){D.trains.forEach(function(t){all.push(t);});});
+  all.sort(function(a,b){return a.sec-b.sec;});
+  if(all.length){
+    var h=all[0],sec=h.sec;
+    var cd=sec<60?sec+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
+    html+='<div class="hero"><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span>'+
+      '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':info.name)+'</div>'+
+      '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
+      '<div class="hero-sub">'+esc(info.name)+(sec>=60?' · '+(sec%60)+'초':'')+'</div></div>';
+  }
+  html+='<div class="lines-h">상하행 도착 정보</div><div class="dircols">';
+  dirs.forEach(function(D){
+    var first=D.trains[0];
+    html+='<div class="dcol"><div class="dhead">'+esc(D.name)+(first&&first.dest?'<small>'+esc(first.dest)+'행 방향</small>':'')+'</div>';
+    if(!D.trains.length){html+='<div class="dnone">도착 예정 없음</div>';}
+    D.trains.forEach(function(t,i){
+      html+='<div class="tr"><div class="cd">'+fmtArr(t.sec)+'</div><div class="mg">'+esc(t.msg)+(t.dest?' · '+esc(t.dest)+'행':'')+'</div>'+(i===0?carsBlock(t.cars):'')+'</div>';
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div class="arr-foot">'+(arrData.updated?'기준 '+esc(arrData.updated)+' · ':'')+'20초마다 자동으로 새로 고쳐요. 서울 열린데이터광장 실시간 도착정보이며 실제와 차이가 있을 수 있어요.</div>';
   arrBody.innerHTML=html;
 }
+arrBody.addEventListener('click',function(e){
+  var b=e.target.closest('[data-line]');if(!b)return;
+  arrLine=b.getAttribute('data-line');renderArr();
+});
 $('#arrClose').addEventListener('click',closeArr);
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&arrEl.classList.contains('open'))closeArr();});
 
