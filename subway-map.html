@@ -226,7 +226,7 @@ fetch('scripts/data/subway_lines.json').then(function(r){return r.json();}).then
 
 function mkIcon(G,st){
   var major=/환승/.test(st.xfer||'');
-  return L.circleMarker([st.lat,st.lng],{radius:major?5:3,color:'#12202B',weight:major?1.6:1,fillColor:'#fff',fillOpacity:1,opacity:1});
+  return L.circleMarker([st.lat,st.lng],{radius:major?8:6,color:'#12202B',weight:major?2.2:1.8,fillColor:'#fff',fillOpacity:1,opacity:1,bubblingMouseEvents:false});
 }
 
 function init(){
