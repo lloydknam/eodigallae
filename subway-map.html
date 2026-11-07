@@ -369,11 +369,15 @@ function loadArr(){
     });
 }
 var arrData=null,arrLine=null,arrFetchedAt=0,arrTick=0,arrPos=[];
+/* 노선도용 열차 위치는 GitHub 스냅샷에서 읽는다(서울 API 호출 한도를 쓰지 않음).
+   5분보다 오래된 스냅샷은 쓰지 않고 추정 위치로 대신한다. */
+var posFetchedAt=0;
 function loadPos(){
-  if(!API)return;
-  fetch(API+'/subway',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
-    if(j&&j.trains)arrPos=j.trains;
-  }).catch(function(){});
+  if(Date.now()-posFetchedAt<30000)return;
+  posFetchedAt=Date.now();
+  fetch(SNAP+'?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+    arrPos=(j&&j.trains&&j.at&&Date.now()-j.at<300000)?j.trains:[];
+  }).catch(function(){arrPos=[];});
 }
 function arrRem(t){return Math.max(0,(+t.sec||0)-(Date.now()-arrFetchedAt)/1000);}
 /* 전동차 모양(측면) SVG. sign<0이면 좌우 반전 */

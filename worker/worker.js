@@ -161,19 +161,21 @@ async function handleReport(env, body) {
 async function handleSubway(env) {
   if (!env.SEOUL_API_KEY) return { error: "서울시 인증키(SEOUL_API_KEY)가 아직 등록되지 않았어요." };
   const trains = [];
-  let okLines = 0;
+  let okLines = 0, lastCode = "";
   await Promise.all(Array.from({ length: 9 }, (_, i) => i + 1).map(async (n) => {
     try {
       const r = await fetch(`http://swopenapi.seoul.go.kr/api/subway/${env.SEOUL_API_KEY}/json/realtimePosition/0/200/${encodeURIComponent(n + "호선")}`);
       if (!r.ok) return;
       const j = await r.json();
+      const c = (j.errorMessage || {}).code || j.code;
+      if (c && c !== "INFO-000") lastCode = c;
       const list = j.realtimePositionList;
       if (!Array.isArray(list)) return;
       okLines++;
       for (const t of list) trains.push({ l: n, t: t.trainNo, s: t.statnNm, d: t.statnTnm, u: +t.updnLine, st: +t.trainSttus, x: +t.directAt || 0 });
     } catch (e) { /* 한 노선이 실패해도 나머지는 돌려준다 */ }
   }));
-  if (!okLines) return { error: "서울시에서 열차 위치를 받지 못했어요." };
+  if (!okLines) return { error: lastCode === "ERROR-337" ? "오늘 서울시 실시간 지하철 호출 한도를 다 썼어요." : "서울시에서 열차 위치를 받지 못했어요.", code: lastCode };
   return { at: Date.now(), lines: okLines, trains };
 }
 
@@ -187,8 +189,10 @@ async function handleSubwayStation(env, station) {
   catch { return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." }; }
   if (!r.ok) return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
   let js; try { js = await r.json(); } catch { return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." }; }
-  const code = (js.errorMessage || {}).code;
-  if (code && code !== "INFO-000" && code !== "INFO-200") return { error: "열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요." };
+  // 서울시는 인증 오류·호출 한도 초과를 errorMessage가 아닌 최상위 code/message로 돌려준다.
+  const code = (js.errorMessage || {}).code || js.code || (js.RESULT || {}).CODE;
+  if (code === "ERROR-337") return { error: "오늘 서울시 실시간 지하철 호출 한도를 다 썼어요. 자정이 지나면 다시 보여요.", code };
+  if (code && code !== "INFO-000" && code !== "INFO-200") return { error: `열차 정보를 가져오지 못했어요 (${code}).`, code };
   const list = js.realtimeArrivalList || [];
   const lines = new Map();
   for (const t of list) {
