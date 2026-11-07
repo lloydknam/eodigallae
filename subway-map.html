@@ -137,6 +137,15 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .car.l{background:#3DDC97}.car.m{background:#F5C542}.car.h{background:#F0524B}
 .cars-legend{display:flex;gap:10px;margin-top:6px;color:#93A4B1;font-size:11px}
 .cars-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.route{position:relative;height:66px;margin:14px 0 4px}
+.rwrap{position:absolute;left:34px;right:34px;top:0;bottom:0}
+.rline{position:absolute;left:0;right:0;top:13px;height:4px;border-radius:2px;opacity:.9}
+.rnode{position:absolute;top:7px;transform:translateX(-50%);width:70px;text-align:center}
+.rnode i{display:block;width:12px;height:12px;border-radius:50%;background:#0A1119;border:2px solid #EEF3F7;margin:0 auto;box-sizing:border-box}
+.rnode.cur i{width:16px;height:16px;border-color:#3AA6F0;box-shadow:0 0 0 4px rgba(58,166,240,.25)}
+.rnode span{display:block;margin-top:7px;font-size:10px;color:#93A4B1;white-space:nowrap}
+.rnode.cur span{color:#EEF3F7;font-weight:700}
+.rtrain{position:absolute;top:0;transform:translateX(-50%);height:26px;line-height:26px;padding:0 9px;border-radius:7px;color:#fff;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 @media (max-width:360px){.trow .c{min-width:70px}.tr .cd{font-size:17px}}
 </style>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script>
@@ -316,7 +325,7 @@ function lineInfo(id){
   var nmx=SUBWAY_NAME[+id]||'기타';
   return {label:nmx.slice(0,2),name:nmx,bg:'#5B6B78',fg:'#fff'};
 }
-function fmtArr(sec){sec=Math.max(0,+sec||0);return sec<60?sec+'초':Math.floor(sec/60)+'분 '+(sec%60)+'초';}
+function fmtArr(sec){sec=Math.floor(Math.max(0,+sec||0));return sec<60?sec+'초':Math.floor(sec/60)+'분 '+(sec%60)+'초';}
 function stationLines(s){
   return LINES.filter(function(x){return x.stations.some(function(st){return st.name===s.name&&Math.abs(st.lat-s.lat)<.002&&Math.abs(st.lng-s.lng)<.002;});});
 }
@@ -330,9 +339,10 @@ function showStation(s){
   arrEl.scrollTop=0;
   loadArr();
   clearInterval(arrTimer);arrTimer=setInterval(loadArr,20000);
+  clearInterval(arrTick);arrTick=setInterval(function(){if(arrData&&arrEl.classList.contains('open'))renderArr();},1000);
 }
 function closeArr(){
-  arrEl.classList.remove('open');clearInterval(arrTimer);arrTimer=0;arrTok++;
+  arrEl.classList.remove('open');clearInterval(arrTimer);arrTimer=0;clearInterval(arrTick);arrTick=0;arrTok++;
 }
 function loadArr(){
   var tok=++arrTok;
@@ -342,13 +352,35 @@ function loadArr(){
     .then(function(x){
       if(tok!==arrTok)return;
       if(!x.ok||x.j.error){arrBody.innerHTML='<div class="arr-empty">'+esc(x.j.error||'열차 정보를 가져오지 못했어요. 잠시 뒤 다시 해 주세요.')+'</div>';return;}
+      arrFetchedAt=Date.now();
       renderArr(x.j);
     })
     .catch(function(){
       if(tok===arrTok)arrBody.innerHTML='<div class="arr-empty">열차 정보를 가져오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';
     });
 }
-var arrData=null,arrLine=null;
+var arrData=null,arrLine=null,arrFetchedAt=0,arrTick=0;
+function arrRem(t){return Math.max(0,(+t.sec||0)-(Date.now()-arrFetchedAt)/1000);}
+function routeStrip(G,t,st){
+  if(!G||!G.branches||!st)return '';
+  var b=G.branches.filter(function(br){return br.some(function(x){return x.name===st.name;});})[0];
+  if(!b)return '';
+  var ti=b.findIndex(function(x){return x.name===st.name;});
+  var di=b.findIndex(function(x){return nm(x.name)===nm(t.dest);});
+  if(di<0||di===ti)return '';
+  var sign=di>ti?1:-1, prev=ti-sign, rem=arrRem(t);
+  var f=rem<=0?1:Math.min(.95,1-rem/300);
+  var lo=Math.max(0,ti-3), hi=Math.min(b.length-1,ti+3), n=Math.max(1,hi-lo);
+  function X(k){return (k-lo)/n*100;}
+  var tp=(prev>=0&&prev<b.length)?X(prev)+f*(X(ti)-X(prev)):X(ti);
+  var info=lineInfo(G.id);
+  var h='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
+  for(var k=lo;k<=hi;k++){
+    h+='<div class="rnode'+(k===ti?' cur':'')+'" style="left:'+X(k)+'%"><i></i><span>'+esc(b[k].name)+'</span></div>';
+  }
+  h+='<div class="rtrain" style="left:'+tp+'%;background:'+info.bg+';color:'+info.fg+'">'+(sign>0?'▶':'◀')+' 열차</div></div></div>';
+  return h;
+}
 function congLevel(v){v=String(v||'');return /혼잡/.test(v)?'h':/보통/.test(v)?'m':'l';}
 function carsBlock(cars){
   if(!cars||!cars.length)return '';
@@ -366,6 +398,7 @@ function renderArr(j){
   if(!arrLine||!groups.some(function(L){return L.id===arrLine;}))arrLine=groups[0].id;
   var G=groups.filter(function(L){return L.id===arrLine;})[0];
   var info=lineInfo(G.id);
+  var LG=LINES.filter(function(g){return +g.liveNum===+(G.id)-1000;})[0];
   var html='';
   if(groups.length>1){
     html+='<div class="ltabs" role="group" aria-label="노선 선택">'+groups.map(function(L){
@@ -376,14 +409,15 @@ function renderArr(j){
   var dirs=G.dirs.slice().sort(function(a,b){return dirOrder(a)-dirOrder(b);});
   var all=[];
   dirs.forEach(function(D){D.trains.forEach(function(t){all.push(t);});});
-  all.sort(function(a,b){return a.sec-b.sec;});
+  all.sort(function(a,b){return arrRem(a)-arrRem(b);});
   if(all.length){
-    var h=all[0],sec=h.sec;
-    var cd=sec<60?sec+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
+    var h=all[0],sec=arrRem(h);
+    var cd=sec<60?Math.floor(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
     html+='<div class="hero"><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span>'+
       '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':info.name)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-sub">'+esc(info.name)+(sec>=60?' · '+(sec%60)+'초':'')+'</div></div>';
+      '<div class="hero-sub">'+esc(info.name)+(sec>=60?' · '+(Math.floor(sec)%60)+'초':'')+'</div>'+
+      routeStrip(LG,h,arrStation)+'</div>';
   }
   html+='<div class="lines-h">상하행 도착 정보</div><div class="dircols">';
   dirs.forEach(function(D){
@@ -391,7 +425,7 @@ function renderArr(j){
     html+='<div class="dcol"><div class="dhead">'+esc(D.name)+(first&&first.dest?'<small>'+esc(first.dest)+'행 방향</small>':'')+'</div>';
     if(!D.trains.length){html+='<div class="dnone">도착 예정 없음</div>';}
     D.trains.forEach(function(t,i){
-      html+='<div class="tr"><div class="cd">'+fmtArr(t.sec)+'</div><div class="mg">'+esc(t.msg)+(t.dest?' · '+esc(t.dest)+'행':'')+'</div>'+(i===0?carsBlock(t.cars):'')+'</div>';
+      html+='<div class="tr"><div class="cd">'+fmtArr(arrRem(t))+'</div><div class="mg">'+esc(t.msg)+(t.dest?' · '+esc(t.dest)+'행':'')+'</div>'+(i===0?carsBlock(t.cars):'')+'</div>';
     });
     html+='</div>';
   });
