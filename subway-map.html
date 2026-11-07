@@ -97,6 +97,12 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #1E6FA8;border-radius:999px;padding:4px 12px;color:#5DB8F2;font-size:13px}
 .pill i{width:7px;height:7px;border-radius:50%;background:#2F9BE8;box-shadow:0 0 0 3px rgba(47,155,232,.25)}
 .hero-main{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:16px}
+.dhero{margin-top:18px;padding-top:16px;border-top:1px solid #1E2C38}
+.dhero:first-child{margin-top:14px;border-top:0;padding-top:0}
+.dtag-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dtag{font:800 13px var(--f-body);color:#EEF3F7;background:#1B2935;border-radius:6px;padding:3px 9px}
+.dhero .hero-dest{font-size:clamp(34px,10vw,52px)}
+.dhero .hero-cd{font-size:clamp(52px,15vw,80px)}
 .hero-dest{font:800 clamp(40px,12vw,64px)/1.05 var(--f-display);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .hero-cd{flex:none;text-align:right;font:800 clamp(60px,18vw,96px)/.95 var(--f-display);font-variant-numeric:tabular-nums}
 .hero-cd small{font-size:24px;color:#3AA6F0;margin-left:4px;font-weight:700}
@@ -396,8 +402,8 @@ function routeStrip(G,list,st){
     /* 당행역을 이미 지난 열차: 도착 정보가 '당행역 출발'이면 */
     var passed=(t.msg||'').indexOf(nm(st.name))>=0&&/출발/.test(t.msg||'');
     var lo,hi;
-    if(!passed){ /* 도착 전: 전역 3개 + 당행역 */
-      if(sign>0){lo=Math.max(0,ti-3);hi=ti;} else {lo=ti;hi=Math.min(b.length-1,ti+3);}
+    if(!passed){ /* 도착 전: 전역 3개 + 당행역 + 다음 역 1개 */
+      if(sign>0){lo=Math.max(0,ti-3);hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=Math.min(b.length-1,ti+3);}
     }else{       /* 지난 뒤: 당행역 + 다음 역 1개 */
       if(sign>0){lo=ti;hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=ti;}
     }
@@ -460,15 +466,16 @@ function renderArr(j){
   dirs.forEach(function(D){D.trains.forEach(function(t){all.push(t);});});
   all.sort(function(a,b){return arrRem(a)-arrRem(b);});
   var soon=dirs.map(function(D){var ts=D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);});return ts.length?{t:ts[0],dir:D.name}:null;}).filter(Boolean);
-  if(all.length){
-    var h=all[0],sec=arrRem(h);
+  /* 상행·하행 각각의 큰 도착 정보와 노선도 */
+  soon.forEach(function(it){
+    var h=it.t,sec=arrRem(h);
     var cd=sec<60?Math.floor(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
-    html+='<div class="hero"><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span>'+
-      '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':info.name)+'</div>'+
+    html+='<div class="dhero"><div class="dtag-row"><span class="dtag">'+esc(it.dir)+'</span><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span></div>'+
+      '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':it.dir)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-sub">'+esc(info.name)+(sec>=60?' · '+(Math.floor(sec)%60)+'초':'')+'</div>'+
-      routeStrip(LG,soon,arrStation)+'</div>';
-  }
+      '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+(sec>=60?' · '+(Math.floor(sec)%60)+'초':'')+'</div>'+
+      routeStrip(LG,[it],arrStation)+'</div>';
+  });
   html+='<div class="lines-h">상하행 도착 정보</div><div class="dircols">';
   dirs.forEach(function(D){
     var first=D.trains[0];
