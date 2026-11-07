@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-06",
- "count": 175,
+ "updatedAt": "2026-11-07",
+ "count": 173,
  "items": [
   {
    "id": "tour-3481597",
@@ -988,8 +988,8 @@
    "lng": 126.7601224,
    "image": null,
    "homepage": "https://www.pajucf.or.kr/main/main.php",
-   "cityId": "a31-s27",
-   "city": "파주시",
+   "cityId": "a31-s2",
+   "city": "고양시",
    "source": "std"
   },
   {
@@ -1038,21 +1038,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-4109730",
-   "title": "6.10만세운동 100주년 기념 독립페어",
-   "start": "20261104",
-   "end": "20261106",
-   "addr": "경상북도 안동시 도산면 월천길 301",
-   "tel": "02-6951-0289",
-   "lat": 36.6958501961,
-   "lng": 128.8432435883,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/31/4109731_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a35-s11",
-   "city": "안동시",
-   "source": "tour"
-  },
-  {
    "id": "std-5310000-진주국제농식품박람회-20261104",
    "title": "진주국제농식품박람회",
    "start": "20261104",
@@ -1095,21 +1080,6 @@
    "homepage": null,
    "cityId": "a31-s13",
    "city": "수원시",
-   "source": "tour"
-  },
-  {
-   "id": "tour-2918621",
-   "title": "2026 울산 스타트업 페스타",
-   "start": "20261105",
-   "end": "20261106",
-   "addr": "울산광역시 울주군 울산역로 255",
-   "tel": "070-5080-2804",
-   "lat": 35.5556172556,
-   "lng": 129.1316534328,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/48/4128848_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a7-s5",
-   "city": "울주군",
    "source": "tour"
   },
   {
