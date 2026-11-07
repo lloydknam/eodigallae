@@ -204,7 +204,8 @@ async function handleSubwayStation(env, station) {
   }));
   const rec = (list[0] && list[0].recptnDt) || "";
   const updated = rec ? rec.slice(11, 19) : new Date(Date.now() + 9 * 3600e3).toISOString().slice(11, 19);
-  return { station: name, updated, lines: out };
+  const emsg = (js.errorMessage || {});
+  return { station: name, updated, code: emsg.code || '', msg: emsg.message || '', count: list.length, lines: out };
 }
 
 // 한국관광공사 오디(Odii) 오디오 가이드: 좌표 근처 또는 검색어로 찾아 필요한 항목만 돌려준다.

@@ -448,7 +448,7 @@ function renderArr(j){
   if(j)arrData=j;
   var groups=(arrData&&arrData.lines)||[];
   if(!groups.length){
-    arrBody.innerHTML='<div class="arr-empty">지금 도착 예정인 열차 정보가 없어요.<br>첫차 전이거나 운행이 끝났을 수 있어요.</div>';return;
+    arrBody.innerHTML='<div class="arr-empty">지금 도착 예정인 열차 정보가 없어요.<br>첫차 전이거나 운행이 끝났을 수 있어요.'+(arrData&&arrData.code?'<br><small>서울 API 응답: '+esc(arrData.code)+' '+esc(arrData.msg)+' (건수 '+(arrData.count||0)+')</small>':'')+'</div>';return;
   }
   if(!arrLine||!groups.some(function(L){return L.id===arrLine;}))arrLine=groups[0].id;
   var G=groups.filter(function(L){return L.id===arrLine;})[0];
