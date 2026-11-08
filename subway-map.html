@@ -102,11 +102,12 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .dtag-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .dtag{font:800 13px var(--f-body);color:#EEF3F7;background:#1B2935;border-radius:6px;padding:3px 9px}
 .dhero .hero-dest{font-size:clamp(34px,10vw,52px)}
-.dhero .hero-cd{font-size:clamp(52px,15vw,80px)}
+.dhero .hero-cd{font-size:clamp(40px,11vw,72px);white-space:nowrap}
 .hero-dest{font:800 clamp(40px,12vw,64px)/1.05 var(--f-display);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .hero-cd{flex:none;text-align:right;font:800 clamp(60px,18vw,96px)/.95 var(--f-display);font-variant-numeric:tabular-nums}
 .hero-cd .cd-word{font-size:.62em;letter-spacing:-.02em}
-.hero-cd small{font-size:24px;color:#3AA6F0;margin-left:4px;font-weight:700}
+.hero-cd small{font-size:24px;color:#3AA6F0;margin-left:4px;margin-right:6px;font-weight:700}
+.hero-cd small:last-child{margin-right:0}
 .hero-lbl{color:#7E8F9C;font-size:12px;text-align:right;margin-bottom:2px}
 .hero-sub{color:#7E8F9C;font-size:13px;margin-top:8px}
 .lines-h{margin:26px 0 8px;color:#7E8F9C;font-size:12px;letter-spacing:.06em}
@@ -418,7 +419,7 @@ function arrRem(t){var i=tinfo(t);return i.exact?Math.max(0,i.sec-(Date.now()-ar
 function cdHtml(t){
   var i=tinfo(t),sec=arrRem(t);
   if(i.label==='진입'||i.label==='도착'||i.label==='출발')return '<span class="cd-word">'+esc(i.label)+'</span>';
-  if(i.exact)return sec<60?Math.floor(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
+  if(i.exact){sec=Math.floor(sec);return sec<60?pad(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>'+pad(sec%60)+'<small>초</small>';}
   if(i.ahead)return i.ahead+'<small>역 전</small>';
   return '<span class="cd-word">-</span>';
 }
@@ -538,7 +539,7 @@ function renderArr(j){
     html+='<div class="dhero"><div class="dtag-row"><span class="dtag">'+esc(it.dir)+'</span><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span></div>'+
       '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':it.dir)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+(hi_.exact&&sec>=60?' · '+(Math.floor(sec)%60)+'초':'')+'</div>'+
+      '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+'</div>'+
       routeStrip(G.id,it,arrStation,it.peers)+'</div>';
   });
   html+='<div class="lines-h">상하행 도착 정보</div><div class="dircols">';
