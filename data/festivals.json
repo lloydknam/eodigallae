@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-07",
- "count": 173,
+ "updatedAt": "2026-11-08",
+ "count": 156,
  "items": [
   {
    "id": "tour-3481597",
@@ -303,51 +303,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-3478890",
-   "title": "2026 금남로 차 없는 거리 ‘걷자잉’",
-   "start": "20260404",
-   "end": "20261107",
-   "addr": "전남광주통합특별시 동구 금남로 245 (금남로1가)",
-   "tel": "062-413-2535",
-   "lat": 35.14836487617714,
-   "lng": 126.91873155733187,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/37/4040737_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a5-s3",
-   "city": "동구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-2865136",
-   "title": "2026 라온페스타",
-   "start": "20260404",
-   "end": "20261107",
-   "addr": "전남광주통합특별시 동구 충장로 94 (충장로2가)",
-   "tel": "062-413-1274",
-   "lat": 35.1474235264676,
-   "lng": 126.91694835998,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/01/4067301_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a5-s3",
-   "city": "동구",
-   "source": "tour"
-  },
-  {
-   "id": "std-5805000-금남로차없는거리걷자잉-20260404",
-   "title": "금남로 차 없는 거리 걷자잉",
-   "start": "20260404",
-   "end": "20261107",
-   "addr": "전남광주통합특별시 동구 서남로 1(동구청)",
-   "tel": "062-608-2906",
-   "lat": 35.1461414,
-   "lng": 126.9230951,
-   "image": null,
-   "homepage": null,
-   "cityId": "a5-s3",
-   "city": "동구",
-   "source": "std"
-  },
-  {
    "id": "tour-4058556",
    "title": "컬처라운지 경기, 장(場)",
    "start": "20260418",
@@ -573,21 +528,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-4056606",
-   "title": "청백리의 집, 오늘을 비추다",
-   "start": "20260905",
-   "end": "20261107",
-   "addr": "경기도 광명시 오리로347번길 5-6 (소하동)",
-   "tel": "02-6015-2592",
-   "lat": 37.433927297,
-   "lng": 126.8777258264,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/72/4096372_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a31-s4",
-   "city": "광명시",
-   "source": "tour"
-  },
-  {
    "id": "std-6290000-광주비엔날레-20260905",
    "title": "광주비엔날레",
    "start": "20260905",
@@ -601,36 +541,6 @@
    "cityId": "a5-s4",
    "city": "북구",
    "source": "std"
-  },
-  {
-   "id": "tour-4109305",
-   "title": "달밤에체조 부산 챌린지",
-   "start": "20260919",
-   "end": "20261107",
-   "addr": "부산광역시 부산진구 시민공원로 73 (범전동)",
-   "tel": "070-8065-4592",
-   "lat": 35.1655426683,
-   "lng": 129.0558397915,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/24/4109324_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a6-s7",
-   "city": "부산진구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-3355698",
-   "title": "한강수계 걷기행사",
-   "start": "20260919",
-   "end": "20261107",
-   "addr": "경기도 가평군 가평읍 대곡리 174-3",
-   "tel": "02-458-3315",
-   "lat": 37.823886379,
-   "lng": 127.5134174634,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/96/4105196_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a31-s1",
-   "city": "가평군",
-   "source": "tour"
   },
   {
    "id": "tour-4116779",
@@ -1068,21 +978,6 @@
    "source": "std"
   },
   {
-   "id": "tour-3552019",
-   "title": "2026 뷰티썸 수원",
-   "start": "20261105",
-   "end": "20261107",
-   "addr": "경기도 수원시 영통구 광교중앙로 140 (하동)",
-   "tel": "02-6121-6229",
-   "lat": 37.2858286641,
-   "lng": 127.0594469415,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/86/4114586_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a31-s13",
-   "city": "수원시",
-   "source": "tour"
-  },
-  {
    "id": "std-B551011-구미라면축제-20261106",
    "title": "구미라면축제",
    "start": "20261106",
@@ -1263,21 +1158,6 @@
    "source": "std"
   },
   {
-   "id": "std-4420000-2026속리산축제-20261106",
-   "title": "2026 속리산 축제",
-   "start": "20261106",
-   "end": "20261107",
-   "addr": "충청북도 보은군 보은읍 교사삼산길 20-4",
-   "tel": "043-540-3372",
-   "lat": 36.532721,
-   "lng": 127.8248196,
-   "image": null,
-   "homepage": null,
-   "cityId": "a33-s3",
-   "city": "보은군",
-   "source": "std"
-  },
-  {
    "id": "std-4530000-서산국화축제-20261106",
    "title": "서산국화축제",
    "start": "20261106",
@@ -1308,21 +1188,6 @@
    "source": "std"
   },
   {
-   "id": "tour-3401306",
-   "title": "김포 해병대 문화축제 in 대명항",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "경기도 김포시 대곶면 대명항1로 110-36",
-   "tel": "031-980-5110",
-   "lat": 37.6400140918,
-   "lng": 126.539451725,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/71/4131171_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a31-s8",
-   "city": "김포시",
-   "source": "tour"
-  },
-  {
    "id": "tour-4127761",
    "title": "마산야외도서관 [오롯이 마도로]",
    "start": "20261107",
@@ -1336,21 +1201,6 @@
    "cityId": "a36-s16",
    "city": "창원시",
    "source": "tour"
-  },
-  {
-   "id": "std-6260000-부산불꽃축제-20261107",
-   "title": "부산불꽃축제",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "부산광역시 수영구 광안해변로 219",
-   "tel": "051-888-5222",
-   "lat": 35.153773,
-   "lng": 129.11852,
-   "image": null,
-   "homepage": "https://festivalbusan.com/",
-   "cityId": "a6-s12",
-   "city": "수영구",
-   "source": "std"
   },
   {
    "id": "tour-4116982",
@@ -1380,51 +1230,6 @@
    "homepage": null,
    "cityId": "a31-s15",
    "city": "안산시",
-   "source": "tour"
-  },
-  {
-   "id": "tour-3113222",
-   "title": "온 가족 책 잔치",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "서울특별시 종로구 북촌로5길 48 (화동)",
-   "tel": "02-2011-5742",
-   "lat": 37.5796819937,
-   "lng": 126.9823646863,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/36/4128436_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a1-s23",
-   "city": "종로구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-4063702",
-   "title": "평화온담",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "경상북도 경주시 황남동 104-1",
-   "tel": "02-6958-7225",
-   "lat": 35.8353125,
-   "lng": 129.2180625,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/09/4133309_image2_1.png",
-   "homepage": null,
-   "cityId": "a31-s31",
-   "city": "화성시",
-   "source": "tour"
-  },
-  {
-   "id": "tour-3399435",
-   "title": "2026 안성맞춤 상설공연 “톡톡달콤 페스티벌”",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "경기도 안성시 죽산면 용설호수길 101",
-   "tel": "031-677-2554",
-   "lat": 37.0563847422,
-   "lng": 127.4516587664,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/50/4130950_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a31-s16",
-   "city": "안성시",
    "source": "tour"
   },
   {
@@ -1458,21 +1263,6 @@
    "source": "std"
   },
   {
-   "id": "std-5100000-금호삼삼오오이웃대잔치-20261107",
-   "title": "금호삼삼오오이웃대잔치",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "경상북도 영천시 금호읍 금호로 153",
-   "tel": "",
-   "lat": null,
-   "lng": null,
-   "image": null,
-   "homepage": null,
-   "cityId": "a35-s15",
-   "city": "영천시",
-   "source": "std"
-  },
-  {
    "id": "std-5130000-2026경산반려문화축제-20261107",
    "title": "2026 경산 반려문화축제",
    "start": "20261107",
@@ -1488,21 +1278,6 @@
    "source": "std"
   },
   {
-   "id": "std-4090000-2026김포선셋페스타-20261107",
-   "title": "2026 김포 선셋 페스타",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "경기도 김포시 대곶면 대명리 551-1",
-   "tel": "031-980-5105",
-   "lat": 37.64067915,
-   "lng": 126.5392694,
-   "image": null,
-   "homepage": null,
-   "cityId": "a31-s8",
-   "city": "김포시",
-   "source": "std"
-  },
-  {
    "id": "std-4610000-2026의좋은형제축제-20261107",
    "title": "2026 의좋은형제축제",
    "start": "20261107",
@@ -1515,36 +1290,6 @@
    "homepage": null,
    "cityId": "a34-s11",
    "city": "예산군",
-   "source": "std"
-  },
-  {
-   "id": "std-4191000-치악산왕발걸음축제-20261107",
-   "title": "치악산왕발걸음축제",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "강원특별자치도 원주시 소초면 평장동길 86-16",
-   "tel": "033-748-5966",
-   "lat": 37.4186377,
-   "lng": 128.0031734,
-   "image": null,
-   "homepage": null,
-   "cityId": "a32-s9",
-   "city": "원주시",
-   "source": "std"
-  },
-  {
-   "id": "std-5820000-2026비엔날레문화콘서트3-20261107",
-   "title": "2026 비엔날레 문화콘서트3",
-   "start": "20261107",
-   "end": "20261107",
-   "addr": "전남광주통합특별시 북구 비엔날레로 111",
-   "tel": "062-410-8227",
-   "lat": 35.18309427,
-   "lng": 126.8892065,
-   "image": null,
-   "homepage": null,
-   "cityId": "a5-s4",
-   "city": "북구",
    "source": "std"
   },
   {
