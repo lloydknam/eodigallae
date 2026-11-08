@@ -171,9 +171,10 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .rnode.edge-l span{left:24px;text-align:left}
 .rnode.edge-r span{right:24px;text-align:right}
 .rnode.cur.edge-l span,.rnode.cur.edge-r span{top:17px}
-.rtrain{position:absolute;top:4px;transform:translateX(-50%);width:110px;text-align:center;pointer-events:none}
+/* 열차는 바퀴가 노선(가운데 44px)에 닿게 아래를 맞추고, 상하행 표시는 열차 위에 둔다 */
+.rtrain{position:absolute;bottom:35px;transform:translateX(-50%);width:94px;text-align:center;pointer-events:none}
 .rtrain svg{display:block;margin:0 auto;overflow:visible;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
-.rcap{margin-top:2px;font-size:10px;font-weight:700;color:#EEF3F7;white-space:nowrap}
+.rcap{margin-bottom:1px;font-size:10px;font-weight:700;color:#EEF3F7;white-space:nowrap}
 @media (max-width:360px){.trow .c{min-width:70px}.tr .cd{font-size:17px}}
 </style>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script>
@@ -487,20 +488,21 @@ function cdText(t){
 /* 전동차 모양(측면) SVG. sign<0이면 좌우 반전 */
 var emuN=0;
 function emuSvg(color,sign){
-  /* 차체는 x 0~64, 앞(오른쪽)으로 헤드라이트 불빛 44만큼. viewBox를 좌우 대칭으로 잡아 차체가 가운데 오게 한다 */
-  var flip=sign<0?' transform="translate(64,0) scale(-1,1)"':'',id='hl'+(++emuN);
+  /* 차체는 x 0~43(이전보다 1/3 짧게), 앞(오른쪽)으로 헤드라이트 불빛 44만큼.
+     viewBox를 차체 가운데(21.5) 기준 좌우 대칭으로 잡아 차체가 열차 위치 한가운데 오게 한다 */
+  var flip=sign<0?' transform="translate(43,0) scale(-1,1)"':'',id='hl'+(++emuN);
   var win='';
-  [8,17,26,35].forEach(function(x){win+='<rect x="'+x+'" y="6" width="6.5" height="7" rx="1" fill="#E6EEF5" opacity=".92"/>';});
-  return '<svg width="110" height="17" viewBox="-44 0 152 24" aria-hidden="true">'+
+  [7,15,23].forEach(function(x){win+='<rect x="'+x+'" y="6" width="6" height="7" rx="1" fill="#E6EEF5" opacity=".92"/>';});
+  return '<svg width="94" height="17" viewBox="-44 0 131 24" aria-hidden="true">'+
     '<defs><linearGradient id="'+id+'" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#FFF4C2" stop-opacity=".75"/><stop offset="1" stop-color="#FFF4C2" stop-opacity="0"/></linearGradient></defs>'+
     '<g'+flip+'>'+
-    '<polygon points="59,10.5 106,0 106,24 59,14.5" fill="url(#'+id+')"/>'+
-    '<path d="M2 7 Q2 3 6 3 L49 3 Q59 4 61 13 Q59 21 49 21 L6 21 Q2 21 2 17 Z" fill="'+color+'" stroke="#0A1119" stroke-width="1"/>'+
+    '<polygon points="39,10.5 86,0 86,24 39,14.5" fill="url(#'+id+')"/>'+
+    '<path d="M2 7 Q2 3 6 3 L30 3 Q39 4 41 13 Q39 21 30 21 L6 21 Q2 21 2 17 Z" fill="'+color+'" stroke="#0A1119" stroke-width="1"/>'+
     win+
-    '<rect x="44" y="5" width="6" height="14" rx="1" fill="#E6EEF5" opacity=".75"/>'+
-    '<rect x="2" y="14" width="59" height="2" fill="#fff" opacity=".55"/>'+
-    '<circle cx="58.5" cy="12.5" r="1.7" fill="#FFF4C2"/>'+
-    '<circle cx="12" cy="21.5" r="2.3" fill="#0A1119"/><circle cx="50" cy="21.5" r="2.3" fill="#0A1119"/>'+
+    '<rect x="31" y="5" width="5" height="9" rx="1" fill="#E6EEF5" opacity=".75"/>'+
+    '<rect x="2" y="15" width="39" height="2" fill="#fff" opacity=".55"/>'+
+    '<circle cx="38.5" cy="12.5" r="1.7" fill="#FFF4C2"/>'+
+    '<circle cx="9" cy="21.5" r="2.3" fill="#0A1119"/><circle cx="33" cy="21.5" r="2.3" fill="#0A1119"/>'+
     '</g></svg>';
 }
 /* 순환선 여부: 첫 역과 마지막 역이 2km 안에 있으면 이어진 고리로 본다(2호선 본선) */
@@ -574,8 +576,8 @@ function routeStrip(lineId,it,st,peers){
     var shortNm=String(sx.name).replace(/\(.*?\)/g,'').trim()||sx.name;
     out+='<div class="rnode'+(o===0?' cur':'')+(o===lo?' edge-l':o===hi?' edge-r':'')+'" style="left:'+X(o)+'%" title="'+esc(sx.name)+'"><i'+(o===0?' style="--ph:-'+(Date.now()%1400)+'ms"':'')+'></i><span>'+esc(shortNm)+'</span></div>';
   }
-  out+='<div class="rtrain" style="left:'+X(tpos)+'%">'+emuSvg(G.color,sign)+
-    '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(dirLabel(it.dir))+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+(far?' · '+far:'')+'</div></div>';
+  out+='<div class="rtrain" style="left:'+X(tpos)+'%">'+
+    '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(dirLabel(it.dir))+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+(far?' · '+far:'')+'</div>'+emuSvg(G.color,sign)+'</div>';
   return out+'</div></div>';
 }
 /* 2호선 내선·외선은 서울시 구분(상행/내선, 하행/외선)대로 상행·하행으로 표시 */
