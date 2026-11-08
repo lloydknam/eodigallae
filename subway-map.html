@@ -110,6 +110,8 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .hero-cd small:last-child{margin-right:0}
 .hero-lbl{color:#7E8F9C;font-size:12px;text-align:right;margin-bottom:2px}
 .hero-sub{color:#7E8F9C;font-size:13px;margin-top:8px}
+.hero-next{color:#B7C4CE;font-size:13px;margin-top:4px}
+.hero-next b{color:#EEF3F7;font-weight:700}
 .lines-h{margin:26px 0 8px;color:#7E8F9C;font-size:12px;letter-spacing:.06em}
 .ln-block{border:1px solid #1E2C38;border-radius:12px;padding:10px 12px;margin-bottom:10px;background:#101A23}
 .ln-head{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:2px}
@@ -395,7 +397,7 @@ var ARVL_CD={0:'진입',1:'도착',2:'출발',3:'전역 출발',4:'전역 진입
 function tinfo(t){
   var m=String(t.msg||'').trim(), here=nm(arrStation&&arrStation.name||'');
   var r={sec:0,exact:false,label:'',ahead:null,cur:t.cur?nm(t.cur):''};
-  var par=m.match(/\(([^)]+)\)\s*$/); if(par&&!r.cur)r.cur=nm(par[1]);
+  var par=m.match(/\((.+)\)\s*$/); if(par&&!r.cur)r.cur=nm(par[1]);
   var mm=m.match(/(\d+)분\s*(?:(\d+)초)?\s*후/), ss=m.match(/(\d+)초\s*후/), nb=m.match(/\[(\d+)\]번째\s*전역/);
   var cd=(t.cd!==undefined&&t.cd!==null&&t.cd!=='')?+t.cd:null;
   if(+t.sec>0){r.sec=+t.sec;r.exact=true;}
@@ -531,7 +533,7 @@ function renderArr(j){
   var all=[];
   dirs.forEach(function(D){D.trains.forEach(function(t){all.push(t);});});
   all.sort(function(a,b){return arrRem(a)-arrRem(b);});
-  var soon=dirs.map(function(D){var ts=D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);});return ts.length?{t:ts[0],dir:D.name,peers:D.trains}:null;}).filter(Boolean);
+  var soon=dirs.map(function(D){var ts=D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);});return ts.length?{t:ts[0],next:ts[1]||null,dir:D.name,peers:D.trains}:null;}).filter(Boolean);
   /* 상행·하행 각각의 큰 도착 정보와 노선도 */
   soon.forEach(function(it){
     var h=it.t,sec=arrRem(h),hi_=tinfo(h);
@@ -540,19 +542,10 @@ function renderArr(j){
       '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':it.dir)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
       '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+'</div>'+
+      '<div class="hero-next">'+(it.next?'다음 열차 <b>'+esc(it.next.dest?it.next.dest+'행':'')+' '+esc(cdText(it.next))+'</b>'+(tinfo(it.next).cur?' · 지금 '+esc(tinfo(it.next).cur):''):'다음 열차 정보 없음')+'</div>'+
+      carsBlock(h.cars)+
       routeStrip(G.id,it,arrStation,it.peers)+'</div>';
   });
-  html+='<div class="lines-h">상하행 도착 정보</div><div class="dircols">';
-  dirs.forEach(function(D){
-    var first=D.trains[0];
-    html+='<div class="dcol"><div class="dhead">'+esc(D.name)+(first&&first.dest?'<small>'+esc(first.dest)+'행 방향</small>':'')+'</div>';
-    if(!D.trains.length){html+='<div class="dnone">도착 예정 없음</div>';}
-    D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);}).forEach(function(t,i){
-      html+='<div class="tr"><div class="cd">'+esc(cdText(t))+'</div><div class="mg">'+esc(t.msg)+(t.dest?' · '+esc(t.dest)+'행':'')+'</div>'+(i===0?carsBlock(t.cars):'')+'</div>';
-    });
-    html+='</div>';
-  });
-  html+='</div>';
   html+='<div class="arr-foot">'+(arrData.updated?'기준 '+esc(arrData.updated)+' · ':'')+'20초마다 자동으로 새로 고쳐요. 서울 열린데이터광장 실시간 도착정보이며 실제와 차이가 있을 수 있어요.</div>';
   arrBody.innerHTML=html;
 }
