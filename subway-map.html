@@ -105,6 +105,7 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .dhero .hero-cd{font-size:clamp(52px,15vw,80px)}
 .hero-dest{font:800 clamp(40px,12vw,64px)/1.05 var(--f-display);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .hero-cd{flex:none;text-align:right;font:800 clamp(60px,18vw,96px)/.95 var(--f-display);font-variant-numeric:tabular-nums}
+.hero-cd .cd-word{font-size:.62em;letter-spacing:-.02em}
 .hero-cd small{font-size:24px;color:#3AA6F0;margin-left:4px;font-weight:700}
 .hero-lbl{color:#7E8F9C;font-size:12px;text-align:right;margin-bottom:2px}
 .hero-sub{color:#7E8F9C;font-size:13px;margin-top:8px}
@@ -322,7 +323,15 @@ function syncChips(){
 
 /* ---------- 역 도착정보 화면 ---------- */
 var arrEl=$('#arr'),arrBody=$('#arrBody'),arrTimer=0,arrTok=0,arrStation=null;
-var SUBWAY_NAME={1032:'GTX-A',1063:'경의중앙',1065:'공항철도',1067:'경춘',1075:'수인분당',1077:'신분당',1092:'우이신설',1094:'신림'};
+var SUBWAY_NAME={1032:'GTX-A',1061:'중앙',1063:'경의중앙',1065:'공항철도',1067:'경춘',1075:'수인분당',1077:'신분당',1081:'경강',1092:'우이신설',1093:'서해',1094:'신림'};
+/* 서울시 subwayId → 노선 데이터(subway_lines.json) 그룹 id. 수인분당은 분당선·수인선 둘로 나뉘어 있다. */
+var SUBWAY_GROUPS={1061:['GJ'],1063:['GJ'],1065:['AP'],1067:['GC'],1075:['BD','SU'],1077:['SB'],1081:['GG'],1092:['UI'],1093:['SH'],1094:['SR']};
+function lineGroups(id){
+  var n=+id-1000;
+  if(n>=1&&n<=9)return LINES.filter(function(g){return +g.liveNum===n;});
+  var ids=SUBWAY_GROUPS[+id]||[];
+  return LINES.filter(function(g){return ids.indexOf(g.id)>=0;});
+}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function lineInfo(id){
   var n=+id-1000;
@@ -330,12 +339,12 @@ function lineInfo(id){
     var G=LINES.filter(function(g){return +g.liveNum===n;})[0];
     if(G)return {label:String(n),name:n+'호선',bg:G.color,fg:G.textColor};
   }
-  var nmx=SUBWAY_NAME[+id]||'기타';
-  return {label:nmx.slice(0,2),name:nmx,bg:'#5B6B78',fg:'#fff'};
+  var nmx=SUBWAY_NAME[+id]||'기타',g0=lineGroups(id)[0];
+  return {label:nmx.slice(0,2),name:nmx,bg:g0?g0.color:'#5B6B78',fg:g0?g0.textColor:'#fff'};
 }
 function fmtArr(sec){sec=Math.floor(Math.max(0,+sec||0));return sec<60?sec+'초':Math.floor(sec/60)+'분 '+(sec%60)+'초';}
 function stationLines(s){
-  return LINES.filter(function(x){return x.stations.some(function(st){return st.name===s.name&&Math.abs(st.lat-s.lat)<.002&&Math.abs(st.lng-s.lng)<.002;});});
+  return LINES.filter(function(x){return x.stations.some(function(st){return nm(st.name)===nm(s.name)&&Math.abs(st.lat-s.lat)<.006&&Math.abs(st.lng-s.lng)<.006;});});
 }
 function showStation(s){
   arrStation=s;arrLine=null;arrData=null;
@@ -379,7 +388,47 @@ function loadPos(){
     arrPos=(j&&j.trains&&j.at&&Date.now()-j.at<300000)?j.trains:[];
   }).catch(function(){arrPos=[];});
 }
-function arrRem(t){return Math.max(0,(+t.sec||0)-(Date.now()-arrFetchedAt)/1000);}
+/* 도착 정보 해석. 서울시는 노선에 따라 남은 초(barvlDt)를 0으로 주고 문구로만 위치를 알려 준다.
+   반환: sec(남은 초 추정), exact(정확한 초인지), label(진입·도착·출발), ahead(몇 역 전), cur(열차가 있는 역) */
+var ARVL_CD={0:'진입',1:'도착',2:'출발',3:'전역 출발',4:'전역 진입',5:'전역 도착'};
+function tinfo(t){
+  var m=String(t.msg||'').trim(), here=nm(arrStation&&arrStation.name||'');
+  var r={sec:0,exact:false,label:'',ahead:null,cur:t.cur?nm(t.cur):''};
+  var par=m.match(/\(([^)]+)\)\s*$/); if(par&&!r.cur)r.cur=nm(par[1]);
+  var mm=m.match(/(\d+)분\s*(?:(\d+)초)?\s*후/), ss=m.match(/(\d+)초\s*후/), nb=m.match(/\[(\d+)\]번째\s*전역/);
+  var cd=(t.cd!==undefined&&t.cd!==null&&t.cd!=='')?+t.cd:null;
+  if(+t.sec>0){r.sec=+t.sec;r.exact=true;}
+  else if(mm){r.sec=(+mm[1])*60+(+(mm[2]||0));r.exact=true;}
+  else if(ss){r.sec=+ss[1];r.exact=true;}
+  if(cd===0||cd===1||cd===2){r.ahead=0;r.label=ARVL_CD[cd];}
+  else if(cd===3||cd===4||cd===5){r.ahead=1;}
+  else if(nb){r.ahead=+nb[1];}
+  else if(/^전역\s*(진입|도착|출발)/.test(m)){r.ahead=1;}
+  else if(here&&nm(m.split(/\s/)[0])===here&&/(진입|도착|출발)/.test(m)){r.ahead=0;r.label=(m.match(/(진입|도착|출발)/)||[])[1];}
+  else if(/^당역\s*(진입|도착|출발)/.test(m)){r.ahead=0;r.label=(m.match(/(진입|도착|출발)/)||[])[1];}
+  if(!r.exact){
+    if(r.label==='진입')r.sec=20; else if(r.label==='도착'||r.label==='출발')r.sec=0;
+    else if(r.ahead!==null)r.sec=r.ahead*120;
+    else r.sec=9999;
+  }
+  return r;
+}
+function arrRem(t){var i=tinfo(t);return i.exact?Math.max(0,i.sec-(Date.now()-arrFetchedAt)/1000):i.sec;}
+/* 큰 숫자 영역과 목록에 쓸 남은 시간 표현 */
+function cdHtml(t){
+  var i=tinfo(t),sec=arrRem(t);
+  if(i.label==='진입'||i.label==='도착'||i.label==='출발')return '<span class="cd-word">'+esc(i.label)+'</span>';
+  if(i.exact)return sec<60?Math.floor(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
+  if(i.ahead)return i.ahead+'<small>역 전</small>';
+  return '<span class="cd-word">-</span>';
+}
+function cdText(t){
+  var i=tinfo(t);
+  if(i.label)return i.label;
+  if(i.exact)return fmtArr(arrRem(t));
+  if(i.ahead)return i.ahead+'역 전';
+  return '정보 없음';
+}
 /* 전동차 모양(측면) SVG. sign<0이면 좌우 반전 */
 function emuSvg(color,sign){
   var flip=sign<0?' transform="translate(64,0) scale(-1,1)"':'';
@@ -393,52 +442,65 @@ function emuSvg(color,sign){
     '<circle cx="12" cy="21.5" r="2.3" fill="#0A1119"/><circle cx="50" cy="21.5" r="2.3" fill="#0A1119"/>'+
     '</g></svg>';
 }
-function routeStrip(G,list,st){
-  if(!G||!G.branches||!st||!list.length)return '';
-  var b=G.branches.filter(function(br){return br.some(function(x){return x.name===st.name;});})[0];
-  if(!b)return '';
-  var ti=b.findIndex(function(x){return x.name===st.name;});
-  var info=lineInfo(G.id),out='';
-  list.forEach(function(it){
-    var t=it.t, di=b.findIndex(function(x){return nm(x.name)===nm(t.dest);});
-    if(di<0||di===ti)return;
-    var sign=di>ti?1:-1, rem=arrRem(t);
-    /* 당행역을 이미 지난 열차: 도착 정보가 '당행역 출발'이면 */
-    var passed=(t.msg||'').indexOf(nm(st.name))>=0&&/출발/.test(t.msg||'');
-    var lo,hi;
-    if(!passed){ /* 도착 전: 전역 3개 + 당행역 + 다음 역 1개 */
-      if(sign>0){lo=Math.max(0,ti-3);hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=Math.min(b.length-1,ti+3);}
-    }else{       /* 지난 뒤: 당행역 + 다음 역 1개 */
-      if(sign>0){lo=ti;hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=ti;}
-    }
-    var n=Math.max(1,hi-lo);
-    function X(k){return (k-lo)/n*100;}
-    /* 실시간 열차 위치: 같은 노선·같은 행선지 열차 중 창 안에 있는 열차 */
-    var livePos=null;
-    arrPos.forEach(function(tr){
-      if(+tr.l!==+G.liveNum||nm(tr.d)!==nm(t.dest))return;
-      var si=b.findIndex(function(x){return nm(x.name)===nm(tr.s);});
-      if(si<0)return;
-      var pos=(tr.st===2||tr.st===3)?si+sign*0.5:si;
-      if(pos<lo||pos>hi)return;
-      var ok=passed?((pos-ti)*sign>=0):((pos-ti)*sign<0);
-      if(!ok)return;
-      if(livePos===null||Math.abs(pos-ti)<Math.abs(livePos-ti))livePos=pos;
+function routeStrip(lineId,it,st,peers){
+  if(!st)return '';
+  var here=nm(st.name),G=null,b=null;
+  lineGroups(lineId).some(function(g){
+    return g.branches.some(function(br){
+      if(br.some(function(x){return nm(x.name)===here;})){G=g;b=br;return true;}
+      return false;
     });
-    var tpos;
-    if(livePos!==null)tpos=livePos;
-    else if(!passed){var f=rem<=0?1:Math.min(.95,1-rem/300);tpos=ti-sign*(1-f);}
-    else tpos=ti+sign*0.5;
-    var tp=X(Math.max(lo,Math.min(hi,tpos)));
-    out+='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
-    for(var k=lo;k<=hi;k++){
-      out+='<div class="rnode'+(k===ti?' cur':'')+'" style="left:'+X(k)+'%"><i></i><span>'+esc(b[k].name)+'</span></div>';
-    }
-    out+='<div class="rtrain" style="left:'+tp+'%">'+emuSvg(info.bg,sign)+
-      '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(it.dir)+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+'</div></div>';
-    out+='</div></div>';
   });
-  return out;
+  if(!b)return '';
+  function idx(name){name=nm(name);if(!name)return -1;return b.findIndex(function(x){return nm(x.name)===name;});}
+  var ti=idx(here),t=it.t,inf=tinfo(t);
+  /* 진행 방향(sign): 행선지 → 열차가 있는 역 → 같은 방향 다른 열차 → 상행/하행 관례 순으로 정한다 */
+  function signOf(tr){
+    var d=idx(tr.dest);if(d>=0&&d!==ti)return d>ti?1:-1;
+    var c=idx(tinfo(tr).cur);if(c>=0&&c!==ti)return c<ti?1:-1;
+    return 0;
+  }
+  var sign=signOf(t);
+  if(!sign)(peers||[]).some(function(p){sign=signOf(p);return !!sign;});
+  if(!sign)sign=/상행|내선/.test(it.dir)?(+lineId===1009?1:-1):(+lineId===1009?-1:1);
+  var passed=inf.label==='출발';
+  var lo,hi;
+  if(!passed){ /* 도착 전: 전역 3개 + 당역 + 다음 역 1개 */
+    if(sign>0){lo=Math.max(0,ti-3);hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=Math.min(b.length-1,ti+3);}
+  }else{       /* 지난 뒤: 당역 + 다음 역 1개 */
+    if(sign>0){lo=ti;hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=ti;}
+  }
+  var n=Math.max(1,hi-lo);
+  function X(k){return (k-lo)/n*100;}
+  /* 열차 위치: 실시간 스냅샷(1~9호선) → 도착 문구 → 남은 시간 추정 순 */
+  var livePos=null;
+  if(G.liveNum)arrPos.forEach(function(tr){
+    if(+tr.l!==+G.liveNum||!t.dest||nm(tr.d)!==nm(t.dest))return;
+    var si=idx(tr.s);if(si<0)return;
+    var pos=(tr.st===2||tr.st===3)?si+sign*0.5:si;
+    var ok=passed?((pos-ti)*sign>=0):((pos-ti)*sign<0);
+    if(!ok)return;
+    if(livePos===null||Math.abs(pos-ti)<Math.abs(livePos-ti))livePos=pos;
+  });
+  var tpos,far='';
+  if(livePos!==null)tpos=livePos;
+  else if(passed)tpos=ti+sign*0.5;
+  else if(inf.label==='도착')tpos=ti;
+  else if(inf.label==='진입')tpos=ti-sign*0.25;
+  else{
+    var ci=idx(inf.cur);
+    if(ci>=0&&(ci-ti)*sign<0)tpos=ci;
+    else if(inf.ahead)tpos=ti-sign*inf.ahead;
+    else{var rem=arrRem(t),f=rem<=0?1:Math.min(.95,1-rem/300);tpos=ti-sign*(1-f);}
+  }
+  if(tpos<lo||tpos>hi){far=Math.round(Math.abs(tpos-ti))+'역 전';tpos=Math.max(lo,Math.min(hi,tpos));}
+  var out='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
+  for(var k=lo;k<=hi;k++){
+    out+='<div class="rnode'+(k===ti?' cur':'')+'" style="left:'+X(k)+'%"><i></i><span>'+esc(b[k].name)+'</span></div>';
+  }
+  out+='<div class="rtrain" style="left:'+X(tpos)+'%">'+emuSvg(G.color,sign)+
+    '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(it.dir)+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+(far?' · '+far:'')+'</div></div>';
+  return out+'</div></div>';
 }
 function congLevel(v){v=String(v||'');return /혼잡/.test(v)?'h':/보통/.test(v)?'m':'l';}
 function carsBlock(cars){
@@ -457,7 +519,6 @@ function renderArr(j){
   if(!arrLine||!groups.some(function(L){return L.id===arrLine;}))arrLine=groups[0].id;
   var G=groups.filter(function(L){return L.id===arrLine;})[0];
   var info=lineInfo(G.id);
-  var LG=LINES.filter(function(g){return +g.liveNum===+(G.id)-1000;})[0];
   var html='';
   if(groups.length>1){
     html+='<div class="ltabs" role="group" aria-label="노선 선택">'+groups.map(function(L){
@@ -469,24 +530,24 @@ function renderArr(j){
   var all=[];
   dirs.forEach(function(D){D.trains.forEach(function(t){all.push(t);});});
   all.sort(function(a,b){return arrRem(a)-arrRem(b);});
-  var soon=dirs.map(function(D){var ts=D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);});return ts.length?{t:ts[0],dir:D.name}:null;}).filter(Boolean);
+  var soon=dirs.map(function(D){var ts=D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);});return ts.length?{t:ts[0],dir:D.name,peers:D.trains}:null;}).filter(Boolean);
   /* 상행·하행 각각의 큰 도착 정보와 노선도 */
   soon.forEach(function(it){
-    var h=it.t,sec=arrRem(h);
-    var cd=sec<60?Math.floor(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>';
+    var h=it.t,sec=arrRem(h),hi_=tinfo(h);
+    var cd=cdHtml(h);
     html+='<div class="dhero"><div class="dtag-row"><span class="dtag">'+esc(it.dir)+'</span><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span></div>'+
       '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':it.dir)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+(sec>=60?' · '+(Math.floor(sec)%60)+'초':'')+'</div>'+
-      routeStrip(LG,[it],arrStation)+'</div>';
+      '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+(hi_.exact&&sec>=60?' · '+(Math.floor(sec)%60)+'초':'')+'</div>'+
+      routeStrip(G.id,it,arrStation,it.peers)+'</div>';
   });
   html+='<div class="lines-h">상하행 도착 정보</div><div class="dircols">';
   dirs.forEach(function(D){
     var first=D.trains[0];
     html+='<div class="dcol"><div class="dhead">'+esc(D.name)+(first&&first.dest?'<small>'+esc(first.dest)+'행 방향</small>':'')+'</div>';
     if(!D.trains.length){html+='<div class="dnone">도착 예정 없음</div>';}
-    D.trains.forEach(function(t,i){
-      html+='<div class="tr"><div class="cd">'+fmtArr(arrRem(t))+'</div><div class="mg">'+esc(t.msg)+(t.dest?' · '+esc(t.dest)+'행':'')+'</div>'+(i===0?carsBlock(t.cars):'')+'</div>';
+    D.trains.slice().sort(function(a,b){return arrRem(a)-arrRem(b);}).forEach(function(t,i){
+      html+='<div class="tr"><div class="cd">'+esc(cdText(t))+'</div><div class="mg">'+esc(t.msg)+(t.dest?' · '+esc(t.dest)+'행':'')+'</div>'+(i===0?carsBlock(t.cars):'')+'</div>';
     });
     html+='</div>';
   });

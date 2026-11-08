@@ -200,7 +200,7 @@ async function handleSubwayStation(env, station) {
     const dirs = lines.get(t.subwayId);
     const dname = t.updnLine || t.trainLineNm || "방향";
     if (!dirs.has(dname)) dirs.set(dname, []);
-    dirs.get(dname).push({ sec: +t.barvlDt || 0, msg: t.arvlMsg2 || "", dest: t.bstatnNm || "" });
+    dirs.get(dname).push({ sec: +t.barvlDt || 0, msg: t.arvlMsg2 || "", dest: t.bstatnNm || "", cur: t.arvlMsg3 || "", cd: t.arvlCd ?? "" });
   }
   const out = [...lines].map(([id, dirs]) => ({
     id,
