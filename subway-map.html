@@ -474,6 +474,7 @@ function arrRem(t){var i=tinfo(t);return i.exact?Math.max(0,i.sec-(Date.now()-ar
 function cdHtml(t){
   var i=tinfo(t),sec=arrRem(t);
   if(i.label==='진입'||i.label==='도착'||i.label==='출발')return '<span class="cd-word">'+esc(i.label)+'</span>';
+  if(i.exact&&sec<1)return '<span class="cd-word">도착</span>';
   if(i.exact){sec=Math.floor(sec);return sec<60?pad(sec)+'<small>초</small>':Math.floor(sec/60)+'<small>분</small>'+pad(sec%60)+'<small>초</small>';}
   if(i.ahead)return i.ahead+'<small>역 전</small>';
   return '<span class="cd-word">-</span>';
@@ -548,26 +549,65 @@ function routeStrip(lineId,it,st,peers){
   if(!loop){lo=Math.max(lo,-ti);hi=Math.min(hi,N-1-ti);}
   var span=Math.max(1,hi-lo);
   function X(o){return (o-lo)/span*100;}
-  /* 열차 위치(상대): 실시간 스냅샷(1~9호선) → 도착 문구 → 남은 시간 추정 순 */
-  var livePos=null;
-  if(G.liveNum)arrPos.forEach(function(tr){
-    if(+tr.l!==+G.liveNum||!t.dest||nm(tr.d)!==nm(t.dest))return;
-    var so=off(idx(tr.s));if(so===null)return;
-    var pos=(tr.st===2||tr.st===3)?so+sign*0.5:so;
-    var ok=passed?(pos*sign>=0):(pos*sign<0);
-    if(!ok)return;
-    if(livePos===null||Math.abs(pos)<Math.abs(livePos))livePos=pos;
-  });
-  var tpos,far='';
-  if(livePos!==null)tpos=livePos;
-  else if(passed)tpos=sign*0.5;
-  else if(inf.label==='도착')tpos=0;
-  else if(inf.label==='진입')tpos=-sign*0.25;
-  else{
-    var co=off(idx(inf.cur));
-    if(co!==null&&co*sign<0)tpos=co;
-    else if(inf.ahead)tpos=-sign*inf.ahead;
-    else{var rem=arrRem(t),f=rem<=0?1:Math.min(.95,1-rem/300);tpos=-sign*(1-f);}
+  /* 열차 위치(상대, 역 단위 소수). 남은 시간으로 역과 역 사이를 연속으로 움직인다.
+     구간 시간 = 역 간 거리 ÷ 평균 표정속도 + 정차 시간. 구간 앞부분은 이전 역 정차, 뒷부분은 주행으로 본다 */
+  var RUN_KMH=36,STOP=25;
+  function runT(k){var a1=at(-sign*k),b1=at(-sign*(k-1));return (a1&&b1)?Math.max(40,hav(a1,b1)/RUN_KMH*3600):90;}
+  function timeTo(k){var tt=0;for(var j=1;j<=k;j++)tt+=runT(j)+(j<k?STOP:0);return tt;} /* k역 전 출발 순간부터 당역 도착까지 */
+  function posFromRem(rem){ /* rem초 뒤 당역 도착 → 상대 위치 */
+    if(rem<=0)return 0;
+    var tt=0;
+    for(var k=1;k<=12;k++){
+      var r=runT(k);
+      if(rem<=tt+r)return -sign*((k-1)+(rem-tt)/r);   /* k-1역과 k역 사이 주행 중 */
+      tt+=r;
+      if(rem<=tt+STOP)return -sign*k;                 /* k역 정차 중 */
+      tt+=STOP;
+    }
+    return -sign*12;
+  }
+  var el=Math.max(0,(Date.now()-arrFetchedAt)/1000),m=String(t.msg||''),cdv=(t.cd===''||t.cd==null)?null:+t.cd;
+  var tpos,far='',livePos=null;
+  if(passed){ /* 당역을 떠난 열차: 다음 역 쪽으로 이동 */
+    var fw=at(sign),rF=fw?Math.max(40,hav(at(0),fw)/RUN_KMH*3600):90;
+    tpos=sign*Math.min(1,(el+5)/rF);
+  }else{
+    var rem;
+    if(inf.exact)rem=arrRem(t);
+    else{
+      /* 정확한 초가 없으면 문구로 남은 시간을 추정해 받은 뒤부터 줄여 간다 */
+      var est;
+      if(inf.label==='도착')est=0;
+      else if(inf.label==='진입')est=15;
+      else if(cdv===5||/^전역\s*도착/.test(m))est=runT(1)+STOP*0.5;
+      else if(cdv===4||/^전역\s*진입/.test(m))est=runT(1)+STOP+10;
+      else if(cdv===3||/^전역\s*출발/.test(m))est=runT(1)*0.95;
+      else if(inf.ahead)est=timeTo(inf.ahead)+STOP*0.5;
+      else est=null;
+      rem=est===null?null:Math.max(0,est-el);
+    }
+    if(rem!==null){
+      tpos=posFromRem(rem);
+      /* 서울시가 알려 준 열차 위치(현재 역·몇 번째 전역)와 어긋나지 않게 그 역~다음 역 사이로 묶는다 */
+      var anchor=off(idx(inf.cur));
+      if(anchor===null||anchor*sign>=0)anchor=inf.ahead?-sign*inf.ahead:null;
+      if(anchor!==null&&anchor*sign<0){
+        var lo2=Math.min(anchor,anchor+sign),hi2=Math.max(anchor,anchor+sign);
+        tpos=Math.max(lo2,Math.min(hi2,tpos));
+      }
+    }
+    else{
+      /* 남은 시간 정보가 전혀 없을 때만 실시간 스냅샷 위치를 쓴다 */
+      if(G.liveNum)arrPos.forEach(function(tr){
+        if(+tr.l!==+G.liveNum||!t.dest||nm(tr.d)!==nm(t.dest))return;
+        var so=off(idx(tr.s));if(so===null)return;
+        var pos=(tr.st===2||tr.st===3)?so+sign*0.5:so;
+        if(pos*sign>=0)return;
+        if(livePos===null||Math.abs(pos)<Math.abs(livePos))livePos=pos;
+      });
+      var co=off(idx(inf.cur));
+      tpos=livePos!==null?livePos:(co!==null&&co*sign<0)?co:-sign*0.5;
+    }
   }
   if(tpos<lo||tpos>hi){far=Math.round(Math.abs(tpos))+'역 전';tpos=Math.max(lo,Math.min(hi,tpos));}
   var out='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
