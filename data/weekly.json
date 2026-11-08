@@ -1,6 +1,6 @@
 {
  "week": "2026-W45",
- "updatedAt": "2026-11-08T04:32:33+09:00",
+ "updatedAt": "2026-11-09T04:49:23+09:00",
  "videos": 408,
  "citiesWithData": 229,
  "lists": {
@@ -320,27 +320,6 @@
     }
    },
    {
-    "name": "해어름",
-    "city": "당진시",
-    "province": "충청남도",
-    "cityId": "a34-s4",
-    "spotId": "k26087950",
-    "kakao": "26087950",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 9,
-    "views": 47586,
-    "score": 60.99,
-    "thumb": "https://i.ytimg.com/vi/A8-KFKk9C_c/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/A8-KFKk9C_c/hqdefault.jpg",
-    "video": {
-     "id": "A8-KFKk9C_c",
-     "title": "서울 근교 당일치기 여행지 추천! 1시간이면 가는 충청남도 당진의 알찬 여행지와 맛집까지 8곳을 묶어서 소개해 드릴게요!",
-     "channel": "[빵이네]캠핑&여행TV",
-     "views": 38904
-    }
-   },
-   {
     "name": "무우루",
     "city": "구례군",
     "province": "전라남도",
@@ -401,6 +380,27 @@
      "title": "속초 얏호! 속초에서 유명한 거는 다 먹은 나 혼자 속초 여행🍦 (육구방앗간 찹쌀떡, 강릉막걸리술빵, 북청닭강정, 흰다정, 속초옥수수소금빵, 타이그랜파, 속초맛집)",
      "channel": "나나 Nanasserie",
      "views": 143874
+    }
+   },
+   {
+    "name": "나그네의 주머니",
+    "city": "남원시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s4",
+    "spotId": "k1429015207",
+    "kakao": "1429015207",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 8,
+    "views": 145176,
+    "score": 50.02,
+    "thumb": "https://i.ytimg.com/vi/vJtvxvj4Eew/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/vJtvxvj4Eew/hqdefault.jpg",
+    "video": {
+     "id": "vJtvxvj4Eew",
+     "title": "힐링 남원에서 도파민 풀 충전해버린 혼자 남원여행 브이로그",
+     "channel": "쨔링 zzaling",
+     "views": 121369
     }
    }
   ],
@@ -490,6 +490,48 @@
     }
    },
    {
+    "name": "영월 청령포",
+    "city": "영월군",
+    "province": "강원특별자치도",
+    "cityId": "a32-s8",
+    "spotId": "125785",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 45,
+    "views": 2341598,
+    "score": 1575.71,
+    "thumb": "https://i.ytimg.com/vi/nxukV1yfvCA/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/65/4041365_image2_1.jpg",
+    "video": {
+     "id": "nxukV1yfvCA",
+     "title": "🔥요즘 핫한 영월 여행🔥 관광객은 모르는 현지인 맛집 풀코스 풍자가 직접 완주했습니다. | 또간집 EP.105",
+     "channel": "스튜디오 수제",
+     "views": 1247560
+    }
+   },
+   {
+    "name": "공주 공산성",
+    "city": "공주시",
+    "province": "충청남도",
+    "cityId": "a34-s1",
+    "spotId": "125949",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 44,
+    "views": 1076275,
+    "score": 1377.7,
+    "thumb": "https://i.ytimg.com/vi/Q3N1XTQQfjg/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/41/3404541_image2_1.jpg",
+    "video": {
+     "id": "Q3N1XTQQfjg",
+     "title": "한 번도 궁금하지 않았는데 상상과 다른 공주",
+     "channel": "로드50 Road50",
+     "views": 321263
+    }
+   },
+   {
     "name": "고석정 꽃밭",
     "city": "철원군",
     "province": "강원특별자치도",
@@ -550,48 +592,6 @@
      "title": "★제6회 감악산 꽃별여행과 함께 하는 2026 거창방문의 해★",
      "channel": "거창군",
      "views": 164842
-    }
-   },
-   {
-    "name": "영월 청령포",
-    "city": "영월군",
-    "province": "강원특별자치도",
-    "cityId": "a32-s8",
-    "spotId": "125785",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 38,
-    "views": 4269546,
-    "score": 1017.5,
-    "thumb": "https://i.ytimg.com/vi/7f_BAjPTGaQ/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/65/4041365_image2_1.jpg",
-    "video": {
-     "id": "7f_BAjPTGaQ",
-     "title": "사랑이다vs아니다, 여러분의 생각은? #shorts #윤택TV #오지객 #어디고 #나는자연인이다 #자연인 #영월 #왕과사는남자 #왕사남 #영월여행 #고씨동굴 #강원도여행 #반려견",
-     "channel": "윤택TV",
-     "views": 2087664
-    }
-   },
-   {
-    "name": "대천해수욕장",
-    "city": "보령시",
-    "province": "충청남도",
-    "cityId": "a34-s5",
-    "spotId": "127866",
-    "kakao": "24925403",
-    "cat": "",
-    "kind": "spot",
-    "n": 37,
-    "views": 4179480,
-    "score": 967.83,
-    "thumb": "https://i.ytimg.com/vi/zZEDbH-toCA/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/66/3513866_image2_1.jpg",
-    "video": {
-     "id": "zZEDbH-toCA",
-     "title": "세계 5위 해저터널 뚫었는데 왜 사람은 줄었나, 보령 주민들만 아는 충격적인 진실",
-     "channel": "무궁화경제",
-     "views": 1469676
     }
    }
   ],
