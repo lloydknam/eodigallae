@@ -112,7 +112,9 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .hero-cd small:last-child{margin-right:0}
 .hero-lbl{color:#7E8F9C;font-size:12px;text-align:right;margin-bottom:2px}
 .hero-sub{color:#7E8F9C;font-size:13px;margin-top:8px}
-.hero-next{color:#B7C4CE;font-size:13px;margin-top:4px}
+.hero-row{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px;margin-top:6px}
+.hero-row .hero-sub{margin-top:0}
+.hero-next{color:#B7C4CE;font-size:13px;margin-left:auto;text-align:right}
 .hero-next b{color:#EEF3F7;font-weight:700}
 .lines-h{margin:26px 0 8px;color:#7E8F9C;font-size:12px;letter-spacing:.06em}
 .ln-block{border:1px solid #1E2C38;border-radius:12px;padding:10px 12px;margin-bottom:10px;background:#101A23}
@@ -543,8 +545,8 @@ function renderArr(j){
     html+='<div class="dhero"><div class="dtag-row"><span class="dtag">'+esc(it.dir)+'</span><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span></div>'+
       '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':it.dir)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+'</div>'+
-      '<div class="hero-next">'+(it.next?'다음 열차 <b>'+esc(it.next.dest?it.next.dest+'행':'')+' '+esc(cdText(it.next))+'</b>'+(tinfo(it.next).cur?' · 지금 '+esc(tinfo(it.next).cur):''):'다음 열차 정보 없음')+'</div>'+
+      '<div class="hero-row"><div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+'</div>'+
+      '<div class="hero-next">'+(it.next?'다음 열차 <b>'+esc(it.next.dest?it.next.dest+'행':'')+' '+esc(cdText(it.next))+'</b>'+(tinfo(it.next).cur?' · 지금 '+esc(tinfo(it.next).cur):''):'다음 열차 정보 없음')+'</div></div>'+
       carsBlock(h.cars)+
       routeStrip(G.id,it,arrStation,it.peers)+'</div>';
   });
