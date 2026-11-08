@@ -259,7 +259,7 @@ export default {
           const hit = await caches.default.match(cacheKey);
           if (hit) return json(await hit.json(), 200, origin);
           const res = await handleSubwayStation(env, st);
-          if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=25" } })));
+          if (!res.error) ctx.waitUntil(caches.default.put(cacheKey, new Response(JSON.stringify(res), { headers: { "Cache-Control": "max-age=30" } })));
           return json(res, res.error ? 400 : 200, origin);
         }
         const cacheKey = new Request("https://cache.eodigallae/subway");

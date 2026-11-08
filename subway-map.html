@@ -228,7 +228,9 @@ var WORKER='https://eodigallae.lloydnam.workers.dev';
 var API=(new URLSearchParams(location.search).get('api')||WORKER).replace(/\/$/,'');
 /* 중계 서버가 없으면 GitHub Actions가 30초마다 올리는 스냅샷을 읽는다 */
 var SNAP='https://raw.githubusercontent.com/lloydknam/eodigallae/live-data/subway.json';
-function liveUrl(){return API?API+'/subway':SNAP+'?t='+Date.now();}
+/* 열차 위치는 항상 GitHub 스냅샷에서 읽는다. 워커 /subway는 한 번에 서울 API를 9건 써서
+   하루 호출 한도를 금방 소진했다(2026-11-07, 11-08). 서울 API 호출은 역 도착정보에만 쓴다. */
+function liveUrl(){return SNAP+'?t='+Date.now();}
 
 var SPEED_KMH=42, DWELL=25; /* 모의 운행 속도·역당 정차 시간 */
 
@@ -377,7 +379,7 @@ function showStation(s){
   arrEl.classList.add('open');
   arrEl.scrollTop=0;
   loadArr();
-  clearInterval(arrTimer);arrTimer=setInterval(loadArr,20000);
+  clearInterval(arrTimer);arrTimer=setInterval(function(){if(!document.hidden)loadArr();},30000);
   clearInterval(arrTick);arrTick=setInterval(function(){if(arrData&&arrEl.classList.contains('open'))renderArr();},1000);
 }
 /* ---------- 즐겨찾는 역(이 브라우저에만 저장) ---------- */
@@ -413,6 +415,9 @@ window.addEventListener('message',function(e){
   if(e.origin!==location.origin||!e.data||e.data.type!=='openStation')return;
   var ok=openByName(String(e.data.name||''));
   try{e.source.postMessage({type:'stationOpened',name:e.data.name,ok:ok||pendingStation!==null},location.origin);}catch(x){}
+});
+document.addEventListener('visibilitychange',function(){
+  if(!document.hidden&&arrEl.classList.contains('open')&&Date.now()-arrFetchedAt>25000)loadArr();
 });
 function closeArr(){
   arrEl.classList.remove('open');clearInterval(arrTimer);arrTimer=0;clearInterval(arrTick);arrTick=0;arrTok++;
@@ -664,7 +669,7 @@ function renderArr(j){
       carsBlock(h.cars)+
       routeStrip(G.id,it,arrStation,it.peers)+'</div>';
   });
-  html+='<div class="arr-foot">'+(arrData.updated?'기준 '+esc(arrData.updated)+' · ':'')+'20초마다 자동으로 새로 고쳐요. 서울 열린데이터광장 실시간 도착정보이며 실제와 차이가 있을 수 있어요.</div>';
+  html+='<div class="arr-foot">'+(arrData.updated?'기준 '+esc(arrData.updated)+' · ':'')+'30초마다 자동으로 새로 고쳐요. 서울 열린데이터광장 실시간 도착정보이며 실제와 차이가 있을 수 있어요.</div>';
   arrBody.innerHTML=html;
 }
 arrBody.addEventListener('click',function(e){
