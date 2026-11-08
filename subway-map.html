@@ -488,6 +488,12 @@ function emuSvg(color,sign){
     '<circle cx="12" cy="21.5" r="2.3" fill="#0A1119"/><circle cx="50" cy="21.5" r="2.3" fill="#0A1119"/>'+
     '</g></svg>';
 }
+/* 순환선 여부: 첫 역과 마지막 역이 2km 안에 있으면 이어진 고리로 본다(2호선 본선) */
+function isLoop(b){
+  if(!b||b.length<10)return false;
+  var a=b[0],z=b[b.length-1];
+  return hav(a,z)<2;
+}
 function routeStrip(lineId,it,st,peers){
   if(!st)return '';
   var here=nm(st.name),G=null,b=null;
@@ -498,56 +504,67 @@ function routeStrip(lineId,it,st,peers){
     });
   });
   if(!b)return '';
+  var N=b.length,loop=isLoop(b);
   function idx(name){name=nm(name);if(!name)return -1;return b.findIndex(function(x){return nm(x.name)===name;});}
   var ti=idx(here),t=it.t,inf=tinfo(t);
-  /* 진행 방향(sign): 행선지 → 열차가 있는 역 → 같은 방향 다른 열차 → 상행/하행 관례 순으로 정한다 */
+  /* 당역 기준 상대 위치(역 수). 순환선은 가까운 쪽으로 감아서 센다 */
+  function off(k){if(k<0)return null;var o=k-ti;if(loop){o=((o%N)+N)%N;if(o>N/2)o-=N;}return o;}
+  function at(o){var k=ti+o;if(loop)k=((k%N)+N)%N;return (k>=0&&k<N)?b[k]:null;}
+  /* 진행 방향(sign, 데이터 순서 기준 +1/-1)
+     순환선: 열차가 있는 역 → 내선(+1)/외선(-1). 2호선 데이터는 시청→을지로입구 순(내선순환 방향)
+     그 밖: 행선지 → 열차가 있는 역 → 같은 방향 다른 열차 → 상행/하행 관례 */
   function signOf(tr){
-    var d=idx(tr.dest);if(d>=0&&d!==ti)return d>ti?1:-1;
-    var c=idx(tinfo(tr).cur);if(c>=0&&c!==ti)return c<ti?1:-1;
+    if(!loop){var d=off(idx(tr.dest));if(d)return d>0?1:-1;}
+    var c=off(idx(tinfo(tr).cur));if(c)return c<0?1:-1;
     return 0;
   }
-  var sign=signOf(t);
+  var sign=0;
+  if(loop&&/내선|외선/.test(it.dir))sign=/내선/.test(it.dir)?1:-1;
+  if(!sign)sign=signOf(t);
   if(!sign)(peers||[]).some(function(p){sign=signOf(p);return !!sign;});
   if(!sign)sign=/상행|내선/.test(it.dir)?(+lineId===1009?1:-1):(+lineId===1009?-1:1);
   var passed=inf.label==='출발';
+  /* 표시 구간(상대 위치): 도착 전 = 전역 3개 + 당역 + 다음 역 1개, 지난 뒤 = 당역 + 다음 역 1개 */
   var lo,hi;
-  if(!passed){ /* 도착 전: 전역 3개 + 당역 + 다음 역 1개 */
-    if(sign>0){lo=Math.max(0,ti-3);hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=Math.min(b.length-1,ti+3);}
-  }else{       /* 지난 뒤: 당역 + 다음 역 1개 */
-    if(sign>0){lo=ti;hi=Math.min(b.length-1,ti+1);} else {lo=Math.max(0,ti-1);hi=ti;}
-  }
-  var n=Math.max(1,hi-lo);
-  function X(k){return (k-lo)/n*100;}
-  /* 열차 위치: 실시간 스냅샷(1~9호선) → 도착 문구 → 남은 시간 추정 순 */
+  if(!passed){if(sign>0){lo=-3;hi=1;}else{lo=-1;hi=3;}}
+  else{if(sign>0){lo=0;hi=1;}else{lo=-1;hi=0;}}
+  if(!loop){lo=Math.max(lo,-ti);hi=Math.min(hi,N-1-ti);}
+  var span=Math.max(1,hi-lo);
+  function X(o){return (o-lo)/span*100;}
+  /* 열차 위치(상대): 실시간 스냅샷(1~9호선) → 도착 문구 → 남은 시간 추정 순 */
   var livePos=null;
   if(G.liveNum)arrPos.forEach(function(tr){
     if(+tr.l!==+G.liveNum||!t.dest||nm(tr.d)!==nm(t.dest))return;
-    var si=idx(tr.s);if(si<0)return;
-    var pos=(tr.st===2||tr.st===3)?si+sign*0.5:si;
-    var ok=passed?((pos-ti)*sign>=0):((pos-ti)*sign<0);
+    var so=off(idx(tr.s));if(so===null)return;
+    var pos=(tr.st===2||tr.st===3)?so+sign*0.5:so;
+    var ok=passed?(pos*sign>=0):(pos*sign<0);
     if(!ok)return;
-    if(livePos===null||Math.abs(pos-ti)<Math.abs(livePos-ti))livePos=pos;
+    if(livePos===null||Math.abs(pos)<Math.abs(livePos))livePos=pos;
   });
   var tpos,far='';
   if(livePos!==null)tpos=livePos;
-  else if(passed)tpos=ti+sign*0.5;
-  else if(inf.label==='도착')tpos=ti;
-  else if(inf.label==='진입')tpos=ti-sign*0.25;
+  else if(passed)tpos=sign*0.5;
+  else if(inf.label==='도착')tpos=0;
+  else if(inf.label==='진입')tpos=-sign*0.25;
   else{
-    var ci=idx(inf.cur);
-    if(ci>=0&&(ci-ti)*sign<0)tpos=ci;
-    else if(inf.ahead)tpos=ti-sign*inf.ahead;
-    else{var rem=arrRem(t),f=rem<=0?1:Math.min(.95,1-rem/300);tpos=ti-sign*(1-f);}
+    var co=off(idx(inf.cur));
+    if(co!==null&&co*sign<0)tpos=co;
+    else if(inf.ahead)tpos=-sign*inf.ahead;
+    else{var rem=arrRem(t),f=rem<=0?1:Math.min(.95,1-rem/300);tpos=-sign*(1-f);}
   }
-  if(tpos<lo||tpos>hi){far=Math.round(Math.abs(tpos-ti))+'역 전';tpos=Math.max(lo,Math.min(hi,tpos));}
+  if(tpos<lo||tpos>hi){far=Math.round(Math.abs(tpos))+'역 전';tpos=Math.max(lo,Math.min(hi,tpos));}
   var out='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
-  for(var k=lo;k<=hi;k++){
-    out+='<div class="rnode'+(k===ti?' cur':'')+'" style="left:'+X(k)+'%"><i></i><span>'+esc(b[k].name)+'</span></div>';
+  for(var o=lo;o<=hi;o++){
+    var sx=at(o);if(!sx)continue;
+    out+='<div class="rnode'+(o===0?' cur':'')+'" style="left:'+X(o)+'%"><i></i><span>'+esc(sx.name)+'</span></div>';
   }
   out+='<div class="rtrain" style="left:'+X(tpos)+'%">'+emuSvg(G.color,sign)+
-    '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(it.dir)+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+(far?' · '+far:'')+'</div></div>';
+    '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(dirLabel(it.dir))+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+(far?' · '+far:'')+'</div></div>';
   return out+'</div></div>';
 }
+/* 2호선 내선·외선은 서울시 구분(상행/내선, 하행/외선)대로 상행·하행으로 표시 */
+function dirLabel(d){return /내선/.test(d)?'상행':/외선/.test(d)?'하행':d;}
+function dirNote(d){return /내선/.test(d)?'내선순환(시계방향)':/외선/.test(d)?'외선순환(반시계방향)':'';}
 function congLevel(v){v=String(v||'');return /혼잡/.test(v)?'h':/보통/.test(v)?'m':'l';}
 function carsBlock(cars){
   if(!cars||!cars.length)return '';
@@ -581,10 +598,10 @@ function renderArr(j){
   soon.forEach(function(it){
     var h=it.t,sec=arrRem(h),hi_=tinfo(h);
     var cd=cdHtml(h);
-    html+='<div class="dhero"><div class="dtag-row"><span class="dtag">'+esc(it.dir)+'</span><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span></div>'+
+    html+='<div class="dhero"><div class="dtag-row"><span class="dtag">'+esc(dirLabel(it.dir))+'</span><span class="pill"><i></i>'+esc(h.msg||'도착 정보')+'</span></div>'+
       '<div class="hero-main"><div class="hero-dest">'+esc(h.dest?h.dest+'행':it.dir)+'</div>'+
       '<div><div class="hero-lbl">도착까지</div><div class="hero-cd">'+cd+'</div></div></div>'+
-      '<div class="hero-row"><div class="hero-sub">'+esc(info.name)+' · '+esc(it.dir)+'</div>'+
+      '<div class="hero-row"><div class="hero-sub">'+esc(info.name)+' · '+esc(dirLabel(it.dir))+(dirNote(it.dir)?' · '+esc(dirNote(it.dir)):'')+'</div>'+
       '<div class="hero-next">'+(it.next?'다음 열차 <b>'+esc(it.next.dest?it.next.dest+'행':'')+' '+esc(cdText(it.next))+'</b>'+(tinfo(it.next).cur?' · 지금 '+esc(tinfo(it.next).cur):''):'다음 열차 정보 없음')+'</div></div>'+
       carsBlock(h.cars)+
       routeStrip(G.id,it,arrStation,it.peers)+'</div>';
