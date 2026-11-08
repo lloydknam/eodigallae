@@ -91,6 +91,9 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .arr-title{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
 .arr-title .sn{font:700 22px/1.2 var(--f-display);white-space:nowrap;margin-right:4px}
 .arr-title .sep{width:1px;height:18px;background:#2A3A47;margin:0 4px}
+.arr-acts{display:flex;gap:8px;flex:none}
+.arr-fav{flex:none;border:1px solid #2A3A47;background:transparent;color:#EEF3F7;border-radius:999px;height:36px;padding:0 12px;cursor:pointer;font-size:18px;line-height:1}
+.arr-fav[aria-pressed="true"]{color:#F5C542;border-color:#F5C542}
 .arr-x{flex:none;border:1px solid #2A3A47;background:transparent;color:#EEF3F7;border-radius:999px;width:36px;height:36px;cursor:pointer;font-size:14px}
 .badge{flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:999px;display:inline-grid;place-items:center;font:700 12px var(--f-body);box-sizing:border-box}
 .hero{margin-top:20px}
@@ -200,7 +203,7 @@ html.embed body{padding-top:8px;padding-bottom:8px}
   <div class="arr-in">
     <header class="arr-top">
       <div class="arr-title" id="arrTitle"></div>
-      <button type="button" class="arr-x" id="arrClose" aria-label="닫기">✕</button>
+      <div class="arr-acts"><button type="button" class="arr-fav" id="arrFav" aria-pressed="false" aria-label="즐겨찾는 역으로 등록">☆</button><button type="button" class="arr-x" id="arrClose" aria-label="닫기">✕</button></div>
     </header>
     <div id="arrBody"><div class="arr-empty">불러오는 중…</div></div>
   </div>
@@ -269,6 +272,8 @@ fetch('scripts/data/subway_lines.json').then(function(r){return r.json();}).then
     G.stations=[].concat.apply([],G.branches); /* 매칭·팝업용 평탄화 목록 */
   });
   init();
+  var q=new URLSearchParams(location.search).get('station');
+  if(pendingStation||q){openByName(pendingStation||q);pendingStation=null;}
 }).catch(function(e){
   $('#sheet').innerHTML='<div class="who"><div><strong>노선 데이터를 불러오지 못했어요</strong><span class="s">잠시 뒤 새로고침해 주세요</span></div></div>';
   console.error(e);
@@ -354,7 +359,7 @@ function stationLines(s){
   return LINES.filter(function(x){return x.stations.some(function(st){return nm(st.name)===nm(s.name)&&Math.abs(st.lat-s.lat)<.006&&Math.abs(st.lng-s.lng)<.006;});});
 }
 function showStation(s){
-  arrStation=s;arrLine=null;arrData=null;
+  arrStation=s;arrLine=null;arrData=null;favSync();
   var lines=stationLines(s);
   $('#arrTitle').innerHTML='<span class="sn">'+esc(s.name)+'</span>'+
     lines.map(function(x){var lb=x.liveNum||x.name.replace(/\s/g,'').slice(0,2);return '<span class="badge" style="background:'+x.color+';color:'+x.textColor+'">'+esc(lb)+'</span>';}).join('');
@@ -365,6 +370,40 @@ function showStation(s){
   clearInterval(arrTimer);arrTimer=setInterval(loadArr,20000);
   clearInterval(arrTick);arrTick=setInterval(function(){if(arrData&&arrEl.classList.contains('open'))renderArr();},1000);
 }
+/* ---------- 즐겨찾는 역(이 브라우저에만 저장) ---------- */
+var FAV_KEY='eodigallae.favStations';
+function favLoad(){try{var v=JSON.parse(localStorage.getItem(FAV_KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+function favSave(a){try{localStorage.setItem(FAV_KEY,JSON.stringify(a));}catch(e){}
+  try{if(window.parent!==window)window.parent.postMessage({type:'favChanged'},location.origin);}catch(e){}}
+function favHas(name){name=nm(name);return favLoad().some(function(f){return nm(f.name)===name;});}
+function favSync(){var on=!!(arrStation&&favHas(arrStation.name)),b=$('#arrFav');
+  b.textContent=on?'★':'☆';b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',on?'즐겨찾는 역에서 빼기':'즐겨찾는 역으로 등록');}
+$('#arrFav').addEventListener('click',function(){
+  if(!arrStation)return;
+  var a=favLoad(),n=nm(arrStation.name);
+  if(favHas(n))a=a.filter(function(f){return nm(f.name)!==n;});
+  else a.push({name:n,lat:arrStation.lat,lng:arrStation.lng});
+  favSave(a);favSync();
+});
+/* 역 이름으로 도착정보 열기: ?station=이름 또는 부모 창의 postMessage({type:'openStation',name}) */
+var pendingStation=null;
+function findStation(name){
+  name=nm(name);var hit=null;
+  LINES.some(function(G){return G.stations.some(function(s){if(nm(s.name)===name){hit=s;return true;}return false;});});
+  return hit;
+}
+function openByName(name){
+  if(!LINES.length||!LINES[0].stations){pendingStation=name;return false;}
+  var s=findStation(name);if(!s)return false;
+  showStation(s);
+  try{map.setView([s.lat,s.lng],Math.max(map.getZoom(),14),{animate:false});}catch(e){}
+  return true;
+}
+window.addEventListener('message',function(e){
+  if(e.origin!==location.origin||!e.data||e.data.type!=='openStation')return;
+  var ok=openByName(String(e.data.name||''));
+  try{e.source.postMessage({type:'stationOpened',name:e.data.name,ok:ok||pendingStation!==null},location.origin);}catch(x){}
+});
 function closeArr(){
   arrEl.classList.remove('open');clearInterval(arrTimer);arrTimer=0;clearInterval(arrTick);arrTick=0;arrTok++;
 }

@@ -17,6 +17,20 @@ header a{color:var(--green);text-decoration:none;font:700 26px var(--display)}
 main{max-width:980px;margin:auto;padding:22px 14px calc(70px + env(safe-area-inset-bottom,0px) + 20px)}.kicker{font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--green)}
 h1{font:36px/1.2 var(--display);font-weight: 700;margin:4px 0}.lead{margin:0;color:var(--muted);font-size:14px}
 .switch{display:flex;gap:8px;margin:20px 0 12px}.switch button{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:13px;padding:11px 17px;font:600 14px var(--body);cursor:pointer}.switch button.active{background:var(--green);border-color:var(--green);color:white}
+.switch{flex-wrap:wrap}
+.switch .fav-btn[aria-expanded="true"]{border-color:#F5B700;color:var(--ink);background:#FFF8DD}
+.favpanel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 12px}
+.fav-list{display:flex;flex-wrap:wrap;gap:8px}
+.fav-chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);overflow:hidden}
+.fav-chip .go{border:0;background:none;padding:8px 6px 8px 14px;font:700 14px var(--body);color:var(--ink);cursor:pointer}
+.fav-chip .rm{border:0;background:none;padding:8px 12px 8px 6px;color:var(--muted);cursor:pointer;font-size:13px}
+.fav-chip .go:hover{color:var(--green)}
+.fav-empty{color:var(--muted);font-size:13px}
+.fav-add{display:flex;gap:8px;margin-top:10px}
+.fav-add input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font:15px var(--body)}
+.fav-add button{border:0;border-radius:10px;padding:9px 16px;background:var(--green);color:#fff;font:700 14px var(--body);cursor:pointer}
+.fav-msg{margin:8px 0 0;color:var(--muted);font-size:12px}
+@media(max-width:620px){.switch{gap:6px}.switch button{padding:10px 11px;font-size:13px}}
 .panel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 2px 10px #172b2410}
 .panel iframe{display:block;width:100%;height:min(84vh,780px);min-height:560px;border:0;background:#E7EDF1}
 .notice{margin-top:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:12px}.back{display:inline-flex;margin-top:20px;color:var(--green);font-weight:700;text-decoration:none}
@@ -37,7 +51,17 @@ h1{font:36px/1.2 var(--display);font-weight: 700;margin:4px 0}.lead{margin:0;col
 <div class="switch" role="tablist" aria-label="교통수단 선택">
 <button id="metroBtn" class="active" type="button" role="tab" aria-selected="true">🚇 수도권 지하철</button>
 <button id="nationalBtn" type="button" role="tab" aria-selected="false">🚄 전국 철도</button>
+<button id="favBtn" class="fav-btn" type="button" aria-expanded="false" aria-controls="favPanel">⭐ 즐겨찾는 역</button>
 </div>
+<section class="favpanel" id="favPanel" hidden aria-label="즐겨찾는 역">
+  <div class="fav-list" id="favList"></div>
+  <form class="fav-add" id="favForm" autocomplete="off">
+    <input id="favInput" list="favNames" placeholder="역 이름 (예: 강남구청)" aria-label="등록할 역 이름" enterkeyhint="done">
+    <datalist id="favNames"></datalist>
+    <button type="submit">등록</button>
+  </form>
+  <p class="fav-msg" id="favMsg">역을 누르면 도착정보가 바로 열려요. 도착정보 창의 ☆ 버튼으로도 등록할 수 있어요.</p>
+</section>
 <section class="panel" id="metroPanel"><iframe id="metroFrame" title="수도권 지하철 열차지도" src="subway-map.html?embed=1"></iframe></section>
 <section class="panel" id="natPanel" hidden><iframe id="natFrame" title="전국 철도 열차지도" data-src="rail-map.html?embed=1"></iframe></section>
 <div class="notice" id="notice">열차 위치는 시간표를 흉내 낸 모의 운행이며 실제 위치가 아닙니다(지하철 지도의 "실시간" 버튼을 켜면 서울시 실시간 위치로 바뀝니다). 노선도는 주요 역만 이은 약식 지도입니다. 실제 운행·시간표는 코레일 및 각 운영기관의 공지를 확인하세요.</div>
@@ -78,5 +102,63 @@ function showTab(type){
 document.getElementById('nationalBtn').addEventListener('click',()=>showTab('rail'));
 document.getElementById('metroBtn').addEventListener('click',()=>showTab('metro'));
 if(location.hash==='#rail')showTab('rail');
+
+/* ---------- 즐겨찾는 역: 이 브라우저(localStorage)에 저장, 지하철 지도와 같은 키를 쓴다 ---------- */
+const FAV_KEY='eodigallae.favStations';
+const favBtn=document.getElementById('favBtn'),favPanel=document.getElementById('favPanel'),favList=document.getElementById('favList');
+const favInput=document.getElementById('favInput'),favMsg=document.getElementById('favMsg');
+const nmS=s=>String(s||'').replace(/\(.*?\)/g,'').replace(/\s/g,'').replace(/역$/,'');
+let stationNames=null;
+function favLoad(){try{const v=JSON.parse(localStorage.getItem(FAV_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
+function favSave(a){try{localStorage.setItem(FAV_KEY,JSON.stringify(a))}catch(e){favMsg.textContent='이 브라우저에서는 즐겨찾기를 저장할 수 없어요.'}}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderFav(){
+  const a=favLoad();
+  favList.innerHTML=a.length?a.map(f=>'<span class="fav-chip"><button type="button" class="go" data-go="'+esc(f.name)+'">🚇 '+esc(f.name)+'</button><button type="button" class="rm" data-rm="'+esc(f.name)+'" aria-label="'+esc(f.name)+' 즐겨찾기에서 빼기">✕</button></span>').join('')
+    :'<span class="fav-empty">아직 등록한 역이 없어요. 아래에 역 이름을 넣고 등록해 보세요.</span>';
+}
+function loadNames(){
+  if(stationNames)return Promise.resolve(stationNames);
+  return fetch('scripts/data/subway_lines.json').then(r=>r.json()).then(d=>{
+    const set=new Set();d.forEach(g=>(g.branches||[]).forEach(b=>b.forEach(s=>set.add(nmS(s.name)))));
+    stationNames=[...set].filter(Boolean).sort((x,y)=>x.localeCompare(y,'ko'));
+    document.getElementById('favNames').innerHTML=stationNames.map(n=>'<option value="'+esc(n)+'">').join('');
+    return stationNames;
+  }).catch(()=>{stationNames=[];return stationNames});
+}
+function openStation(name){
+  showTab('metro');
+  const f=document.getElementById('metroFrame');
+  f.scrollIntoView({behavior:'smooth',block:'start'});
+  let tries=0,done=false;
+  const onAck=e=>{if(e.origin===location.origin&&e.data&&e.data.type==='stationOpened'){done=true;window.removeEventListener('message',onAck)}};
+  window.addEventListener('message',onAck);
+  (function send(){
+    if(done||tries++>40)return;
+    try{f.contentWindow.postMessage({type:'openStation',name},location.origin)}catch(e){}
+    setTimeout(send,300);
+  })();
+}
+favBtn.addEventListener('click',()=>{
+  const open=favPanel.hidden;favPanel.hidden=!open;favBtn.setAttribute('aria-expanded',String(open));
+  if(open){renderFav();loadNames()}
+});
+favList.addEventListener('click',e=>{
+  const go=e.target.closest('[data-go]'),rm=e.target.closest('[data-rm]');
+  if(go)openStation(go.dataset.go);
+  if(rm){favSave(favLoad().filter(f=>nmS(f.name)!==nmS(rm.dataset.rm)));renderFav()}
+});
+document.getElementById('favForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=nmS(favInput.value);if(!n)return;
+  loadNames().then(names=>{
+    if(names.length&&!names.includes(n)){favMsg.textContent='"'+favInput.value.trim()+'"을(를) 찾지 못했어요. 목록에서 골라 주세요.';return}
+    const a=favLoad();
+    if(!a.some(f=>nmS(f.name)===n)){a.push({name:n});favSave(a)}
+    favInput.value='';favMsg.textContent=n+' 역을 등록했어요. 누르면 도착정보가 바로 열려요.';renderFav();
+  });
+});
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data&&e.data.type==='favChanged'&&!favPanel.hidden)renderFav()});
+window.addEventListener('storage',e=>{if(e.key===FAV_KEY&&!favPanel.hidden)renderFav()});
 </script>
 </body></html>
