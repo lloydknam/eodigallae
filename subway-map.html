@@ -155,15 +155,24 @@ html.embed body{padding-top:8px;padding-bottom:8px}
 .cars-legend{display:flex;gap:10px;margin-top:6px;color:#93A4B1;font-size:11px}
 .cars-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
 .route{position:relative;height:80px;margin:12px 0 2px}
-.rwrap{position:absolute;left:34px;right:34px;top:0;bottom:0}
-.rline{position:absolute;left:0;right:0;top:42px;height:4px;border-radius:2px;opacity:.9}
-.rnode{position:absolute;top:38px;transform:translateX(-50%);width:70px;text-align:center}
-.rnode i{display:block;width:12px;height:12px;border-radius:50%;background:#0A1119;border:2px solid #EEF3F7;margin:0 auto;box-sizing:border-box}
-.rnode.cur i{width:16px;height:16px;border-color:#3AA6F0;box-shadow:0 0 0 4px rgba(58,166,240,.25)}
-.rnode span{display:block;margin-top:7px;font-size:10px;color:#93A4B1;white-space:nowrap}
-.rnode.cur span{color:#EEF3F7;font-weight:700}
-.rtrain{position:absolute;top:0;transform:translateX(-50%);width:64px;text-align:center}
-.rtrain svg{display:block;margin:0 auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45))}
+.rwrap{position:absolute;left:16px;right:16px;top:0;bottom:0}
+.rline{position:absolute;left:-16px;right:-16px;top:42px;height:4px;border-radius:2px;opacity:.9}
+.rnode{position:absolute;top:38px;transform:translateX(-50%);width:64px;text-align:center}
+.rnode i{display:block;position:relative;width:12px;height:12px;border-radius:50%;background:#0A1119;border:2px solid #EEF3F7;margin:0 auto;box-sizing:border-box}
+.rnode.cur i{width:22px;height:22px;margin-top:-5px;border:3px solid #3AA6F0;background:#0A1119;animation:curBlink 1.4s ease-in-out infinite;animation-delay:var(--ph,0ms)}
+.rnode.cur i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #3AA6F0;animation:curRing 1.4s ease-out infinite;animation-delay:var(--ph,0ms)}
+@keyframes curBlink{0%,100%{background:#0A1119;box-shadow:0 0 0 0 rgba(58,166,240,0)}50%{background:#3AA6F0;box-shadow:0 0 12px 2px rgba(58,166,240,.6)}}
+@keyframes curRing{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.9);opacity:0}}
+@media (prefers-reduced-motion:reduce){.rnode.cur i,.rnode.cur i::after{animation:none}.rnode.cur i{background:#3AA6F0}}
+.rnode span{display:block;margin-top:7px;font-size:10px;color:#93A4B1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rnode.cur span{margin-top:5px;color:#EEF3F7;font-weight:700;font-size:11px;overflow:visible}
+/* 양 끝 역 이름은 안쪽으로 붙여 화면 밖으로 잘리지 않게 */
+.rnode.edge-l span,.rnode.edge-r span{position:absolute;top:12px;overflow:visible}
+.rnode.edge-l span{left:24px;text-align:left}
+.rnode.edge-r span{right:24px;text-align:right}
+.rnode.cur.edge-l span,.rnode.cur.edge-r span{top:17px}
+.rtrain{position:absolute;top:4px;transform:translateX(-50%);width:110px;text-align:center;pointer-events:none}
+.rtrain svg{display:block;margin:0 auto;overflow:visible;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
 .rcap{margin-top:2px;font-size:10px;font-weight:700;color:#EEF3F7;white-space:nowrap}
 @media (max-width:360px){.trow .c{min-width:70px}.tr .cd{font-size:17px}}
 </style>
@@ -476,15 +485,21 @@ function cdText(t){
   return '정보 없음';
 }
 /* 전동차 모양(측면) SVG. sign<0이면 좌우 반전 */
+var emuN=0;
 function emuSvg(color,sign){
-  var flip=sign<0?' transform="translate(64,0) scale(-1,1)"':'';
+  /* 차체는 x 0~64, 앞(오른쪽)으로 헤드라이트 불빛 44만큼. viewBox를 좌우 대칭으로 잡아 차체가 가운데 오게 한다 */
+  var flip=sign<0?' transform="translate(64,0) scale(-1,1)"':'',id='hl'+(++emuN);
   var win='';
   [8,17,26,35].forEach(function(x){win+='<rect x="'+x+'" y="6" width="6.5" height="7" rx="1" fill="#E6EEF5" opacity=".92"/>';});
-  return '<svg width="64" height="24" viewBox="0 0 64 24" aria-hidden="true"><g'+flip+'>'+
+  return '<svg width="110" height="17" viewBox="-44 0 152 24" aria-hidden="true">'+
+    '<defs><linearGradient id="'+id+'" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#FFF4C2" stop-opacity=".75"/><stop offset="1" stop-color="#FFF4C2" stop-opacity="0"/></linearGradient></defs>'+
+    '<g'+flip+'>'+
+    '<polygon points="59,10.5 106,0 106,24 59,14.5" fill="url(#'+id+')"/>'+
     '<path d="M2 7 Q2 3 6 3 L49 3 Q59 4 61 13 Q59 21 49 21 L6 21 Q2 21 2 17 Z" fill="'+color+'" stroke="#0A1119" stroke-width="1"/>'+
     win+
     '<rect x="44" y="5" width="6" height="14" rx="1" fill="#E6EEF5" opacity=".75"/>'+
     '<rect x="2" y="14" width="59" height="2" fill="#fff" opacity=".55"/>'+
+    '<circle cx="58.5" cy="12.5" r="1.7" fill="#FFF4C2"/>'+
     '<circle cx="12" cy="21.5" r="2.3" fill="#0A1119"/><circle cx="50" cy="21.5" r="2.3" fill="#0A1119"/>'+
     '</g></svg>';
 }
@@ -556,7 +571,8 @@ function routeStrip(lineId,it,st,peers){
   var out='<div class="route"><div class="rwrap"><div class="rline" style="background:'+G.color+'"></div>';
   for(var o=lo;o<=hi;o++){
     var sx=at(o);if(!sx)continue;
-    out+='<div class="rnode'+(o===0?' cur':'')+'" style="left:'+X(o)+'%"><i></i><span>'+esc(sx.name)+'</span></div>';
+    var shortNm=String(sx.name).replace(/\(.*?\)/g,'').trim()||sx.name;
+    out+='<div class="rnode'+(o===0?' cur':'')+(o===lo?' edge-l':o===hi?' edge-r':'')+'" style="left:'+X(o)+'%" title="'+esc(sx.name)+'"><i'+(o===0?' style="--ph:-'+(Date.now()%1400)+'ms"':'')+'></i><span>'+esc(shortNm)+'</span></div>';
   }
   out+='<div class="rtrain" style="left:'+X(tpos)+'%">'+emuSvg(G.color,sign)+
     '<div class="rcap">'+(sign>0?'▶':'◀')+' '+esc(dirLabel(it.dir))+(livePos!==null?' · 실시간':'')+(passed?' · 통과':'')+(far?' · '+far:'')+'</div></div>';
