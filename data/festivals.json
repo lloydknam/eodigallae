@@ -1,6 +1,6 @@
 {
  "updatedAt": "2026-11-10",
- "count": 127,
+ "count": 129,
  "items": [
   {
    "id": "tour-3481597",
@@ -858,21 +858,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-2995190",
-   "title": "누들대전축제",
-   "start": "20261113",
-   "end": "20261115",
-   "addr": "대전광역시 중구 계룡로904번길 30 (문화동)",
-   "tel": "042-251-3801",
-   "lat": 36.3209285835,
-   "lng": 127.4119234684,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/35/4138635_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a3-s5",
-   "city": "중구",
-   "source": "tour"
-  },
-  {
    "id": "tour-2613615",
    "title": "영주 사과축제",
    "start": "20261113",
@@ -1203,6 +1188,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4151221",
+   "title": "2026 제1회 강원 도시재생 집수리의 날",
+   "start": "20261120",
+   "end": "20261121",
+   "addr": "강원특별자치도 원주시 남산로218번길 7 (학성동)",
+   "tel": "033-250-2987",
+   "lat": 37.3548373317,
+   "lng": 127.9437145394,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/22/4151222_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a32-s9",
+   "city": "원주시",
+   "source": "tour"
+  },
+  {
    "id": "tour-4101384",
    "title": "20세기 사진 거장전 - 빛, 시간을 멈추다",
    "start": "20261120",
@@ -1278,6 +1278,21 @@
    "source": "std"
   },
   {
+   "id": "tour-4151224",
+   "title": "역사랑께 배우랑께",
+   "start": "20261121",
+   "end": "20261121",
+   "addr": "전북특별자치도 전주시 완산구 전라감영로 55 (중앙동4가)",
+   "tel": "063-232-9938",
+   "lat": 35.8165952746,
+   "lng": 127.1458864053,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/25/4151225_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a37-s12",
+   "city": "전주시",
+   "source": "tour"
+  },
+  {
    "id": "tour-3470738",
    "title": "2026 런트립 남해! FALL & FUN",
    "start": "20261121",
@@ -1305,6 +1320,21 @@
    "homepage": null,
    "cityId": "a1-s15",
    "city": "서초구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3315407",
+   "title": "2026 제4차 제물포웨이브마켓",
+   "start": "20261121",
+   "end": "20261122",
+   "addr": "인천광역시 제물포구 월미로 33 (북성동1가)",
+   "tel": "010-9265-3796",
+   "lat": 37.4760834131,
+   "lng": 126.6146527143,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/10/4151210_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a2-s10",
+   "city": "중구",
    "source": "tour"
   },
   {
