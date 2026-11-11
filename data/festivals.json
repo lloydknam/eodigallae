@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-10",
+ "updatedAt": "2026-11-11",
  "count": 129,
  "items": [
   {
@@ -753,36 +753,6 @@
    "source": "std"
   },
   {
-   "id": "std-5350000-김해분청도자기축제-20261106",
-   "title": "김해분청도자기축제",
-   "start": "20261106",
-   "end": "20261110",
-   "addr": "경상남도 김해시 장유로 551",
-   "tel": "055-330-3244",
-   "lat": 35.183246,
-   "lng": 128.8287909,
-   "image": null,
-   "homepage": "http://festival.buncheong.co.kr/00000/00005/00005.web",
-   "cityId": "a36-s4",
-   "city": "김해시",
-   "source": "std"
-  },
-  {
-   "id": "tour-4114621",
-   "title": "2026 대한민국 제주정원문화박람회",
-   "start": "20261106",
-   "end": "20261110",
-   "addr": "제주특별자치도 서귀포시 서호남로 19-30 (서호동)",
-   "tel": "043-212-7893",
-   "lat": 33.2525461361,
-   "lng": 126.5161895225,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/35/4114835_image2_1.png",
-   "homepage": null,
-   "cityId": "a39-s3",
-   "city": "서귀포시",
-   "source": "tour"
-  },
-  {
    "id": "std-5020000-포항국제음악제-20261106",
    "title": "포항국제음악제",
    "start": "20261106",
@@ -866,7 +836,7 @@
    "tel": "054-630-8706",
    "lat": 37.5690746935,
    "lng": 126.977592121,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/79/4139579_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/85/4139585_image2_1.jpg",
    "homepage": null,
    "cityId": "a1-s24",
    "city": "중구",
@@ -1413,6 +1383,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-3578130",
+   "title": "울산 크리스마스 마켓",
+   "start": "20261127",
+   "end": "20261226",
+   "addr": "울산광역시 남구 대공원로 94 (옥동)",
+   "tel": "052-271-8701",
+   "lat": 35.5316566254,
+   "lng": 129.2935190325,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/40/4153340_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a7-s2",
+   "city": "남구",
+   "source": "tour"
+  },
+  {
    "id": "tour-3367339",
    "title": "2026 우리쌀 우리술 K-라이스페스타",
    "start": "20261127",
@@ -1586,7 +1571,7 @@
    "tel": "02-3788-8105",
    "lat": 37.5716249337,
    "lng": 126.9767679222,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/80/4140180_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/78/4153378_image2_1.png",
    "homepage": null,
    "cityId": "a1-s23",
    "city": "종로구",
@@ -1602,6 +1587,21 @@
    "lat": 37.569204,
    "lng": 126.977633,
    "image": "https://tong.visitkorea.or.kr/cms/resource/35/4147235_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s24",
+   "city": "중구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-2785797",
+   "title": "청계천의 빛",
+   "start": "20261211",
+   "end": "20261231",
+   "addr": "서울특별시 중구 태평로 1가 1",
+   "tel": "02-904-1159",
+   "lat": 37.5690771533,
+   "lng": 126.977599239,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/70/4152170_image2_1.jpg",
    "homepage": null,
    "cityId": "a1-s24",
    "city": "중구",
