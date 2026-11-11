@@ -1,6 +1,6 @@
 {
  "week": "2026-W46",
- "updatedAt": "2026-11-11T06:21:21+09:00",
+ "updatedAt": "2026-11-12T07:03:44+09:00",
  "videos": 443,
  "citiesWithData": 229,
  "lists": {
@@ -278,6 +278,27 @@
     }
    },
    {
+    "name": "이치니산도",
+    "city": "경주시",
+    "province": "경상북도",
+    "cityId": "a35-s2",
+    "spotId": "k1918888925",
+    "kakao": "1918888925",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 10,
+    "views": 311843,
+    "score": 123.83,
+    "thumb": "https://i.ytimg.com/vi/A6v-oh2ICpA/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/A6v-oh2ICpA/hqdefault.jpg",
+    "video": {
+     "id": "A6v-oh2ICpA",
+     "title": "[여행vlog] 황리단길 감성 낭낭히 즐기러 나홀로?🧳 _ 야장 가맥+오차즈케+첨성대+붓가케우동+이치니산도",
+     "channel": "예소리SSOL",
+     "views": 132787
+    }
+   },
+   {
     "name": "평화와평화",
     "city": "전주시",
     "province": "전북특별자치도",
@@ -381,51 +402,9 @@
      "channel": "쟐쟐 ZALZAL",
      "views": 102365
     }
-   },
-   {
-    "name": "화신연쇄점",
-    "city": "목포시",
-    "province": "전라남도",
-    "cityId": "a38-s8",
-    "spotId": "k1177581244",
-    "kakao": "1177581244",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 8,
-    "views": 65381,
-    "score": 56.74,
-    "thumb": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
-    "video": {
-     "id": "AmBYq8Vna8M",
-     "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
-     "channel": "현주zip",
-     "views": 39002
-    }
    }
   ],
   "steady": [
-   {
-    "name": "울릉도",
-    "city": "울릉군",
-    "province": "경상북도",
-    "cityId": "a35-s17",
-    "spotId": "126101",
-    "kakao": "18376884",
-    "cat": "",
-    "kind": "spot",
-    "n": 77,
-    "views": 11828904,
-    "score": 5207.45,
-    "thumb": "https://i.ytimg.com/vi/HyaqoxTU_Os/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/58/3494458_image2_1.jpg",
-    "video": {
-     "id": "HyaqoxTU_Os",
-     "title": "울릉도 정말 망했을까?",
-     "channel": "물만난고기",
-     "views": 1513068
-    }
-   },
    {
     "name": "경주 황리단길",
     "city": "경주시",
@@ -435,16 +414,16 @@
     "kakao": "1124130238",
     "cat": "",
     "kind": "spot",
-    "n": 52,
-    "views": 1078398,
-    "score": 2293.03,
-    "thumb": "https://i.ytimg.com/vi/X2Jt0H-883E/hqdefault.jpg",
+    "n": 64,
+    "views": 1273768,
+    "score": 3097.53,
+    "thumb": "https://i.ytimg.com/vi/5nmvhLEsKAg/hqdefault.jpg",
     "image": "https://tong.visitkorea.or.kr/cms/resource/62/3480062_image2_1.jpg",
     "video": {
-     "id": "X2Jt0H-883E",
-     "title": "경주여행 힐링코스✨(가족들이 극찬한 코스에요) 경주여행 이렇게만 따라오세요..✌️  #경주여행 #경주여행코스 #가족여행 #여행",
-     "channel": "김채소vegetable",
-     "views": 160934
+     "id": "5nmvhLEsKAg",
+     "title": "요즘 경주 핫플 🔥 성동시장 줄서는 맛집 | 황리단길 가볼만한곳 | 20억 최첨단 XR버스, 플래시백 계림 | 최신 경주여행 추천코스",
+     "channel": "윤요기 YUNYOGI",
+     "views": 160155
     }
    },
    {
@@ -574,24 +553,45 @@
     }
    },
    {
-    "name": "고석정 꽃밭",
-    "city": "철원군",
-    "province": "강원특별자치도",
-    "cityId": "a32-s12",
-    "spotId": "2749319",
+    "name": "경주 첨성대",
+    "city": "경주시",
+    "province": "경상북도",
+    "cityId": "a35-s2",
+    "spotId": "126207",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 37,
-    "views": 1177923,
-    "score": 1132.3,
-    "thumb": "https://i.ytimg.com/vi/J-B7Duyufd4/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/76/4062476_image2_1.jpg",
+    "n": 39,
+    "views": 1158629,
+    "score": 1112.89,
+    "thumb": "https://i.ytimg.com/vi/zq3CuvyBUzQ/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/35/4097535_image2_1.JPG",
     "video": {
-     "id": "J-B7Duyufd4",
-     "title": "탱크가 달리던 포사격장이 15만 송이 꽃밭이 됐습니다 | 올가을 단풍보다 먼저 가야 할 곳",
-     "channel": "걸어서일주 Trekkingaround",
-     "views": 674573
+     "id": "zq3CuvyBUzQ",
+     "title": "경주가 이렇게 좋았나?🍁 혼자 뚜벅이 2박 3일 여행",
+     "channel": "박소룡 Park So Ryong",
+     "views": 147602
+    }
+   },
+   {
+    "name": "광한루원",
+    "city": "남원시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s4",
+    "spotId": "126397",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 46,
+    "views": 356283,
+    "score": 1083.8,
+    "thumb": "https://i.ytimg.com/vi/gGyvnQoiQUk/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/15/4060015_image2_1.jpg",
+    "video": {
+     "id": "gGyvnQoiQUk",
+     "title": "[실시간] 남원 지금 난리났습니다✨ 5월 국내 여행지 추천 가볼만한곳: 2026 춘향제 여행 코스 Top 7 (구 서도역, 광한루원, 요천 음악분수 등)",
+     "channel": "여행작가 봄비",
+     "views": 49717
     }
    }
   ],
