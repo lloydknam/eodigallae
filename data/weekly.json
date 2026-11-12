@@ -1,6 +1,6 @@
 {
  "week": "2026-W46",
- "updatedAt": "2026-11-12T07:03:44+09:00",
+ "updatedAt": "2026-11-13T06:55:19+09:00",
  "videos": 443,
  "citiesWithData": 229,
  "lists": {
@@ -236,6 +236,27 @@
     }
    },
    {
+    "name": "군산과자조합",
+    "city": "군산시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s2",
+    "spotId": "k912106998",
+    "kakao": "912106998",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 19,
+    "views": 643997,
+    "score": 271.14,
+    "thumb": "https://i.ytimg.com/vi/lmOC-6qKNB8/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/lmOC-6qKNB8/hqdefault.jpg",
+    "video": {
+     "id": "lmOC-6qKNB8",
+     "title": "📍군산 당일치기 여행",
+     "channel": "니즈남",
+     "views": 464400
+    }
+   },
+   {
     "name": "커피창고로",
     "city": "목포시",
     "province": "전라남도",
@@ -299,27 +320,6 @@
     }
    },
    {
-    "name": "평화와평화",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "k1851904708",
-    "kakao": "1851904708",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 11,
-    "views": 253572,
-    "score": 122.17,
-    "thumb": "https://i.ytimg.com/vi/pF0sFbnkavo/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/pF0sFbnkavo/hqdefault.jpg",
-    "video": {
-     "id": "pF0sFbnkavo",
-     "title": "벌써 가을이니까 〰️ 혼자서 전주맛집 여행 vlog☕️🥮🍚  | 전주한옥마을,왱이,평화와평화,풍년제과,길거리야,백일홍,수정관,디드커피,경기전,,",
-     "channel": "강쥐G",
-     "views": 98858
-    }
-   },
-   {
     "name": "무가보",
     "city": "목포시",
     "province": "전라남도",
@@ -341,48 +341,6 @@
     }
    },
    {
-    "name": "돌창고",
-    "city": "남해군",
-    "province": "경상남도",
-    "cityId": "a36-s5",
-    "spotId": "k609534539",
-    "kakao": "609534539",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 9,
-    "views": 66028,
-    "score": 77.66,
-    "thumb": "https://i.ytimg.com/vi/0i9AzusoIBY/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/0i9AzusoIBY/hqdefault.jpg",
-    "video": {
-     "id": "0i9AzusoIBY",
-     "title": "혼자 남해 펜션에서 바베큐 해먹고 🍺 독일 소세지에 맥주 마시기 │ 유즈노모레, 돌창고, 바래온, 흙기와,  너티버터",
-     "channel": "오귤오귤",
-     "views": 24779
-    }
-   },
-   {
-    "name": "군산과자조합",
-    "city": "군산시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s2",
-    "spotId": "k912106998",
-    "kakao": "912106998",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 10,
-    "views": 562947,
-    "score": 76.12,
-    "thumb": "https://i.ytimg.com/vi/lmOC-6qKNB8/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/lmOC-6qKNB8/hqdefault.jpg",
-    "video": {
-     "id": "lmOC-6qKNB8",
-     "title": "📍군산 당일치기 여행",
-     "channel": "니즈남",
-     "views": 458767
-    }
-   },
-   {
     "name": "무우루",
     "city": "구례군",
     "province": "전라남도",
@@ -401,6 +359,48 @@
      "title": "​지쳐있던 나를 완벽하게 힐링시켜준 나혼자 구례 여행 🌳 소목집•소식다료 차실•무우루•텐텐치킨•드르륵•오목눈이풀숲•평화식당•사성암•천은사",
      "channel": "쟐쟐 ZALZAL",
      "views": 102365
+    }
+   },
+   {
+    "name": "돌창고",
+    "city": "남해군",
+    "province": "경상남도",
+    "cityId": "a36-s5",
+    "spotId": "k609534539",
+    "kakao": "609534539",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 8,
+    "views": 48744,
+    "score": 62.87,
+    "thumb": "https://i.ytimg.com/vi/OfHQ3sBWtZ0/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/OfHQ3sBWtZ0/hqdefault.jpg",
+    "video": {
+     "id": "OfHQ3sBWtZ0",
+     "title": "남해 1박2일 이대로만 가세요 | 쏠비치 남해 보리암 남해 맛집 카페 알짜배기 코스 vlog",
+     "channel": "주니네",
+     "views": 18985
+    }
+   },
+   {
+    "name": "화신연쇄점",
+    "city": "목포시",
+    "province": "전라남도",
+    "cityId": "a38-s8",
+    "spotId": "k1177581244",
+    "kakao": "1177581244",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 8,
+    "views": 65381,
+    "score": 56.74,
+    "thumb": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
+    "video": {
+     "id": "AmBYq8Vna8M",
+     "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
+     "channel": "현주zip",
+     "views": 39002
     }
    }
   ],
@@ -427,48 +427,6 @@
     }
    },
    {
-    "name": "광명동굴",
-    "city": "광명시",
-    "province": "경기도",
-    "cityId": "a31-s4",
-    "spotId": "2649975",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 51,
-    "views": 471204,
-    "score": 2103.01,
-    "thumb": "https://i.ytimg.com/vi/WteyDHtDu2w/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/27/4095727_image2_1.jpg",
-    "video": {
-     "id": "WteyDHtDu2w",
-     "title": "여름에 아이랑 갈만한 곳 #여름방학 에 갈만한곳 #실내 #광명동굴",
-     "channel": "챔별 Ho-LoL-LoG",
-     "views": 184837
-    }
-   },
-   {
-    "name": "전북 전주 한옥마을",
-    "city": "전주시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s12",
-    "spotId": "264284",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 52,
-    "views": 3670976,
-    "score": 1928.74,
-    "thumb": "https://i.ytimg.com/vi/70BHopOO35M/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/67/3516667_image2_1.jpg",
-    "video": {
-     "id": "70BHopOO35M",
-     "title": "10년 전에는 몰랐던 요즘 전주에서 노는법",
-     "channel": "방곡방곡",
-     "views": 2505962
-    }
-   },
-   {
     "name": "순천만국가정원",
     "city": "순천시",
     "province": "전라남도",
@@ -490,6 +448,27 @@
     }
    },
    {
+    "name": "전북 전주 한옥마을",
+    "city": "전주시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s12",
+    "spotId": "264284",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 49,
+    "views": 1437623,
+    "score": 1720.98,
+    "thumb": "https://i.ytimg.com/vi/X2Gjhdq37vU/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/67/3516667_image2_1.jpg",
+    "video": {
+     "id": "X2Gjhdq37vU",
+     "title": "완벽한 전주👏🏻 커피도시임☕️ 체코전 반응, 전주맛집, 물갈비, 콩나물국밥, 전주카페, 육일식당, 한옥마을",
+     "channel": "yoovlog",
+     "views": 408793
+    }
+   },
+   {
     "name": "영월 청령포",
     "city": "영월군",
     "province": "강원특별자치도",
@@ -508,6 +487,27 @@
      "title": "🔥요즘 핫한 영월 여행🔥 관광객은 모르는 현지인 맛집 풀코스 풍자가 직접 완주했습니다. | 또간집 EP.105",
      "channel": "스튜디오 수제",
      "views": 1247560
+    }
+   },
+   {
+    "name": "광명동굴",
+    "city": "광명시",
+    "province": "경기도",
+    "cityId": "a31-s4",
+    "spotId": "2649975",
+    "kakao": "1552244899",
+    "cat": "",
+    "kind": "spot",
+    "n": 43,
+    "views": 623934,
+    "score": 1452.46,
+    "thumb": "https://i.ytimg.com/vi/WteyDHtDu2w/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/27/4095727_image2_1.jpg",
+    "video": {
+     "id": "WteyDHtDu2w",
+     "title": "여름에 아이랑 갈만한 곳 #여름방학 에 갈만한곳 #실내 #광명동굴",
+     "channel": "챔별 Ho-LoL-LoG",
+     "views": 186009
     }
    },
    {
@@ -574,24 +574,24 @@
     }
    },
    {
-    "name": "광한루원",
-    "city": "남원시",
-    "province": "전북특별자치도",
-    "cityId": "a37-s4",
-    "spotId": "126397",
+    "name": "부석사",
+    "city": "영주시",
+    "province": "경상북도",
+    "cityId": "a35-s14",
+    "spotId": "127669",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 46,
-    "views": 356283,
-    "score": 1083.8,
-    "thumb": "https://i.ytimg.com/vi/gGyvnQoiQUk/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/15/4060015_image2_1.jpg",
+    "n": 34,
+    "views": 978476,
+    "score": 1072.27,
+    "thumb": "https://i.ytimg.com/vi/8ScbEHABDzM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/43/3572443_image2_1.JPG",
     "video": {
-     "id": "gGyvnQoiQUk",
-     "title": "[실시간] 남원 지금 난리났습니다✨ 5월 국내 여행지 추천 가볼만한곳: 2026 춘향제 여행 코스 Top 7 (구 서도역, 광한루원, 요천 음악분수 등)",
-     "channel": "여행작가 봄비",
-     "views": 49717
+     "id": "8ScbEHABDzM",
+     "title": "\"이게 진짜 힐링 맞아?\" 지석진의 좌충우돌 영주 선비 체험기📸 (소수서원부터 부석사까지)",
+     "channel": "영주문화관광재단",
+     "views": 398112
     }
    }
   ],
