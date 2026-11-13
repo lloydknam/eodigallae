@@ -1,6 +1,6 @@
 {
  "week": "2026-W46",
- "updatedAt": "2026-11-13T06:55:19+09:00",
+ "updatedAt": "2026-11-14T06:29:12+09:00",
  "videos": 443,
  "citiesWithData": 229,
  "lists": {
@@ -490,6 +490,27 @@
     }
    },
    {
+    "name": "수원 화성",
+    "city": "수원시",
+    "province": "경기도",
+    "cityId": "a31-s13",
+    "spotId": "125555",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 45,
+    "views": 791749,
+    "score": 1532.41,
+    "thumb": "https://i.ytimg.com/vi/w6K7JtUxQ2Y/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/97/3478597_image2_1.jpg",
+    "video": {
+     "id": "w6K7JtUxQ2Y",
+     "title": "수원화성 행궁동 보기만 해도 스트레스 해소🌈 맛집 카페 볼거리 코스 완벽 정리 | 서울근교 국내여행",
+     "channel": "너도 가봤으면 해",
+     "views": 196662
+    }
+   },
+   {
     "name": "광명동굴",
     "city": "광명시",
     "province": "경기도",
@@ -571,27 +592,6 @@
      "title": "경주가 이렇게 좋았나?🍁 혼자 뚜벅이 2박 3일 여행",
      "channel": "박소룡 Park So Ryong",
      "views": 147602
-    }
-   },
-   {
-    "name": "부석사",
-    "city": "영주시",
-    "province": "경상북도",
-    "cityId": "a35-s14",
-    "spotId": "127669",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 34,
-    "views": 978476,
-    "score": 1072.27,
-    "thumb": "https://i.ytimg.com/vi/8ScbEHABDzM/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/43/3572443_image2_1.JPG",
-    "video": {
-     "id": "8ScbEHABDzM",
-     "title": "\"이게 진짜 힐링 맞아?\" 지석진의 좌충우돌 영주 선비 체험기📸 (소수서원부터 부석사까지)",
-     "channel": "영주문화관광재단",
-     "views": 398112
     }
    }
   ],
@@ -836,6 +836,27 @@
     }
    },
    {
+    "name": "불갑사(영광)",
+    "city": "영광군",
+    "province": "전라남도",
+    "cityId": "a38-s16",
+    "spotId": "126349",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 23,
+    "views": 346555,
+    "score": 511.16,
+    "thumb": "https://i.ytimg.com/vi/mNH3J5wulqY/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/34/4057234_image2_1.jpg",
+    "video": {
+     "id": "mNH3J5wulqY",
+     "title": "🍁 2026 해외보다 멋진 국내 가을 여행지 BEST 8 | 9월 10월 여기 안가면 후회합니다! 60대 시니어 여행",
+     "channel": "길따라힐링TV",
+     "views": 177138
+    }
+   },
+   {
     "name": "안동 하회마을",
     "city": "안동시",
     "province": "경상북도",
@@ -878,24 +899,24 @@
     }
    },
    {
-    "name": "수선사",
-    "city": "산청군",
+    "name": "상림공원",
+    "city": "함양군",
     "province": "경상남도",
-    "cityId": "a36-s9",
-    "spotId": "2661541",
-    "kakao": "1882623780",
+    "cityId": "a36-s20",
+    "spotId": "126861",
+    "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 23,
-    "views": 62429,
-    "score": 472.65,
-    "thumb": "https://i.ytimg.com/vi/vMHAClEKpXM/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/41/3491141_image2_1.jpg",
+    "n": 24,
+    "views": 196581,
+    "score": 408.93,
+    "thumb": "https://i.ytimg.com/vi/xKwW80QgbvM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/08/3522408_image2_1.jpg",
     "video": {
-     "id": "vMHAClEKpXM",
-     "title": "지금 당장 가봐야 할 가장 아름다운 사찰 /8월 국내여행지 추천 /사찰여행 /국내여행 추천 /산청여행 /경남여행 #8월국내여행지추천 #국내여행 #아름다운사찰",
-     "channel": "Jay쌤여행TV",
-     "views": 15116
+     "id": "xKwW80QgbvM",
+     "title": "반값으로 갈 수 있는 함양여행?! 해발 1,915m 지리산이 보이는 “산 속에 있는 한옥호텔”에서 하룻밤",
+     "channel": "찬고리 Changori",
+     "views": 97953
     }
    },
    {
@@ -920,24 +941,24 @@
     }
    },
    {
-    "name": "불갑사(영광)",
-    "city": "영광군",
-    "province": "전라남도",
-    "cityId": "a38-s16",
-    "spotId": "126349",
-    "kakao": null,
+    "name": "수선사",
+    "city": "산청군",
+    "province": "경상남도",
+    "cityId": "a36-s9",
+    "spotId": "2661541",
+    "kakao": "1882623780",
     "cat": "",
     "kind": "spot",
     "n": 18,
-    "views": 371361,
-    "score": 313.02,
-    "thumb": "https://i.ytimg.com/vi/mNH3J5wulqY/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/34/4057234_image2_1.jpg",
+    "views": 58013,
+    "score": 303.37,
+    "thumb": "https://i.ytimg.com/vi/vMHAClEKpXM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/41/3491141_image2_1.jpg",
     "video": {
-     "id": "mNH3J5wulqY",
-     "title": "🍁 2026 해외보다 멋진 국내 가을 여행지 BEST 8 | 9월 10월 여기 안가면 후회합니다! 60대 시니어 여행",
-     "channel": "길따라힐링TV",
-     "views": 176589
+     "id": "vMHAClEKpXM",
+     "title": "지금 당장 가봐야 할 가장 아름다운 사찰 /8월 국내여행지 추천 /사찰여행 /국내여행 추천 /산청여행 /경남여행 #8월국내여행지추천 #국내여행 #아름다운사찰",
+     "channel": "Jay쌤여행TV",
+     "views": 15133
     }
    },
    {
@@ -980,27 +1001,6 @@
      "title": "찾다가 진짜 소름 돋았습니다! 충남 가볼만한곳 5곳 알려드림 (여름에도 가기 좋은 곳 여행 코스) 서산 간월암, 대천 스카이웤, 부여 미디어아트와 황포돛배, 서천 씨큐리움",
      "channel": "여행작가 봄비",
      "views": 60828
-    }
-   },
-   {
-    "name": "거창창포원",
-    "city": "거창군",
-    "province": "경상남도",
-    "cityId": "a36-s2",
-    "spotId": "2755874",
-    "kakao": "2023584048",
-    "cat": "",
-    "kind": "spot",
-    "n": 18,
-    "views": 319362,
-    "score": 276.35,
-    "thumb": "https://i.ytimg.com/vi/SITadEPPB_U/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/48/4111648_image2_1.jpg",
-    "video": {
-     "id": "SITadEPPB_U",
-     "title": "🌿 거창 가볼만한곳 BEST 5경남 거창 여행 꼭 가봐야 할 곳GEOCHANG TRAVEL",
-     "channel": "발자국 한스푼",
-     "views": 108099
     }
    }
   ]
