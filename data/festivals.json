@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-12",
- "count": 132,
+ "updatedAt": "2026-11-13",
+ "count": 131,
  "items": [
   {
    "id": "tour-3481597",
@@ -271,21 +271,6 @@
    "cityId": "a39-s4",
    "city": "제주시",
    "source": "std"
-  },
-  {
-   "id": "tour-3377038",
-   "title": "2026 국제선명상대회",
-   "start": "20260403",
-   "end": "20261112",
-   "addr": "서울특별시 강남구 봉은사로 531 (삼성동)",
-   "tel": "010-8441-2371",
-   "lat": 37.5158257049833,
-   "lng": 127.057734484281,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/90/4054090_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a1-s15",
-   "city": "서초구",
-   "source": "tour"
   },
   {
    "id": "tour-293030",
@@ -750,21 +735,6 @@
    "homepage": null,
    "cityId": "a36-s1",
    "city": "거제시",
-   "source": "std"
-  },
-  {
-   "id": "std-5020000-포항국제음악제-20261106",
-   "title": "포항국제음악제",
-   "start": "20261106",
-   "end": "20261112",
-   "addr": "경상북도 포항시 남구 희망대로 850",
-   "tel": "054-289-7822",
-   "lat": 36.00962254,
-   "lng": 129.3656799,
-   "image": null,
-   "homepage": "http://www.phcf.or.kr",
-   "cityId": "a35-s23",
-   "city": "포항시",
    "source": "std"
   },
   {
@@ -1466,7 +1436,7 @@
    "tel": "051-749-4062",
    "lat": 35.1592056511,
    "lng": 129.1615365475,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/12/3576412_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/41/4155841_image2_1.jpg",
    "homepage": null,
    "cityId": "a6-s16",
    "city": "해운대구",
@@ -1951,6 +1921,21 @@
    "cityId": "a6-s2",
    "city": "금정구",
    "source": "std"
+  },
+  {
+   "id": "tour-3367405",
+   "title": "비건·할랄뷰티페어",
+   "start": "20270512",
+   "end": "20270514",
+   "addr": "서울특별시 강남구 영동대로 513 (삼성동)",
+   "tel": "02-761-2586",
+   "lat": 37.5118651508,
+   "lng": 127.0592035846,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/07/4105707_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s15",
+   "city": "서초구",
+   "source": "tour"
   },
   {
    "id": "std-4301000-제21회철원화강다슬기축제-20270805",
