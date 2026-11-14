@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-13",
- "count": 131,
+ "updatedAt": "2026-11-14",
+ "count": 130,
  "items": [
   {
    "id": "tour-3481597",
@@ -466,21 +466,6 @@
    "cityId": "a39-s4",
    "city": "제주시",
    "source": "tour"
-  },
-  {
-   "id": "std-6510000-거리예술제-20260904",
-   "title": "거리예술제",
-   "start": "20260904",
-   "end": "20261113",
-   "addr": "제주특별자치도 제주시 관덕로11길 6",
-   "tel": "",
-   "lat": 33.51371216,
-   "lng": 126.525567,
-   "image": null,
-   "homepage": null,
-   "cityId": "a39-s4",
-   "city": "제주시",
-   "source": "std"
   },
   {
    "id": "tour-617992",
