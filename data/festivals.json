@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-14",
- "count": 130,
+ "updatedAt": "2026-11-15",
+ "count": 123,
  "items": [
   {
    "id": "tour-3481597",
@@ -603,21 +603,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-4120452",
-   "title": "2026 남산 나이트 페스티벌",
-   "start": "20261023",
-   "end": "20261114",
-   "addr": "서울특별시 중구 회현동1가 100-115",
-   "tel": "070-5226-0759",
-   "lat": 37.5548284375,
-   "lng": 126.9792487046,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/54/4120454_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a1-s24",
-   "city": "중구",
-   "source": "tour"
-  },
-  {
    "id": "tour-1748721",
    "title": "2026 포항스틸아트페스티벌 (2026PSAF)",
    "start": "20261024",
@@ -768,21 +753,6 @@
    "source": "std"
   },
   {
-   "id": "tour-4142164",
-   "title": "양동 백투더 장(BACK TO THE 장) 홍탁페스타",
-   "start": "20261112",
-   "end": "20261114",
-   "addr": "전남광주통합특별시 서구 천변좌로 238 (양동)",
-   "tel": "062-413-1271",
-   "lat": 35.1538794581,
-   "lng": 126.9025802615,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/65/4142165_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a5-s5",
-   "city": "서구",
-   "source": "tour"
-  },
-  {
    "id": "tour-2613615",
    "title": "영주 사과축제",
    "start": "20261113",
@@ -813,36 +783,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-4115096",
-   "title": "달려라부산 러닝페스티벌",
-   "start": "20261114",
-   "end": "20261114",
-   "addr": "부산광역시 동구 이순신대로 164 (초량동)",
-   "tel": "070-4659-0409",
-   "lat": 35.1144041132,
-   "lng": 129.0464193172,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/61/4139461_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a6-s5",
-   "city": "동구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-4147845",
-   "title": "순천 올랑가 일일마켓",
-   "start": "20261114",
-   "end": "20261114",
-   "addr": "전남광주통합특별시 순천시 별미길 18 (남내동)",
-   "tel": "070-4902-8266",
-   "lat": 34.9536637379,
-   "lng": 127.4851328015,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/46/4147846_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a38-s11",
-   "city": "순천시",
-   "source": "tour"
-  },
-  {
    "id": "tour-2646950",
    "title": "진안고원 김치보쌈축제",
    "start": "20261114",
@@ -870,21 +810,6 @@
    "homepage": null,
    "cityId": "a1-s23",
    "city": "종로구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-4137577",
-   "title": "2026 국민건강 리부트 마음건강 걷기대회",
-   "start": "20261114",
-   "end": "20261114",
-   "addr": "세종특별자치시 중앙공원로 60 (세종동)",
-   "tel": "044-251-7113",
-   "lat": 36.4917742203,
-   "lng": 127.2717369032,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/78/4137578_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a8-s1",
-   "city": "세종특별자치시",
    "source": "tour"
   },
   {
@@ -933,21 +858,6 @@
    "source": "std"
   },
   {
-   "id": "std-5410000-우포늪생명길걷기대회-20261114",
-   "title": "우포늪 생명길 걷기대회",
-   "start": "20261114",
-   "end": "20261114",
-   "addr": "경상남도 창녕군 유어면 세진리 193",
-   "tel": "055-530-2127",
-   "lat": 35.54466399,
-   "lng": 128.4181995,
-   "image": null,
-   "homepage": "https://www.cng.go.kr/01659/02144/03803.web",
-   "cityId": "a36-s15",
-   "city": "창녕군",
-   "source": "std"
-  },
-  {
    "id": "std-4731000-제8회진안고원김치보쌈축제-20261114",
    "title": "제8회 진안고원 김치보쌈축제",
    "start": "20261114",
@@ -975,21 +885,6 @@
    "homepage": "https://www.seosan.go.kr/tour/index.do",
    "cityId": "a34-s14",
    "city": "태안군",
-   "source": "std"
-  },
-  {
-   "id": "std-5820000-2026비엔날레문화콘서트4-20261114",
-   "title": "2026 비엔날레 문화콘서트4",
-   "start": "20261114",
-   "end": "20261114",
-   "addr": "전남광주통합특별시 북구 비엔날레로 111",
-   "tel": "062-410-8227",
-   "lat": 35.18309427,
-   "lng": 126.8892065,
-   "image": null,
-   "homepage": null,
-   "cityId": "a5-s4",
-   "city": "북구",
    "source": "std"
   },
   {
