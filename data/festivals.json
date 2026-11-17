@@ -1,6 +1,6 @@
 {
  "updatedAt": "2026-11-17",
- "count": 105,
+ "count": 106,
  "items": [
   {
    "id": "tour-3481597",
@@ -19,14 +19,14 @@
   },
   {
    "id": "tour-2786391",
-   "title": "광안리 M(Marvelous) 드론 라이트쇼",
+   "title": "광안리 M(Marvelous) 드론 × 레이저쇼",
    "start": "20260101",
    "end": "20261231",
    "addr": "부산광역시 수영구 광안해변로 219 (광안동)",
    "tel": "051-610-6518",
    "lat": 35.1537727886,
    "lng": 129.1185199367,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/12/3518612_image2_1.jpeg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/97/4163097_image2_1.jpg",
    "homepage": null,
    "cityId": "a6-s12",
    "city": "수영구",
@@ -716,7 +716,7 @@
    "tel": "033-250-2987",
    "lat": 37.3548373317,
    "lng": 127.9437145394,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/22/4151222_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/75/4163075_image2_1.png",
    "homepage": null,
    "cityId": "a32-s9",
    "city": "원주시",
@@ -858,6 +858,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4163259",
+   "title": "2026 전남 콘텐츠 페어 수도권 특별 체험전 〈10개의 이야기, 하나의 만남〉",
+   "start": "20261121",
+   "end": "20261122",
+   "addr": "서울특별시 종로구 인사동9길 26 (견지동)",
+   "tel": "02-6429-3818",
+   "lat": 37.5734697478,
+   "lng": 126.9836237183,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/60/4163260_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s23",
+   "city": "종로구",
+   "source": "tour"
+  },
+  {
    "id": "tour-3315407",
    "title": "2026 제4차 제물포웨이브마켓",
    "start": "20261121",
@@ -948,33 +963,18 @@
    "source": "tour"
   },
   {
-   "id": "tour-3578130",
-   "title": "울산 크리스마스 마켓",
-   "start": "20261127",
-   "end": "20261226",
-   "addr": "울산광역시 남구 대공원로 94 (옥동)",
-   "tel": "052-271-8701",
-   "lat": 35.5316566254,
-   "lng": 129.2935190325,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/40/4153340_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a7-s2",
-   "city": "남구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-3367339",
-   "title": "2026 우리쌀 우리술 K-라이스페스타",
+   "id": "tour-4111479",
+   "title": "제3회 추도 섬 영화제",
    "start": "20261127",
    "end": "20261129",
-   "addr": "경기도 고양시 일산서구 킨텍스로 217-60 (대화동)",
-   "tel": "070-4681-5717",
-   "lat": 37.6689334781,
-   "lng": 126.7458028497,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/60/4111660_image2_1.jpg",
+   "addr": "경상남도 통영시 산양읍",
+   "tel": "051-790-9433",
+   "lat": 34.7561870967,
+   "lng": 128.2954572699,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/10/4163310_image2_1.png",
    "homepage": null,
-   "cityId": "a31-s2",
-   "city": "고양시",
+   "cityId": "a36-s17",
+   "city": "통영시",
    "source": "tour"
   },
   {
@@ -1051,6 +1051,21 @@
    "cityId": "a35-s6",
    "city": "김천시",
    "source": "std"
+  },
+  {
+   "id": "tour-3569496",
+   "title": "담그랑께 나누랑께",
+   "start": "20261129",
+   "end": "20261129",
+   "addr": "전북특별자치도 전주시 완산구 전라감영로 55 (중앙동4가)",
+   "tel": "063-232-9938",
+   "lat": 35.8157360959,
+   "lng": 127.1455680409,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/65/4163165_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a37-s12",
+   "city": "전주시",
+   "source": "tour"
   },
   {
    "id": "tour-3545306",
