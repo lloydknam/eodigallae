@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-17",
- "count": 106,
+ "updatedAt": "2026-11-18",
+ "count": 109,
  "items": [
   {
    "id": "tour-3481597",
@@ -1158,6 +1158,21 @@
    "source": "std"
   },
   {
+   "id": "tour-1762432",
+   "title": "양평빙송어축제",
+   "start": "20261205",
+   "end": "20270307",
+   "addr": "경기도 양평군 곱다니길 55-2",
+   "tel": "031-775-5205",
+   "lat": 37.5144962722,
+   "lng": 127.6573930025,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/82/4164382_image2_1.JPG",
+   "homepage": null,
+   "cityId": "a31-s19",
+   "city": "양평군",
+   "source": "tour"
+  },
+  {
    "id": "tour-4108260",
    "title": "2026 HUG RUN 허그런",
    "start": "20261205",
@@ -1233,6 +1248,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-2515174",
+   "title": "2026 전국민 AI 페스티벌",
+   "start": "20261211",
+   "end": "20261213",
+   "addr": "서울특별시 중구 을지로 281 (을지로7가)",
+   "tel": "02-336-1876",
+   "lat": 37.5680445877,
+   "lng": 127.0108903555,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/18/4165118_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s24",
+   "city": "중구",
+   "source": "tour"
+  },
+  {
    "id": "std-4540000-2026양촌곶감축제-20261211",
    "title": "2026 양촌곶감축제",
    "start": "20261211",
@@ -1291,6 +1321,21 @@
    "cityId": "a35-s8",
    "city": "봉화군",
    "source": "std"
+  },
+  {
+   "id": "tour-2802077",
+   "title": "2026 과학영재교육 페스티벌",
+   "start": "20261223",
+   "end": "20261223",
+   "addr": "서울특별시 강남구 테헤란로7길 22 (역삼동)",
+   "tel": "02-559-3887",
+   "lat": 37.5007217702,
+   "lng": 127.030740311,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/12/4165112_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a1-s15",
+   "city": "서초구",
+   "source": "tour"
   },
   {
    "id": "tour-2630385",
