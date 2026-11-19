@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-18",
- "count": 109,
+ "updatedAt": "2026-11-19",
+ "count": 111,
  "items": [
   {
    "id": "tour-3481597",
@@ -963,6 +963,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-3578130",
+   "title": "울산 크리스마스 마켓",
+   "start": "20261127",
+   "end": "20261226",
+   "addr": "울산광역시 남구 대공원로 94 (옥동)",
+   "tel": "052-271-8701",
+   "lat": 35.5316566254,
+   "lng": 129.2935190325,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/40/4153340_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a7-s2",
+   "city": "남구",
+   "source": "tour"
+  },
+  {
    "id": "tour-4111479",
    "title": "제3회 추도 섬 영화제",
    "start": "20261127",
@@ -1156,6 +1171,21 @@
    "cityId": "a6-s15",
    "city": "중구",
    "source": "std"
+  },
+  {
+   "id": "tour-4088149",
+   "title": "발코니 뮤직쇼 앤 스트릿 페스타",
+   "start": "20261205",
+   "end": "20261205",
+   "addr": "부산광역시 중구 광복로 72-1 (광복동2가)",
+   "tel": "051-780-4151",
+   "lat": 35.0985979131,
+   "lng": 129.0327114585,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/37/4166437_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a6-s15",
+   "city": "중구",
+   "source": "tour"
   },
   {
    "id": "tour-1762432",
