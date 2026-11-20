@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-19",
- "count": 111,
+ "updatedAt": "2026-11-20",
+ "count": 115,
  "items": [
   {
    "id": "tour-3481597",
@@ -1218,6 +1218,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4144190",
+   "title": "2026 인천공항 온-아트 페스티벌",
+   "start": "20261205",
+   "end": "20261205",
+   "addr": "인천광역시 영종구 공항로 271 (운서동)",
+   "tel": "02-2138-0094",
+   "lat": 37.4476713343,
+   "lng": 126.4521719249,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/92/4144192_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a2-s10",
+   "city": "중구",
+   "source": "tour"
+  },
+  {
    "id": "tour-4095478",
    "title": "부산브릿지마라톤",
    "start": "20261206",
@@ -1245,6 +1260,21 @@
    "homepage": null,
    "cityId": "a1-s23",
    "city": "종로구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-1139979",
+   "title": "논산양촌곶감축제",
+   "start": "20261211",
+   "end": "20261213",
+   "addr": "충청남도 논산시 양촌면 양촌리",
+   "tel": "041-730-2982, 2952, 2928",
+   "lat": 36.1292554317,
+   "lng": 127.2473630035,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/26/4167626_image2_1.JPG",
+   "homepage": null,
+   "cityId": "a34-s3",
+   "city": "논산시",
    "source": "tour"
   },
   {
@@ -1379,6 +1409,21 @@
    "image": "https://tong.visitkorea.or.kr/cms/resource/66/4113266_image2_1.jpg",
    "homepage": null,
    "cityId": "a1-s24",
+   "city": "중구",
+   "source": "tour"
+  },
+  {
+   "id": "tour-2933428",
+   "title": "울산 성남동 눈꽃축제",
+   "start": "20261224",
+   "end": "20261227",
+   "addr": "울산광역시 중구 젊음의거리 15 (성남동)",
+   "tel": "010-4825-0560",
+   "lat": 35.5535380301,
+   "lng": 129.3173082015,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/64/3586264_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a7-s1",
    "city": "중구",
    "source": "tour"
   },
@@ -1530,6 +1575,21 @@
    "homepage": null,
    "cityId": "a32-s15",
    "city": "평창군",
+   "source": "tour"
+  },
+  {
+   "id": "tour-3420072",
+   "title": "2027 선양 맨몸마라톤",
+   "start": "20270101",
+   "end": "20270101",
+   "addr": "대전광역시 유성구 대덕대로 480 (도룡동)",
+   "tel": "042-580-1827",
+   "lat": 36.3760605845,
+   "lng": 127.3797537407,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/49/4169049_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a3-s4",
+   "city": "유성구",
    "source": "tour"
   },
   {
