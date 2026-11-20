@@ -1,6 +1,6 @@
 {
  "week": "2026-W47",
- "updatedAt": "2026-11-20T07:44:10+09:00",
+ "updatedAt": "2026-11-21T07:19:32+09:00",
  "videos": 427,
  "citiesWithData": 229,
  "lists": {
@@ -406,6 +406,27 @@
   ],
   "steady": [
    {
+    "name": "강화도",
+    "city": "강화군",
+    "province": "인천",
+    "cityId": "a2-s1",
+    "spotId": "hd29b5ce9c2883f0b7e90f79071a2ca82",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 98,
+    "views": 3643056,
+    "score": 7816.05,
+    "thumb": "https://i.ytimg.com/vi/hMoXzO0yjB4/hqdefault.jpg",
+    "image": "",
+    "video": {
+     "id": "hMoXzO0yjB4",
+     "title": "60년 넘게 강화도 다닌 82세 선우용여의 찐 단골 코스 최초공개 (게맛집,스파)",
+     "channel": "순풍 선우용여",
+     "views": 1247621
+    }
+   },
+   {
     "name": "경주 황리단길",
     "city": "경주시",
     "province": "경상북도",
@@ -571,27 +592,6 @@
      "title": "☔️쉴새없이 쏟아지는 폭우 속 오두막트럭으로 강아지와 편안한 우중캠핑 | 빗소리ASMR | 담양 죽녹원",
      "channel": "[그리는연유]Drawing YeonYoo",
      "views": 2745996
-    }
-   },
-   {
-    "name": "경주 첨성대",
-    "city": "경주시",
-    "province": "경상북도",
-    "cityId": "a35-s2",
-    "spotId": "126207",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 39,
-    "views": 1158629,
-    "score": 1112.89,
-    "thumb": "https://i.ytimg.com/vi/zq3CuvyBUzQ/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/35/4097535_image2_1.JPG",
-    "video": {
-     "id": "zq3CuvyBUzQ",
-     "title": "경주가 이렇게 좋았나?🍁 혼자 뚜벅이 2박 3일 여행",
-     "channel": "박소룡 Park So Ryong",
-     "views": 147602
     }
    }
   ],
