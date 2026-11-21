@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-20",
- "count": 115,
+ "updatedAt": "2026-11-21",
+ "count": 114,
  "items": [
   {
    "id": "tour-3481597",
@@ -720,21 +720,6 @@
    "homepage": null,
    "cityId": "a32-s9",
    "city": "원주시",
-   "source": "tour"
-  },
-  {
-   "id": "tour-4151220",
-   "title": "2026년 제7회 김치의 날 X 제4회 위킴 페스티벌",
-   "start": "20261120",
-   "end": "20261120",
-   "addr": "서울특별시 서초구 강남대로 27 (양재동)",
-   "tel": "02-6405-3641",
-   "lat": 37.4682787075,
-   "lng": 127.0391364334,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/59/4155259_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a1-s15",
-   "city": "서초구",
    "source": "tour"
   },
   {
