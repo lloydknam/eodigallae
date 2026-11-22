@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-21",
- "count": 114,
+ "updatedAt": "2026-11-22",
+ "count": 109,
  "items": [
   {
    "id": "tour-3481597",
@@ -378,21 +378,6 @@
    "source": "std"
   },
   {
-   "id": "std-5790000-순천만씨워킹-20260613",
-   "title": "순천만 씨워킹",
-   "start": "20260613",
-   "end": "20261121",
-   "addr": "전남광주통합특별시 순천시 안풍동 1174-55",
-   "tel": "",
-   "lat": 34.8758361,
-   "lng": 127.5032028,
-   "image": null,
-   "homepage": null,
-   "cityId": "a38-s11",
-   "city": "순천시",
-   "source": "std"
-  },
-  {
    "id": "tour-1032770",
    "title": "부산국제매직페스티벌",
    "start": "20260628",
@@ -510,21 +495,6 @@
    "homepage": null,
    "cityId": "a1-s2",
    "city": "강동구",
-   "source": "tour"
-  },
-  {
-   "id": "tour-4127746",
-   "title": "2026 남산 야간 트래킹 「반짝반짝 남산밤길」",
-   "start": "20261021",
-   "end": "20261121",
-   "addr": "서울특별시 중구 퇴계로34길 28 (필동2가)",
-   "tel": "02-6052-1002",
-   "lat": 37.55954227,
-   "lng": 126.9947387353,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/48/4127748_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a1-s24",
-   "city": "중구",
    "source": "tour"
   },
   {
@@ -663,21 +633,6 @@
    "source": "tour"
   },
   {
-   "id": "std-5020000-포항국제불빛축제-20261120",
-   "title": "포항국제불빛축제",
-   "start": "20261120",
-   "end": "20261122",
-   "addr": "경상북도 포항시 북구 두호동 685-1",
-   "tel": "054-289-7853",
-   "lat": 36.05729023,
-   "lng": 129.378069,
-   "image": null,
-   "homepage": "http://www.phcf.or.kr",
-   "cityId": "a35-s23",
-   "city": "포항시",
-   "source": "std"
-  },
-  {
    "id": "tour-2854855",
    "title": "2026 대한민국 관광기념품 박람회",
    "start": "20261120",
@@ -708,21 +663,6 @@
    "source": "tour"
   },
   {
-   "id": "tour-4151221",
-   "title": "2026 제1회 강원 도시재생 집수리의 날",
-   "start": "20261120",
-   "end": "20261121",
-   "addr": "강원특별자치도 원주시 남산로218번길 7 (학성동)",
-   "tel": "033-250-2987",
-   "lat": 37.3548373317,
-   "lng": 127.9437145394,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/75/4163075_image2_1.png",
-   "homepage": null,
-   "cityId": "a32-s9",
-   "city": "원주시",
-   "source": "tour"
-  },
-  {
    "id": "tour-4101384",
    "title": "20세기 사진 거장전 - 빛, 시간을 멈추다",
    "start": "20261120",
@@ -736,6 +676,21 @@
    "cityId": "a1-s24",
    "city": "중구",
    "source": "tour"
+  },
+  {
+   "id": "std-5020000-포항국제불빛축제-20261120",
+   "title": "포항국제불빛축제",
+   "start": "20261120",
+   "end": "20261122",
+   "addr": "경상북도 포항시 북구 두호동 685-1",
+   "tel": "054-289-7853",
+   "lat": 36.05729023,
+   "lng": 129.378069,
+   "image": null,
+   "homepage": "http://www.phcf.or.kr",
+   "cityId": "a35-s23",
+   "city": "포항시",
+   "source": "std"
   },
   {
    "id": "std-5880000-제6회무안yd페스티벌-20261120",
@@ -796,36 +751,6 @@
    "cityId": "a37-s7",
    "city": "순창군",
    "source": "std"
-  },
-  {
-   "id": "tour-4151224",
-   "title": "역사랑께 배우랑께",
-   "start": "20261121",
-   "end": "20261121",
-   "addr": "전북특별자치도 전주시 완산구 전라감영로 55 (중앙동4가)",
-   "tel": "063-232-9938",
-   "lat": 35.8165952746,
-   "lng": 127.1458864053,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/25/4151225_image2_1.jpg",
-   "homepage": null,
-   "cityId": "a37-s12",
-   "city": "전주시",
-   "source": "tour"
-  },
-  {
-   "id": "tour-3470738",
-   "title": "2026 런트립 남해! FALL & FUN",
-   "start": "20261121",
-   "end": "20261121",
-   "addr": "경상남도 남해군 삼동면 독일로 182",
-   "tel": "051-740-4116",
-   "lat": 34.804261908,
-   "lng": 128.0312711393,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/48/4136448_image2_1.png",
-   "homepage": null,
-   "cityId": "a36-s5",
-   "city": "남해군",
-   "source": "tour"
   },
   {
    "id": "tour-2410727",
