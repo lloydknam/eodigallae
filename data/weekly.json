@@ -1,7 +1,7 @@
 {
- "week": "2026-W47",
- "updatedAt": "2026-11-23T06:07:02+09:00",
- "videos": 427,
+ "week": "2026-W48",
+ "updatedAt": "2026-11-23T08:50:29+09:00",
+ "videos": 434,
  "citiesWithData": 229,
  "lists": {
   "youtube": [
@@ -14,202 +14,202 @@
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 5,
-    "views": 55755,
-    "score": 40.32,
-    "thumb": "https://i.ytimg.com/vi/IPoKQALZisI/hqdefault.jpg",
+    "n": 4,
+    "views": 99940,
+    "score": 28.39,
+    "thumb": "https://i.ytimg.com/vi/io1Xih2VuyQ/hqdefault.jpg",
     "image": "https://tong.visitkorea.or.kr/cms/resource_photo/67/3516667_image2_1.jpg",
     "video": {
-     "id": "IPoKQALZisI",
-     "title": "텐션 감당 불가… 임신 30주에 떠난 시댁 목포 여행",
-     "channel": "좋아혜죠",
-     "views": 28636
+     "id": "io1Xih2VuyQ",
+     "title": "기차표 한 장 들고 떠나기 좋은 국내 여행지 10곳 #국내여행 #기차여행 #주말나들이",
+     "channel": "오늘의 기준",
+     "views": 57562
     },
     "base_n": 49,
-    "change": "new"
+    "change": 0
    },
    {
-    "name": "수원 화성",
-    "city": "수원시",
-    "province": "경기도",
-    "cityId": "a31-s13",
-    "spotId": "125555",
+    "name": "금시당",
+    "city": "밀양시",
+    "province": "경상남도",
+    "cityId": "a36-s7",
+    "spotId": "2792804",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 4,
-    "views": 221263,
-    "score": 32.11,
-    "thumb": "https://i.ytimg.com/vi/cumh0LC2xQk/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/97/3478597_image2_1.jpg",
+    "n": 3,
+    "views": 33169,
+    "score": 24.8,
+    "thumb": "https://i.ytimg.com/vi/qFNa8udXiE0/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/00/3097700_image2_1.jpg",
     "video": {
-     "id": "cumh0LC2xQk",
-     "title": "경기남부 가볼만한 곳 7곳 | 11월 늦가을 서울근교 당일치기 | 60대 이상 시니어 여행",
-     "channel": "길따라힐링TV",
-     "views": 108689
+     "id": "qFNa8udXiE0",
+     "title": "혼자 떠난 밀양여행 | 뚜벅이 1박2일 코스 | 120년 된 고택 숙소(7만원!) | 최고의 떡갈비와 당근🥕케이크 | 위양지, 영남루, 금시당, 월연정",
+     "channel": "두조람 DuJoram",
+     "views": 24101
     },
-    "base_n": 45,
+    "base_n": 6,
     "change": "new"
    },
    {
-    "name": "공주 공산성",
-    "city": "공주시",
+    "name": "아산 공세리성당",
+    "city": "아산시",
     "province": "충청남도",
-    "cityId": "a34-s1",
-    "spotId": "125949",
+    "cityId": "a34-s9",
+    "spotId": "128127",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 4,
-    "views": 41272,
-    "score": 25.37,
-    "thumb": "https://i.ytimg.com/vi/t0OWq9Dd7xE/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/41/3404541_image2_1.jpg",
+    "n": 2,
+    "views": 48761,
+    "score": 14.76,
+    "thumb": "https://i.ytimg.com/vi/RONSphbbiEM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/72/3558572_image2_1.jpg",
     "video": {
-     "id": "t0OWq9Dd7xE",
-     "title": "공주 당일치기 19,000원 패키지 여행 / 차량 + 식사 + 카페 + 체험 + 투어까지 포함",
-     "channel": "파파트래블(PAPATRAVEL)",
-     "views": 17469
+     "id": "RONSphbbiEM",
+     "title": "가을이 가장 아름다운 도시 🍁서울에서 한 시간이면 도착하는 아산 가을 명소 BEST 6 #아산여행 #아산가볼만한곳 #가을여행지 #곡교천은행나무길 #공세리성당 #가을여행",
+     "channel": "일상이여행 Everyday travel",
+     "views": 45480
     },
-    "base_n": 44,
+    "base_n": 8,
     "change": "new"
    },
    {
-    "name": "경주 황리단길",
-    "city": "경주시",
+    "name": "곡교천 은행나무길",
+    "city": "아산시",
+    "province": "충청남도",
+    "cityId": "a34-s9",
+    "spotId": "2606725",
+    "kakao": "2057873831",
+    "cat": "",
+    "kind": "spot",
+    "n": 2,
+    "views": 47962,
+    "score": 14.62,
+    "thumb": "https://i.ytimg.com/vi/RONSphbbiEM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/67/3098767_image2_1.jpg",
+    "video": {
+     "id": "RONSphbbiEM",
+     "title": "가을이 가장 아름다운 도시 🍁서울에서 한 시간이면 도착하는 아산 가을 명소 BEST 6 #아산여행 #아산가볼만한곳 #가을여행지 #곡교천은행나무길 #공세리성당 #가을여행",
+     "channel": "일상이여행 Everyday travel",
+     "views": 45480
+    },
+    "base_n": 10,
+    "change": "new"
+   },
+   {
+    "name": "삼양라운드힐",
+    "city": "평창군",
+    "province": "강원특별자치도",
+    "cityId": "a32-s15",
+    "spotId": "2640123",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 3,
+    "views": 43352,
+    "score": 14.55,
+    "thumb": "https://i.ytimg.com/vi/2nP5PNX8Adg/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/94/3477094_image2_1.jpg",
+    "video": {
+     "id": "2nP5PNX8Adg",
+     "title": "하다하다 인턴까지 한다! 수험생 여러분 이대로 평창 떠나세요🎒🐑ㅣ휴알유 Ep.07 수능 끝 평창 여행ㅣ아이칠린 제이, 발왕산케이블카, 대관령한우 ",
+     "channel": "한국관광공사TV",
+     "views": 37454
+    },
+    "base_n": 6,
+    "change": "new"
+   },
+   {
+    "name": "안동 하회마을",
+    "city": "안동시",
     "province": "경상북도",
-    "cityId": "a35-s2",
-    "spotId": "2658227",
-    "kakao": "1124130238",
-    "cat": "",
-    "kind": "spot",
-    "n": 4,
-    "views": 73405,
-    "score": 25.18,
-    "thumb": "https://i.ytimg.com/vi/URnjx6y0gZw/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/62/3480062_image2_1.jpg",
-    "video": {
-     "id": "URnjx6y0gZw",
-     "title": "경주만 N번째! 경주러버의 나혼자 경주 당일치기✨",
-     "channel": "나나 Nanasserie",
-     "views": 26937
-    },
-    "base_n": 64,
-    "change": "new"
-   },
-   {
-    "name": "용문산",
-    "city": "양평군",
-    "province": "경기도",
-    "cityId": "a31-s19",
-    "spotId": "125485",
+    "cityId": "a35-s11",
+    "spotId": "894027",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 4,
-    "views": 49419,
-    "score": 24.72,
-    "thumb": "https://i.ytimg.com/vi/ezlHxyrZgfo/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/71/4110571_image2_1.jpg",
+    "n": 2,
+    "views": 40051,
+    "score": 14.53,
+    "thumb": "https://i.ytimg.com/vi/nH24BV0lwdM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/62/4059762_image2_1.jpg",
     "video": {
-     "id": "ezlHxyrZgfo",
-     "title": "🚅 서울에서 기차 35분! 한국에서 가장 큰 은행나무 | 🍁 대중교통 당일치기 여행",
-     "channel": "안수지의 여행의 발견",
-     "views": 45723
+     "id": "nH24BV0lwdM",
+     "title": "죽기 전에 꼭 가봐야 할 국내 여행지 15곳 🇰🇷 #국내여행 #여행추천 #한국관광100선",
+     "channel": "하루세번지식쌓기",
+     "views": 27557
     },
-    "base_n": 5,
+    "base_n": 35,
     "change": "new"
    },
    {
-    "name": "용문사(용문산)",
-    "city": "양평군",
-    "province": "경기도",
-    "cityId": "a31-s19",
-    "spotId": "125537",
+    "name": "단양 고수동굴",
+    "city": "단양군",
+    "province": "충청북도",
+    "cityId": "a33-s2",
+    "spotId": "125861",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 4,
-    "views": 49419,
-    "score": 24.7,
-    "thumb": "https://i.ytimg.com/vi/ezlHxyrZgfo/hqdefault.jpg",
+    "n": 2,
+    "views": 28786,
+    "score": 13.88,
+    "thumb": "https://i.ytimg.com/vi/dxWIN6MyXiM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/32/4086232_image2_1.jpg",
+    "video": {
+     "id": "dxWIN6MyXiM",
+     "title": "혼자 단양 뚜벅이 여행 | 고수동굴 | 만천하스카이워크 | 이끼터널 | 단양강 잔도",
+     "channel": "황금상",
+     "views": 27199
+    },
+    "base_n": 18,
+    "change": "new"
+   },
+   {
+    "name": "단양강 잔도",
+    "city": "단양군",
+    "province": "충청북도",
+    "cityId": "a33-s2",
+    "spotId": "2604656",
+    "kakao": "2144277539",
+    "cat": "",
+    "kind": "spot",
+    "n": 2,
+    "views": 28786,
+    "score": 13.88,
+    "thumb": "https://i.ytimg.com/vi/dxWIN6MyXiM/hqdefault.jpg",
     "image": "",
     "video": {
-     "id": "ezlHxyrZgfo",
-     "title": "🚅 서울에서 기차 35분! 한국에서 가장 큰 은행나무 | 🍁 대중교통 당일치기 여행",
-     "channel": "안수지의 여행의 발견",
-     "views": 45723
+     "id": "dxWIN6MyXiM",
+     "title": "혼자 단양 뚜벅이 여행 | 고수동굴 | 만천하스카이워크 | 이끼터널 | 단양강 잔도",
+     "channel": "황금상",
+     "views": 27199
     },
-    "base_n": 9,
+    "base_n": 18,
     "change": "new"
    },
    {
-    "name": "민둥산",
-    "city": "정선군",
-    "province": "강원특별자치도",
-    "cityId": "a32-s11",
-    "spotId": "125616",
-    "kakao": "7887114",
-    "cat": "",
-    "kind": "spot",
-    "n": 2,
-    "views": 59330,
-    "score": 14.0,
-    "thumb": "https://i.ytimg.com/vi/enWeA3BQ3ok/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/52/3414852_image2_1.jpg",
-    "video": {
-     "id": "enWeA3BQ3ok",
-     "title": "인생 첫 국내 여행을 일단 산으로 가봤습니다",
-     "channel": "김연송",
-     "views": 54112
-    },
-    "base_n": 30,
-    "change": "new"
-   },
-   {
-    "name": "와우정사(용인)",
-    "city": "용인시",
-    "province": "경기도",
-    "cityId": "a31-s23",
-    "spotId": "127675",
+    "name": "만천하 스카이워크",
+    "city": "단양군",
+    "province": "충청북도",
+    "cityId": "a33-s2",
+    "spotId": "2519536",
     "kakao": null,
     "cat": "",
     "kind": "spot",
     "n": 2,
-    "views": 110883,
-    "score": 13.48,
-    "thumb": "https://i.ytimg.com/vi/cumh0LC2xQk/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/29/4106429_image2_1.jpg",
+    "views": 28008,
+    "score": 13.55,
+    "thumb": "https://i.ytimg.com/vi/dxWIN6MyXiM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/56/3408156_image2_1.png",
     "video": {
-     "id": "cumh0LC2xQk",
-     "title": "경기남부 가볼만한 곳 7곳 | 11월 늦가을 서울근교 당일치기 | 60대 이상 시니어 여행",
-     "channel": "길따라힐링TV",
-     "views": 108689
+     "id": "dxWIN6MyXiM",
+     "title": "혼자 단양 뚜벅이 여행 | 고수동굴 | 만천하스카이워크 | 이끼터널 | 단양강 잔도",
+     "channel": "황금상",
+     "views": 27199
     },
-    "base_n": 5,
-    "change": "new"
-   },
-   {
-    "name": "경주 동궁과 월지",
-    "city": "경주시",
-    "province": "경상북도",
-    "cityId": "a35-s2",
-    "spotId": "128526",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 2,
-    "views": 8171,
-    "score": 12.14,
-    "thumb": "https://i.ytimg.com/vi/1PkZhqTQGgA/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/88/3020488_image2_1.JPG",
-    "video": {
-     "id": "1PkZhqTQGgA",
-     "title": "국내 야경, 어디가 제일 예쁠까?",
-     "channel": "오늘살림",
-     "views": 5671
-    },
-    "base_n": 21,
+    "base_n": 33,
     "change": "new"
    }
   ],
@@ -233,7 +233,8 @@
      "title": "요즘 다들 여기 간다는데 - 수도권에서 가장 아름다운 바닷길 -황금해안길",
      "channel": "곰슨의바깥세상",
      "views": 311897
-    }
+    },
+    "change": 0
    },
    {
     "name": "군산과자조합",
@@ -254,7 +255,8 @@
      "title": "📍군산 당일치기 여행",
      "channel": "니즈남",
      "views": 464400
-    }
+    },
+    "change": 0
    },
    {
     "name": "아차가",
@@ -275,7 +277,8 @@
      "title": "찜닭 말고 쪼림닭❗️매운식혜❗️ 두번가도 먹을거, 볼게 넘치는 1박2일 안동여행😋",
      "channel": "소풍족",
      "views": 115859
-    }
+    },
+    "change": "new"
    },
    {
     "name": "커피창고로",
@@ -296,7 +299,8 @@
      "title": "목포여행 가시면 이것만 보고가세요 ! 😏",
      "channel": "슈가토끼",
      "views": 238295
-    }
+    },
+    "change": -1
    },
    {
     "name": "온다인",
@@ -317,7 +321,8 @@
      "title": "장성 신상카페 온다인, 나주 스시집 다녀왔어요! 언니최고 #국내여행",
      "channel": "타샤의탱필름 TASHA",
      "views": 2185
-    }
+    },
+    "change": -1
    },
    {
     "name": "이치니산도",
@@ -338,7 +343,8 @@
      "title": "[여행vlog] 황리단길 감성 낭낭히 즐기러 나홀로?🧳 _ 야장 가맥+오차즈케+첨성대+붓가케우동+이치니산도",
      "channel": "예소리SSOL",
      "views": 132787
-    }
+    },
+    "change": -1
    },
    {
     "name": "무가보",
@@ -359,7 +365,8 @@
      "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
      "channel": "현주zip",
      "views": 39002
-    }
+    },
+    "change": -1
    },
    {
     "name": "무우루",
@@ -380,7 +387,8 @@
      "title": "​지쳐있던 나를 완벽하게 힐링시켜준 나혼자 구례 여행 🌳 소목집•소식다료 차실•무우루•텐텐치킨•드르륵•오목눈이풀숲•평화식당•사성암•천은사",
      "channel": "쟐쟐 ZALZAL",
      "views": 102365
-    }
+    },
+    "change": -1
    },
    {
     "name": "돌창고",
@@ -401,7 +409,8 @@
      "title": "남해 1박2일 이대로만 가세요 | 쏠비치 남해 보리암 남해 맛집 카페 알짜배기 코스 vlog",
      "channel": "주니네",
      "views": 18985
-    }
+    },
+    "change": -1
    }
   ],
   "steady": [
@@ -424,7 +433,8 @@
      "title": "60년 넘게 강화도 다닌 82세 선우용여의 찐 단골 코스 최초공개 (게맛집,스파)",
      "channel": "순풍 선우용여",
      "views": 1247621
-    }
+    },
+    "change": "new"
    },
    {
     "name": "경주 황리단길",
@@ -445,7 +455,8 @@
      "title": "요즘 경주 핫플 🔥 성동시장 줄서는 맛집 | 황리단길 가볼만한곳 | 20억 최첨단 XR버스, 플래시백 계림 | 최신 경주여행 추천코스",
      "channel": "윤요기 YUNYOGI",
      "views": 160155
-    }
+    },
+    "change": -1
    },
    {
     "name": "순천만국가정원",
@@ -466,7 +477,8 @@
      "title": "멤버랑 둘이서 여행? 쉽지 않아 | 카세로그 Ep.1",
      "channel": "EXO",
      "views": 245180
-    }
+    },
+    "change": -1
    },
    {
     "name": "전북 전주 한옥마을",
@@ -487,7 +499,8 @@
      "title": "완벽한 전주👏🏻 커피도시임☕️ 체코전 반응, 전주맛집, 물갈비, 콩나물국밥, 전주카페, 육일식당, 한옥마을",
      "channel": "yoovlog",
      "views": 408793
-    }
+    },
+    "change": -1
    },
    {
     "name": "영월 청령포",
@@ -508,7 +521,8 @@
      "title": "🔥요즘 핫한 영월 여행🔥 관광객은 모르는 현지인 맛집 풀코스 풍자가 직접 완주했습니다. | 또간집 EP.105",
      "channel": "스튜디오 수제",
      "views": 1247560
-    }
+    },
+    "change": -1
    },
    {
     "name": "수원 화성",
@@ -529,7 +543,8 @@
      "title": "수원화성 행궁동 보기만 해도 스트레스 해소🌈 맛집 카페 볼거리 코스 완벽 정리 | 서울근교 국내여행",
      "channel": "너도 가봤으면 해",
      "views": 196662
-    }
+    },
+    "change": -1
    },
    {
     "name": "광명동굴",
@@ -550,7 +565,8 @@
      "title": "여름에 아이랑 갈만한 곳 #여름방학 에 갈만한곳 #실내 #광명동굴",
      "channel": "챔별 Ho-LoL-LoG",
      "views": 186009
-    }
+    },
+    "change": -1
    },
    {
     "name": "공주 공산성",
@@ -571,7 +587,8 @@
      "title": "한 번도 궁금하지 않았는데 상상과 다른 공주",
      "channel": "로드50 Road50",
      "views": 321263
-    }
+    },
+    "change": -1
    },
    {
     "name": "죽녹원",
@@ -592,416 +609,226 @@
      "title": "☔️쉴새없이 쏟아지는 폭우 속 오두막트럭으로 강아지와 편안한 우중캠핑 | 빗소리ASMR | 담양 죽녹원",
      "channel": "[그리는연유]Drawing YeonYoo",
      "views": 2745996
-    }
+    },
+    "change": -1
    }
   ],
   "rising": [
    {
-    "name": "용문산",
-    "city": "양평군",
-    "province": "경기도",
-    "cityId": "a31-s19",
-    "spotId": "125485",
+    "name": "삼양라운드힐",
+    "city": "평창군",
+    "province": "강원특별자치도",
+    "cityId": "a32-s15",
+    "spotId": "2640123",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 4,
-    "views": 49419,
-    "score": 24.72,
-    "thumb": "https://i.ytimg.com/vi/ezlHxyrZgfo/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/71/4110571_image2_1.jpg",
+    "n": 3,
+    "views": 43352,
+    "score": 14.55,
+    "thumb": "https://i.ytimg.com/vi/2nP5PNX8Adg/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/94/3477094_image2_1.jpg",
     "video": {
-     "id": "ezlHxyrZgfo",
-     "title": "🚅 서울에서 기차 35분! 한국에서 가장 큰 은행나무 | 🍁 대중교통 당일치기 여행",
-     "channel": "안수지의 여행의 발견",
-     "views": 45723
+     "id": "2nP5PNX8Adg",
+     "title": "하다하다 인턴까지 한다! 수험생 여러분 이대로 평창 떠나세요🎒🐑ㅣ휴알유 Ep.07 수능 끝 평창 여행ㅣ아이칠린 제이, 발왕산케이블카, 대관령한우 ",
+     "channel": "한국관광공사TV",
+     "views": 37454
     },
-    "base_n": 5,
-    "ratio": 5.8,
+    "base_n": 6,
+    "ratio": 4.1,
     "change": "new"
    },
    {
-    "name": "용문사(용문산)",
-    "city": "양평군",
-    "province": "경기도",
-    "cityId": "a31-s19",
-    "spotId": "125537",
+    "name": "금시당",
+    "city": "밀양시",
+    "province": "경상남도",
+    "cityId": "a36-s7",
+    "spotId": "2792804",
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 4,
-    "views": 49419,
-    "score": 24.7,
-    "thumb": "https://i.ytimg.com/vi/ezlHxyrZgfo/hqdefault.jpg",
-    "image": "",
+    "n": 3,
+    "views": 33169,
+    "score": 24.8,
+    "thumb": "https://i.ytimg.com/vi/qFNa8udXiE0/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/00/3097700_image2_1.jpg",
     "video": {
-     "id": "ezlHxyrZgfo",
-     "title": "🚅 서울에서 기차 35분! 한국에서 가장 큰 은행나무 | 🍁 대중교통 당일치기 여행",
-     "channel": "안수지의 여행의 발견",
-     "views": 45723
+     "id": "qFNa8udXiE0",
+     "title": "혼자 떠난 밀양여행 | 뚜벅이 1박2일 코스 | 120년 된 고택 숙소(7만원!) | 최고의 떡갈비와 당근🥕케이크 | 위양지, 영남루, 금시당, 월연정",
+     "channel": "두조람 DuJoram",
+     "views": 24101
     },
-    "base_n": 9,
-    "ratio": 4.7,
+    "base_n": 6,
+    "ratio": 4.1,
     "change": "new"
    },
    {
-    "name": "남대문시장",
-    "city": "중구",
-    "province": "서울",
-    "cityId": "a1-s24",
-    "spotId": "132180",
+    "name": "국립전주박물관",
+    "city": "전주시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s12",
+    "spotId": "129786",
     "kakao": null,
     "cat": "",
     "kind": "spot",
     "n": 2,
-    "views": 1481,
-    "score": 6.17,
-    "thumb": "https://i.ytimg.com/vi/3_XgCA8ysZg/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/67/2612867_image2_1.jpg",
+    "views": 14821,
+    "score": 8.34,
+    "thumb": "https://i.ytimg.com/vi/4-VSPTi8ObY/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/67/4111167_image2_1.jpg",
     "video": {
-     "id": "3_XgCA8ysZg",
-     "title": "빨대로 마실 때마다 설탕이 아그작?! 남대문 콩코드커피 솔직 후기 ☕✨",
-     "channel": "우리가가 | 가족 일상 여행 브이로그",
-     "views": 1316
+     "id": "4-VSPTi8ObY",
+     "title": "전주 여행, 이런 막걸리 한상이 있다고? 먹거리와 볼거리 가득한 전주!~",
+     "channel": "쿠수니네 - 맛집 찾아 삼만리",
+     "views": 13504
+    },
+    "base_n": 0,
+    "ratio": 4.0,
+    "change": "new"
+   },
+   {
+    "name": "설천봉",
+    "city": "무주군",
+    "province": "전북특별자치도",
+    "cityId": "a37-s5",
+    "spotId": "2704644",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 2,
+    "views": 6881,
+    "score": 11.75,
+    "thumb": "https://i.ytimg.com/vi/syOufTF-J1s/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/05/3478805_image2_1.jpg",
+    "video": {
+     "id": "syOufTF-J1s",
+     "title": "겨울에 가면 해외 같은 국내 여행지 TOP 10 #겨울여행 #국내여행",
+     "channel": "맘스픽 여행",
+     "views": 5089
+    },
+    "base_n": 1,
+    "ratio": 3.7,
+    "change": "new"
+   },
+   {
+    "name": "로미지안가든",
+    "city": "정선군",
+    "province": "강원특별자치도",
+    "cityId": "a32-s11",
+    "spotId": "2778965",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 2,
+    "views": 48667,
+    "score": 8.74,
+    "thumb": "https://i.ytimg.com/vi/8g8ooujlK_c/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/53/3352853_image2_1.jpg",
+    "video": {
+     "id": "8g8ooujlK_c",
+     "title": "6만7천원 뚜벅이 당일치기 정선 여행코스",
+     "channel": "트레킹 코리아",
+     "views": 31122
+    },
+    "base_n": 2,
+    "ratio": 3.5,
+    "change": "new"
+   },
+   {
+    "name": "강화 초지진",
+    "city": "강화군",
+    "province": "인천",
+    "cityId": "a2-s1",
+    "spotId": "128030",
+    "kakao": null,
+    "cat": "",
+    "kind": "spot",
+    "n": 2,
+    "views": 16022,
+    "score": 8.53,
+    "thumb": "https://i.ytimg.com/vi/yldLddSZF3A/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/50/4079250_image2_1.JPG",
+    "video": {
+     "id": "yldLddSZF3A",
+     "title": "관광지를 벗어나 만난 뜻밖의 풍경과 맛있는 하루",
+     "channel": "로드50 Road50",
+     "views": 14173
     },
     "base_n": 3,
     "ratio": 3.2,
     "change": "new"
    },
    {
-    "name": "무릉계곡",
-    "city": "동해시",
+    "name": "가리왕산케이블카",
+    "city": "정선군",
     "province": "강원특별자치도",
-    "cityId": "a32-s3",
-    "spotId": "125677",
-    "kakao": "7877800",
-    "cat": "",
-    "kind": "spot",
-    "n": 2,
-    "views": 9271,
-    "score": 11.81,
-    "thumb": "https://i.ytimg.com/vi/PfH8ijQmC2s/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/42/3474442_image2_1.jpg",
-    "video": {
-     "id": "PfH8ijQmC2s",
-     "title": "육해공 다 접수한 김대호! 동해 당일치기 제대로 즐기는 법 ㅣ어디든 간대호",
-     "channel": "헬로라이프",
-     "views": 7726
-    },
-    "base_n": 4,
-    "ratio": 3.1,
-    "change": "new"
-   },
-   {
-    "name": "와우정사(용인)",
-    "city": "용인시",
-    "province": "경기도",
-    "cityId": "a31-s23",
-    "spotId": "127675",
+    "cityId": "a32-s11",
+    "spotId": "3068424",
     "kakao": null,
     "cat": "",
     "kind": "spot",
     "n": 2,
-    "views": 110883,
-    "score": 13.48,
-    "thumb": "https://i.ytimg.com/vi/cumh0LC2xQk/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/29/4106429_image2_1.jpg",
+    "views": 48667,
+    "score": 8.74,
+    "thumb": "https://i.ytimg.com/vi/8g8ooujlK_c/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/30/3533330_image2_1.jpg",
     "video": {
-     "id": "cumh0LC2xQk",
-     "title": "경기남부 가볼만한 곳 7곳 | 11월 늦가을 서울근교 당일치기 | 60대 이상 시니어 여행",
-     "channel": "길따라힐링TV",
-     "views": 108689
+     "id": "8g8ooujlK_c",
+     "title": "6만7천원 뚜벅이 당일치기 정선 여행코스",
+     "channel": "트레킹 코리아",
+     "views": 31122
     },
-    "base_n": 5,
-    "ratio": 2.9,
+    "base_n": 7,
+    "ratio": 2.6,
     "change": "new"
    },
    {
-    "name": "제부도",
-    "city": "화성시",
-    "province": "경기도",
-    "cityId": "a31-s31",
-    "spotId": "125503",
+    "name": "아산 공세리성당",
+    "city": "아산시",
+    "province": "충청남도",
+    "cityId": "a34-s9",
+    "spotId": "128127",
     "kakao": null,
     "cat": "",
     "kind": "spot",
     "n": 2,
-    "views": 212457,
-    "score": 11.56,
-    "thumb": "https://i.ytimg.com/vi/cumh0LC2xQk/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/89/3330989_image2_1.jpg",
+    "views": 48761,
+    "score": 14.76,
+    "thumb": "https://i.ytimg.com/vi/RONSphbbiEM/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/72/3558572_image2_1.jpg",
     "video": {
-     "id": "cumh0LC2xQk",
-     "title": "경기남부 가볼만한 곳 7곳 | 11월 늦가을 서울근교 당일치기 | 60대 이상 시니어 여행",
-     "channel": "길따라힐링TV",
-     "views": 108689
+     "id": "RONSphbbiEM",
+     "title": "가을이 가장 아름다운 도시 🍁서울에서 한 시간이면 도착하는 아산 가을 명소 BEST 6 #아산여행 #아산가볼만한곳 #가을여행지 #곡교천은행나무길 #공세리성당 #가을여행",
+     "channel": "일상이여행 Everyday travel",
+     "views": 45480
     },
-    "base_n": 9,
-    "ratio": 2.4,
+    "base_n": 8,
+    "ratio": 2.5,
     "change": "new"
    },
    {
-    "name": "경포호(철새도래지)",
-    "city": "강릉시",
-    "province": "강원특별자치도",
-    "cityId": "a32-s1",
-    "spotId": "127975",
-    "kakao": "8654759",
+    "name": "고려궁지",
+    "city": "강화군",
+    "province": "인천",
+    "cityId": "a2-s1",
+    "spotId": "127184",
+    "kakao": "1010691640",
     "cat": "",
     "kind": "spot",
     "n": 2,
-    "views": 39884,
-    "score": 9.73,
-    "thumb": "https://i.ytimg.com/vi/cyFmhPIgk1o/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/50/4118550_image2_1.jpg",
+    "views": 16022,
+    "score": 8.53,
+    "thumb": "https://i.ytimg.com/vi/yldLddSZF3A/hqdefault.jpg",
+    "image": "",
     "video": {
-     "id": "cyFmhPIgk1o",
-     "title": "버스 놓치고 시작한 혼자 동해안 자전거 여행🌊 | 강릉→정동진→삼척 1박 2일",
-     "channel": "지니라이딩 GenieRiding",
-     "views": 30432
+     "id": "yldLddSZF3A",
+     "title": "관광지를 벗어나 만난 뜻밖의 풍경과 맛있는 하루",
+     "channel": "로드50 Road50",
+     "views": 14173
     },
-    "base_n": 9,
-    "ratio": 2.4,
+    "base_n": 10,
+    "ratio": 2.3,
     "change": "new"
-   },
-   {
-    "name": "청풍문화유산단지",
-    "city": "제천시",
-    "province": "충청북도",
-    "cityId": "a33-s7",
-    "spotId": "126004",
-    "kakao": "449901966",
-    "cat": "",
-    "kind": "spot",
-    "n": 2,
-    "views": 47877,
-    "score": 10.05,
-    "thumb": "https://i.ytimg.com/vi/_Uu1-oPsvKI/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/42/3331142_image2_1.jpg",
-    "video": {
-     "id": "_Uu1-oPsvKI",
-     "title": "침대에서 청풍호가 보이는 리조트, 기차 타고 다녀왔어요｜제천 1박 2일",
-     "channel": "가희드 gahiiide",
-     "views": 28626
-    },
-    "base_n": 9,
-    "ratio": 2.4,
-    "change": "new"
-   },
-   {
-    "name": "일산호수공원",
-    "city": "고양시",
-    "province": "경기도",
-    "cityId": "a31-s2",
-    "spotId": "127197",
-    "kakao": "25039021",
-    "cat": "",
-    "kind": "spot",
-    "n": 2,
-    "views": 15155,
-    "score": 8.91,
-    "thumb": "https://i.ytimg.com/vi/-nH9vM3yd68/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/83/3553283_image2_1.jpg",
-    "video": {
-     "id": "-nH9vM3yd68",
-     "title": "차 없이 가는 경기도 당일치기 6곳 | 지하철·버스·셔틀로 가는 길까지 정리",
-     "channel": "[빵이네]캠핑&여행TV",
-     "views": 8709
-    },
-    "base_n": 11,
-    "ratio": 2.2,
-    "change": "new"
-   }
-  ],
-  "halfprice": [
-   {
-    "name": "감악산(거창)",
-    "city": "거창군",
-    "province": "경상남도",
-    "cityId": "a36-s2",
-    "spotId": "1576464",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 35,
-    "views": 679677,
-    "score": 1000.45,
-    "thumb": "https://i.ytimg.com/vi/PyDsJxjTJ5s/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/93/4007893_image2_1.jpg",
-    "video": {
-     "id": "PyDsJxjTJ5s",
-     "title": "★특별한 가을과 함께 하는 2026 거창방문의 해★",
-     "channel": "거창군",
-     "views": 212600
-    }
-   },
-   {
-    "name": "월영교",
-    "city": "안동시",
-    "province": "경상북도",
-    "cityId": "a35-s11",
-    "spotId": "988449",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 39,
-    "views": 596071,
-    "score": 984.76,
-    "thumb": "https://i.ytimg.com/vi/ZXt9Ke8LJys/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/85/4062785_image2_1.jpg",
-    "video": {
-     "id": "ZXt9Ke8LJys",
-     "title": "[도다리편] 맛집원정대의 꾹꾹 눌러담은🐽 먹방브이로그 (만두전골, 안동 퇴근, 안동찜닭, 막창, 선지국밥, 생갈비, 돈까스, 김밥, 세꼬시, 수구레, 순대국) ",
-     "channel": "우니의끼니 UNIII",
-     "views": 159304
-    }
-   },
-   {
-    "name": "안동 하회마을",
-    "city": "안동시",
-    "province": "경상북도",
-    "cityId": "a35-s11",
-    "spotId": "894027",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 35,
-    "views": 772058,
-    "score": 801.76,
-    "thumb": "https://i.ytimg.com/vi/GSUBt1MylGc/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/62/4059762_image2_1.jpg",
-    "video": {
-     "id": "GSUBt1MylGc",
-     "title": "부모님 모시고 안동여행, 탈춤도 보고 간고등어 뜯고~[2026 안동탈춤페스티벌]",
-     "channel": "흥삶이네 Heungsam's Life",
-     "views": 182614
-    }
-   },
-   {
-    "name": "밀양 영남루",
-    "city": "밀양시",
-    "province": "경상남도",
-    "cityId": "a36-s7",
-    "spotId": "126206",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 29,
-    "views": 270860,
-    "score": 638.43,
-    "thumb": "https://i.ytimg.com/vi/EQ3DMLB4B4Q/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/77/4069277_image2_1.jpg",
-    "video": {
-     "id": "EQ3DMLB4B4Q",
-     "title": "당일치기로 혼술하러 갔다가 국밥먹고 감동해버린 밀양여행 브이로그",
-     "channel": "쨔링 zzaling",
-     "views": 89832
-    }
-   },
-   {
-    "name": "불갑사(영광)",
-    "city": "영광군",
-    "province": "전라남도",
-    "cityId": "a38-s16",
-    "spotId": "126349",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 23,
-    "views": 346555,
-    "score": 511.16,
-    "thumb": "https://i.ytimg.com/vi/mNH3J5wulqY/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/34/4057234_image2_1.jpg",
-    "video": {
-     "id": "mNH3J5wulqY",
-     "title": "🍁 2026 해외보다 멋진 국내 가을 여행지 BEST 8 | 9월 10월 여기 안가면 후회합니다! 60대 시니어 여행",
-     "channel": "길따라힐링TV",
-     "views": 177138
-    }
-   },
-   {
-    "name": "상림공원",
-    "city": "함양군",
-    "province": "경상남도",
-    "cityId": "a36-s20",
-    "spotId": "126861",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 24,
-    "views": 196581,
-    "score": 408.93,
-    "thumb": "https://i.ytimg.com/vi/xKwW80QgbvM/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/08/3522408_image2_1.jpg",
-    "video": {
-     "id": "xKwW80QgbvM",
-     "title": "반값으로 갈 수 있는 함양여행?! 해발 1,915m 지리산이 보이는 “산 속에 있는 한옥호텔”에서 하룻밤",
-     "channel": "찬고리 Changori",
-     "views": 97953
-    }
-   },
-   {
-    "name": "거창 별바람언덕",
-    "city": "거창군",
-    "province": "경상남도",
-    "cityId": "a36-s2",
-    "spotId": "2796956",
-    "kakao": null,
-    "cat": "",
-    "kind": "spot",
-    "n": 20,
-    "views": 430142,
-    "score": 348.44,
-    "thumb": "https://i.ytimg.com/vi/PyDsJxjTJ5s/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/69/4007869_image2_1.jpg",
-    "video": {
-     "id": "PyDsJxjTJ5s",
-     "title": "★특별한 가을과 함께 하는 2026 거창방문의 해★",
-     "channel": "거창군",
-     "views": 212600
-    }
-   },
-   {
-    "name": "수선사",
-    "city": "산청군",
-    "province": "경상남도",
-    "cityId": "a36-s9",
-    "spotId": "2661541",
-    "kakao": "1882623780",
-    "cat": "",
-    "kind": "spot",
-    "n": 18,
-    "views": 58013,
-    "score": 303.37,
-    "thumb": "https://i.ytimg.com/vi/vMHAClEKpXM/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/41/3491141_image2_1.jpg",
-    "video": {
-     "id": "vMHAClEKpXM",
-     "title": "지금 당장 가봐야 할 가장 아름다운 사찰 /8월 국내여행지 추천 /사찰여행 /국내여행 추천 /산청여행 /경남여행 #8월국내여행지추천 #국내여행 #아름다운사찰",
-     "channel": "Jay쌤여행TV",
-     "views": 15133
-    }
-   },
-   {
-    "name": "거창창포원",
-    "city": "거창군",
-    "province": "경상남도",
-    "cityId": "a36-s2",
-    "spotId": "2755874",
-    "kakao": "2023584048",
-    "cat": "",
-    "kind": "spot",
-    "n": 19,
-    "views": 941924,
-    "score": 261.23,
-    "thumb": "https://i.ytimg.com/vi/sUuXC_snlHc/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/48/4111648_image2_1.jpg",
-    "video": {
-     "id": "sUuXC_snlHc",
-     "title": "거창에 왔으니 거창하게 놀아보자  [낭만부부]",
-     "channel": "김해준",
-     "views": 491904
-    }
    }
   ]
  }
