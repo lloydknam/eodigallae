@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-23T06:07:02+09:00",
+ "updatedAt": "2026-11-24T11:20:01+09:00",
  "cities": [
   {
    "id": "a1-s1",
@@ -108,7 +108,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/61/3534561_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:42:25+09:00",
+   "updatedAt": "2026-11-24T11:16:25+09:00",
    "center": [
     37.54596,
     127.0844
@@ -127,7 +127,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/27/3400227_image3_1.JPG",
-   "updatedAt": "2026-11-20T07:42:29+09:00",
+   "updatedAt": "2026-11-24T11:16:25+09:00",
    "center": [
     37.49853,
     126.86987
@@ -146,7 +146,7 @@
    "hasData": true,
    "spotCount": 29,
    "image": "https://tong.visitkorea.or.kr/cms/resource/48/3573148_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:42:33+09:00",
+   "updatedAt": "2026-11-24T11:16:26+09:00",
    "center": [
     37.46471,
     126.90005
@@ -165,7 +165,7 @@
    "hasData": true,
    "spotCount": 35,
    "image": "https://tong.visitkorea.or.kr/cms/resource/79/4077779_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:42:41+09:00",
+   "updatedAt": "2026-11-24T11:16:27+09:00",
    "center": [
     37.64538,
     127.07723
@@ -184,7 +184,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/75/4126275_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:42:46+09:00",
+   "updatedAt": "2026-11-24T11:16:28+09:00",
    "center": [
     37.66893,
     127.03352
@@ -203,7 +203,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/82/3474682_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:42:50+09:00",
+   "updatedAt": "2026-11-24T11:16:28+09:00",
    "center": [
     37.58275,
     127.04546
@@ -222,7 +222,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/47/3516647_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:42:54+09:00",
+   "updatedAt": "2026-11-24T11:16:29+09:00",
    "center": [
     37.50349,
     126.94475
@@ -241,7 +241,7 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource/11/3509911_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:03+09:00",
+   "updatedAt": "2026-11-24T11:16:30+09:00",
    "center": [
     37.55781,
     126.90885
@@ -260,7 +260,7 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource/29/3520329_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:06+09:00",
+   "updatedAt": "2026-11-24T11:16:31+09:00",
    "center": [
     37.57134,
     126.94299
@@ -280,9 +280,9 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/07/4061307_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:12+09:00",
+   "updatedAt": "2026-11-24T11:16:33+09:00",
    "center": [
-    37.49161,
+    37.4916,
     127.02101
    ],
    "v": 4
@@ -299,7 +299,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/59/3414159_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:16+09:00",
+   "updatedAt": "2026-11-24T11:16:33+09:00",
    "center": [
     37.54841,
     127.04671
@@ -318,7 +318,7 @@
    "hasData": true,
    "spotCount": 37,
    "image": "https://tong.visitkorea.or.kr/cms/resource/72/3376572_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:25+09:00",
+   "updatedAt": "2026-11-24T11:16:34+09:00",
    "center": [
     37.59882,
     127.0093
@@ -337,7 +337,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/33/4129633_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:30+09:00",
+   "updatedAt": "2026-11-24T11:16:35+09:00",
    "center": [
     37.50869,
     127.11073
@@ -356,7 +356,7 @@
    "hasData": true,
    "spotCount": 32,
    "image": "https://tong.visitkorea.or.kr/cms/resource/87/4002487_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:33+09:00",
+   "updatedAt": "2026-11-24T11:16:36+09:00",
    "center": [
     37.52286,
     126.86502
@@ -375,7 +375,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/89/3544389_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:39+09:00",
+   "updatedAt": "2026-11-24T11:16:37+09:00",
    "center": [
     37.52435,
     126.91484
@@ -394,10 +394,10 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource/12/3495012_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:43:47+09:00",
+   "updatedAt": "2026-11-24T11:16:38+09:00",
    "center": [
-    37.53318,
-    126.97773
+    37.53383,
+    126.97809
    ],
    "v": 4
   },
@@ -413,7 +413,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/90/3525890_image3_1.JPG",
-   "updatedAt": "2026-11-20T07:43:56+09:00",
+   "updatedAt": "2026-11-24T11:16:38+09:00",
    "center": [
     37.6179,
     126.92535
@@ -432,7 +432,7 @@
    "hasData": true,
    "spotCount": 42,
    "image": "https://tong.visitkorea.or.kr/cms/resource/20/4152820_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:44:05+09:00",
+   "updatedAt": "2026-11-24T11:16:40+09:00",
    "center": [
     37.57953,
     126.98569
@@ -451,7 +451,7 @@
    "hasData": true,
    "spotCount": 41,
    "image": "https://tong.visitkorea.or.kr/cms/resource/50/3590450_image3_1.jpg",
-   "updatedAt": "2026-11-20T07:44:10+09:00",
+   "updatedAt": "2026-11-24T11:16:42+09:00",
    "center": [
     37.56319,
     126.98658
@@ -470,7 +470,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/93/4095993_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:15:51+09:00",
+   "updatedAt": "2026-11-24T11:16:42+09:00",
    "center": [
     37.59643,
     127.09389
@@ -489,7 +489,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/03/3497303_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:15:59+09:00",
+   "updatedAt": "2026-11-24T11:16:44+09:00",
    "center": [
     37.70695,
     126.4013
@@ -508,10 +508,10 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/94/3542094_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:03+09:00",
+   "updatedAt": "2026-11-24T11:16:44+09:00",
    "center": [
-    37.55106,
-    126.73166
+    37.55131,
+    126.73181
    ],
    "v": 4
   },
@@ -527,7 +527,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/15/4102915_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:07+09:00",
+   "updatedAt": "2026-11-24T11:16:45+09:00",
    "center": [
     37.45117,
     126.66952
@@ -546,7 +546,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/65/4039065_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:12+09:00",
+   "updatedAt": "2026-11-24T11:16:46+09:00",
    "center": [
     37.43298,
     126.72988
@@ -565,7 +565,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/94/3518594_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:21+09:00",
+   "updatedAt": "2026-11-24T11:16:47+09:00",
    "center": [
     37.46945,
     126.61344
@@ -584,7 +584,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/16/4116616_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:25+09:00",
+   "updatedAt": "2026-11-24T11:16:48+09:00",
    "center": [
     37.49947,
     126.72188
@@ -604,7 +604,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/15/4123315_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:33+09:00",
+   "updatedAt": "2026-11-24T11:16:49+09:00",
    "center": [
     37.54186,
     126.64988
@@ -623,7 +623,7 @@
    "hasData": true,
    "spotCount": 32,
    "image": "https://tong.visitkorea.or.kr/cms/resource/19/3512919_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:38+09:00",
+   "updatedAt": "2026-11-24T11:16:50+09:00",
    "center": [
     37.39614,
     126.64483
@@ -642,7 +642,7 @@
    "hasData": true,
    "spotCount": 41,
    "image": "https://tong.visitkorea.or.kr/cms/resource/44/4132544_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:44+09:00",
+   "updatedAt": "2026-11-24T11:16:51+09:00",
    "center": [
     37.42296,
     126.18719
@@ -662,7 +662,7 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource/94/3518594_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:52+09:00",
+   "updatedAt": "2026-11-24T11:16:52+09:00",
    "center": [
     37.46345,
     126.55057
@@ -681,7 +681,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/44/3033644_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:16:57+09:00",
+   "updatedAt": "2026-11-24T11:16:53+09:00",
    "center": [
     36.40595,
     127.44199
@@ -700,7 +700,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/55/3320755_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:05+09:00",
+   "updatedAt": "2026-11-24T11:16:54+09:00",
    "center": [
     36.32716,
     127.45578
@@ -719,7 +719,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/72/4108472_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:10+09:00",
+   "updatedAt": "2026-11-24T11:16:55+09:00",
    "center": [
     36.33096,
     127.37098
@@ -738,7 +738,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/52/4057052_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:18+09:00",
+   "updatedAt": "2026-11-24T11:16:56+09:00",
    "center": [
     36.36822,
     127.35321
@@ -757,7 +757,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/97/3513197_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:21+09:00",
+   "updatedAt": "2026-11-24T11:16:56+09:00",
    "center": [
     36.31128,
     127.41595
@@ -776,7 +776,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/70/3569970_image3_1.JPG",
-   "updatedAt": "2026-11-21T07:17:30+09:00",
+   "updatedAt": "2026-11-24T11:16:57+09:00",
    "center": [
     35.83883,
     128.58494
@@ -795,7 +795,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/29/3573529_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:33+09:00",
+   "updatedAt": "2026-11-24T11:16:58+09:00",
    "center": [
     35.8331,
     128.5334
@@ -814,7 +814,7 @@
    "hasData": true,
    "spotCount": 38,
    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/00/2951800_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:39+09:00",
+   "updatedAt": "2026-11-24T11:16:59+09:00",
    "center": [
     35.77313,
     128.50447
@@ -833,7 +833,7 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource/90/4147690_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:48+09:00",
+   "updatedAt": "2026-11-24T11:17:00+09:00",
    "center": [
     35.92143,
     128.66376
@@ -852,7 +852,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/40/3521240_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:17:56+09:00",
+   "updatedAt": "2026-11-24T11:17:00+09:00",
    "center": [
     35.91444,
     128.58526
@@ -871,7 +871,7 @@
    "hasData": true,
    "spotCount": 29,
    "image": "https://tong.visitkorea.or.kr/cms/resource/76/4087776_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:01+09:00",
+   "updatedAt": "2026-11-24T11:17:01+09:00",
    "center": [
     35.87153,
     128.55563
@@ -890,7 +890,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/73/3422773_image3_1.png",
-   "updatedAt": "2026-11-21T07:18:09+09:00",
+   "updatedAt": "2026-11-24T11:17:02+09:00",
    "center": [
     35.84324,
     128.65038
@@ -909,7 +909,7 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource/94/3350494_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:17+09:00",
+   "updatedAt": "2026-11-24T11:17:03+09:00",
    "center": [
     35.86784,
     128.59236
@@ -928,7 +928,7 @@
    "hasData": true,
    "spotCount": 34,
    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/29/3495829_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:25+09:00",
+   "updatedAt": "2026-11-24T11:17:04+09:00",
    "center": [
     36.14105,
     128.67449
@@ -947,7 +947,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/78/3366478_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:31+09:00",
+   "updatedAt": "2026-11-24T11:17:04+09:00",
    "center": [
     35.17814,
     126.78016
@@ -966,7 +966,7 @@
    "hasData": true,
    "spotCount": 35,
    "image": "https://tong.visitkorea.or.kr/cms/resource/15/4063615_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:39+09:00",
+   "updatedAt": "2026-11-24T11:17:05+09:00",
    "center": [
     35.11322,
     126.87819
@@ -985,10 +985,10 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/17/4109317_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:48+09:00",
+   "updatedAt": "2026-11-24T11:17:06+09:00",
    "center": [
-    35.13527,
-    126.93856
+    35.13623,
+    126.93564
    ],
    "v": 4
   },
@@ -1002,12 +1002,12 @@
     "12300"
    ],
    "hasData": true,
-   "spotCount": 30,
+   "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/05/3515105_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:48+09:00",
+   "updatedAt": "2026-11-24T11:17:15+09:00",
    "center": [
-    35.18982,
-    126.908
+    35.1898,
+    126.90799
    ],
    "v": 4
   },
@@ -1023,7 +1023,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/96/3516496_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:50+09:00",
+   "updatedAt": "2026-11-24T11:17:23+09:00",
    "center": [
     35.14655,
     126.85915
@@ -1040,9 +1040,9 @@
     "26440"
    ],
    "hasData": true,
-   "spotCount": 31,
+   "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/43/3491943_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:51+09:00",
+   "updatedAt": "2026-11-24T11:17:28+09:00",
    "center": [
     35.07978,
     128.87706
@@ -1059,9 +1059,9 @@
     "26410"
    ],
    "hasData": true,
-   "spotCount": 32,
+   "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/92/3561492_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:51+09:00",
+   "updatedAt": "2026-11-24T11:17:36+09:00",
    "center": [
     35.25554,
     129.08291
@@ -1078,12 +1078,12 @@
     "26710"
    ],
    "hasData": true,
-   "spotCount": 34,
+   "spotCount": 32,
    "image": "https://tong.visitkorea.or.kr/cms/resource/35/3499335_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:52+09:00",
+   "updatedAt": "2026-11-24T11:17:44+09:00",
    "center": [
-    35.26216,
-    129.23477
+    35.26315,
+    129.23108
    ],
    "v": 4
   },
@@ -1097,12 +1097,12 @@
     "26290"
    ],
    "hasData": true,
-   "spotCount": 32,
+   "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/69/3492369_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:53+09:00",
+   "updatedAt": "2026-11-24T11:17:52+09:00",
    "center": [
-    35.12298,
-    129.09711
+    35.12254,
+    129.09692
    ],
    "v": 4
   },
@@ -1116,12 +1116,12 @@
     "26170"
    ],
    "hasData": true,
-   "spotCount": 30,
+   "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/57/2726957_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:54+09:00",
+   "updatedAt": "2026-11-24T11:18:01+09:00",
    "center": [
-    35.12536,
-    129.04493
+    35.12497,
+    129.04472
    ],
    "v": 4
   },
@@ -1137,7 +1137,7 @@
    "hasData": true,
    "spotCount": 32,
    "image": "https://tong.visitkorea.or.kr/cms/resource/37/4090237_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:55+09:00",
+   "updatedAt": "2026-11-24T11:18:09+09:00",
    "center": [
     35.21039,
     129.08206
@@ -1154,12 +1154,12 @@
     "26230"
    ],
    "hasData": true,
-   "spotCount": 32,
+   "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/15/3512315_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:56+09:00",
+   "updatedAt": "2026-11-24T11:18:17+09:00",
    "center": [
-    35.16363,
-    129.05332
+    35.16428,
+    129.05339
    ],
    "v": 4
   },
@@ -1175,7 +1175,7 @@
    "hasData": true,
    "spotCount": 20,
    "image": "https://tong.visitkorea.or.kr/cms/resource/41/3497041_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:57+09:00",
+   "updatedAt": "2026-11-24T11:18:25+09:00",
    "center": [
     35.22206,
     129.01433
@@ -1194,7 +1194,7 @@
    "hasData": true,
    "spotCount": 21,
    "image": "https://tong.visitkorea.or.kr/cms/resource/90/3497090_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:58+09:00",
+   "updatedAt": "2026-11-24T11:18:32+09:00",
    "center": [
     35.16868,
     128.99129
@@ -1211,12 +1211,12 @@
     "26380"
    ],
    "hasData": true,
-   "spotCount": 30,
+   "spotCount": 32,
    "image": "https://tong.visitkorea.or.kr/cms/resource/91/3365491_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:18:59+09:00",
+   "updatedAt": "2026-11-24T11:18:40+09:00",
    "center": [
-    35.08078,
-    128.97644
+    35.08173,
+    128.97556
    ],
    "v": 4
   },
@@ -1232,7 +1232,7 @@
    "hasData": true,
    "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/86/2504686_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:00+09:00",
+   "updatedAt": "2026-11-24T11:18:47+09:00",
    "center": [
     35.08714,
     129.01779
@@ -1251,7 +1251,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/46/4140046_image3_1.JPG",
-   "updatedAt": "2026-11-21T07:19:01+09:00",
+   "updatedAt": "2026-11-24T11:18:55+09:00",
    "center": [
     35.16088,
     129.11333
@@ -1268,9 +1268,9 @@
     "26470"
    ],
    "hasData": true,
-   "spotCount": 22,
+   "spotCount": 21,
    "image": "https://tong.visitkorea.or.kr/cms/resource/79/4129979_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:02+09:00",
+   "updatedAt": "2026-11-24T11:19:01+09:00",
    "center": [
     35.18154,
     129.08704
@@ -1287,12 +1287,12 @@
     "26200"
    ],
    "hasData": true,
-   "spotCount": 34,
+   "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/83/3506383_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:03+09:00",
+   "updatedAt": "2026-11-24T11:19:09+09:00",
    "center": [
-    35.0772,
-    129.06545
+    35.07725,
+    129.06598
    ],
    "v": 4
   },
@@ -1308,7 +1308,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource_photo/05/4108305_image3_1.JPG",
-   "updatedAt": "2026-11-21T07:19:04+09:00",
+   "updatedAt": "2026-11-24T11:19:17+09:00",
    "center": [
     35.10258,
     129.0324
@@ -1325,12 +1325,12 @@
     "26350"
    ],
    "hasData": true,
-   "spotCount": 32,
+   "spotCount": 35,
    "image": "https://tong.visitkorea.or.kr/cms/resource/22/3495922_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:05+09:00",
+   "updatedAt": "2026-11-24T11:19:25+09:00",
    "center": [
-    35.16713,
-    129.15963
+    35.16649,
+    129.15945
    ],
    "v": 4
   },
@@ -1346,7 +1346,7 @@
    "hasData": true,
    "spotCount": 30,
    "image": "https://tong.visitkorea.or.kr/cms/resource/31/3079831_image3_1.JPG",
-   "updatedAt": "2026-11-21T07:19:06+09:00",
+   "updatedAt": "2026-11-24T11:19:29+09:00",
    "center": [
     35.56489,
     129.32004
@@ -1364,12 +1364,12 @@
     "31200"
    ],
    "hasData": true,
-   "spotCount": 35,
+   "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/62/3055562_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:08+09:00",
+   "updatedAt": "2026-11-24T11:19:37+09:00",
    "center": [
-    35.57386,
-    129.37248
+    35.57518,
+    129.37494
    ],
    "v": 4
   },
@@ -1383,9 +1383,9 @@
     "31170"
    ],
    "hasData": true,
-   "spotCount": 30,
+   "spotCount": 31,
    "image": "https://tong.visitkorea.or.kr/cms/resource/16/3583516_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:09+09:00",
+   "updatedAt": "2026-11-24T11:19:45+09:00",
    "center": [
     35.51049,
     129.42945
@@ -1404,7 +1404,7 @@
    "hasData": true,
    "spotCount": 33,
    "image": "https://tong.visitkorea.or.kr/cms/resource/62/3055562_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:10+09:00",
+   "updatedAt": "2026-11-24T11:19:53+09:00",
    "center": [
     35.60945,
     129.40574
@@ -1421,12 +1421,12 @@
     "31710"
    ],
    "hasData": true,
-   "spotCount": 37,
+   "spotCount": 35,
    "image": "https://tong.visitkorea.or.kr/cms/resource/35/3549535_image3_1.jpg",
-   "updatedAt": "2026-11-21T07:19:11+09:00",
+   "updatedAt": "2026-11-24T11:20:01+09:00",
    "center": [
-    35.51806,
-    129.18166
+    35.51392,
+    129.18583
    ],
    "v": 4
   },
