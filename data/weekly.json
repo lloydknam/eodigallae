@@ -1,6 +1,6 @@
 {
  "week": "2026-W48",
- "updatedAt": "2026-11-25T09:09:36+09:00",
+ "updatedAt": "2026-11-26T08:47:46+09:00",
  "videos": 434,
  "citiesWithData": 229,
  "lists": {
@@ -236,6 +236,27 @@
     }
    },
    {
+    "name": "커피창고로",
+    "city": "목포시",
+    "province": "전라남도",
+    "cityId": "a38-s8",
+    "spotId": "k520387007",
+    "kakao": "520387007",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 16,
+    "views": 515982,
+    "score": 190.18,
+    "thumb": "https://i.ytimg.com/vi/roBc9gjzvkk/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/roBc9gjzvkk/hqdefault.jpg",
+    "video": {
+     "id": "roBc9gjzvkk",
+     "title": "목포여행 가시면 이것만 보고가세요 ! 😏",
+     "channel": "슈가토끼",
+     "views": 243400
+    }
+   },
+   {
     "name": "아차가",
     "city": "안동시",
     "province": "경상북도",
@@ -254,27 +275,6 @@
      "title": "찜닭 말고 쪼림닭❗️매운식혜❗️ 두번가도 먹을거, 볼게 넘치는 1박2일 안동여행😋",
      "channel": "소풍족",
      "views": 115859
-    }
-   },
-   {
-    "name": "커피창고로",
-    "city": "목포시",
-    "province": "전라남도",
-    "cityId": "a38-s8",
-    "spotId": "k520387007",
-    "kakao": "520387007",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 14,
-    "views": 493673,
-    "score": 148.36,
-    "thumb": "https://i.ytimg.com/vi/roBc9gjzvkk/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/roBc9gjzvkk/hqdefault.jpg",
-    "video": {
-     "id": "roBc9gjzvkk",
-     "title": "목포여행 가시면 이것만 보고가세요 ! 😏",
-     "channel": "슈가토끼",
-     "views": 238295
     }
    },
    {
@@ -320,27 +320,6 @@
     }
    },
    {
-    "name": "무가보",
-    "city": "목포시",
-    "province": "전라남도",
-    "cityId": "a38-s8",
-    "spotId": "k383560823",
-    "kakao": "383560823",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 10,
-    "views": 70756,
-    "score": 88.67,
-    "thumb": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
-    "video": {
-     "id": "AmBYq8Vna8M",
-     "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
-     "channel": "현주zip",
-     "views": 39002
-    }
-   },
-   {
     "name": "무우루",
     "city": "구례군",
     "province": "전라남도",
@@ -349,16 +328,58 @@
     "kakao": "1547531940",
     "cat": "카페",
     "kind": "kakao",
-    "n": 8,
-    "views": 207845,
-    "score": 69.1,
+    "n": 10,
+    "views": 299000,
+    "score": 101.31,
     "thumb": "https://i.ytimg.com/vi/lDHnB9-XOVA/hqdefault.jpg",
     "image": "https://i.ytimg.com/vi/lDHnB9-XOVA/hqdefault.jpg",
     "video": {
      "id": "lDHnB9-XOVA",
      "title": "​지쳐있던 나를 완벽하게 힐링시켜준 나혼자 구례 여행 🌳 소목집•소식다료 차실•무우루•텐텐치킨•드르륵•오목눈이풀숲•평화식당•사성암•천은사",
      "channel": "쟐쟐 ZALZAL",
-     "views": 102365
+     "views": 103855
+    }
+   },
+   {
+    "name": "무가보",
+    "city": "목포시",
+    "province": "전라남도",
+    "cityId": "a38-s8",
+    "spotId": "k383560823",
+    "kakao": "383560823",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 11,
+    "views": 80106,
+    "score": 93.84,
+    "thumb": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
+    "video": {
+     "id": "AmBYq8Vna8M",
+     "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
+     "channel": "현주zip",
+     "views": 40993
+    }
+   },
+   {
+    "name": "어스언더파크 익산",
+    "city": "익산시",
+    "province": "전북특별자치도",
+    "cityId": "a37-s9",
+    "spotId": "k930090313",
+    "kakao": "930090313",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 10,
+    "views": 450622,
+    "score": 89.88,
+    "thumb": "https://i.ytimg.com/vi/ehfvB9cN2Us/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/ehfvB9cN2Us/hqdefault.jpg",
+    "video": {
+     "id": "ehfvB9cN2Us",
+     "title": "익산 현지인이 끝까지 숨기고 싶은 맛집 4곳 다녀왔습니다",
+     "channel": "둘시네아 dulcinea",
+     "views": 351352
     }
    },
    {
@@ -380,27 +401,6 @@
      "title": "남해 1박2일 이대로만 가세요 | 쏠비치 남해 보리암 남해 맛집 카페 알짜배기 코스 vlog",
      "channel": "주니네",
      "views": 18985
-    }
-   },
-   {
-    "name": "화신연쇄점",
-    "city": "목포시",
-    "province": "전라남도",
-    "cityId": "a38-s8",
-    "spotId": "k1177581244",
-    "kakao": "1177581244",
-    "cat": "카페",
-    "kind": "kakao",
-    "n": 8,
-    "views": 65381,
-    "score": 56.74,
-    "thumb": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
-    "video": {
-     "id": "AmBYq8Vna8M",
-     "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
-     "channel": "현주zip",
-     "views": 39002
     }
    }
   ],
@@ -457,15 +457,15 @@
     "cat": "",
     "kind": "spot",
     "n": 50,
-    "views": 640694,
-    "score": 1756.69,
+    "views": 1040047,
+    "score": 1826.24,
     "thumb": "https://i.ytimg.com/vi/bMhybJJHaF4/hqdefault.jpg",
     "image": "",
     "video": {
      "id": "bMhybJJHaF4",
      "title": "멤버랑 둘이서 여행? 쉽지 않아 | 카세로그 Ep.1",
      "channel": "EXO",
-     "views": 245180
+     "views": 252639
     }
    },
    {
@@ -574,24 +574,24 @@
     }
    },
    {
-    "name": "죽녹원",
-    "city": "담양군",
-    "province": "전라남도",
-    "cityId": "a38-s7",
-    "spotId": "128834",
-    "kakao": "22709702",
+    "name": "양평 두물머리",
+    "city": "양평군",
+    "province": "경기도",
+    "cityId": "a31-s19",
+    "spotId": "128918",
+    "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 43,
-    "views": 3214437,
-    "score": 1289.48,
-    "thumb": "https://i.ytimg.com/vi/K8ZzoRH2E0o/hqdefault.jpg",
-    "image": "https://tong.visitkorea.or.kr/cms/resource/36/4017136_image2_1.jpg",
+    "n": 41,
+    "views": 183425,
+    "score": 1244.22,
+    "thumb": "https://i.ytimg.com/vi/hQvyCBJw8p8/hqdefault.jpg",
+    "image": "https://tong.visitkorea.or.kr/cms/resource/60/4122260_image2_1.jpg",
     "video": {
-     "id": "K8ZzoRH2E0o",
-     "title": "☔️쉴새없이 쏟아지는 폭우 속 오두막트럭으로 강아지와 편안한 우중캠핑 | 빗소리ASMR | 담양 죽녹원",
-     "channel": "[그리는연유]Drawing YeonYoo",
-     "views": 2745996
+     "id": "hQvyCBJw8p8",
+     "title": "이번 가을 양평에 꼭 와야 하는 이유!",
+     "channel": "햄튜브",
+     "views": 40023
     }
    }
   ],
