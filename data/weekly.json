@@ -1,6 +1,6 @@
 {
  "week": "2026-W48",
- "updatedAt": "2026-11-24T11:20:01+09:00",
+ "updatedAt": "2026-11-25T09:09:36+09:00",
  "videos": 434,
  "citiesWithData": 229,
  "lists": {
@@ -215,27 +215,6 @@
   ],
   "hidden": [
    {
-    "name": "황금해안길",
-    "city": "화성시",
-    "province": "경기도",
-    "cityId": "a31-s31",
-    "spotId": "k838616894",
-    "kakao": "838616894",
-    "cat": "관광명소",
-    "kind": "kakao",
-    "n": 14,
-    "views": 1030570,
-    "score": 273.89,
-    "thumb": "https://i.ytimg.com/vi/tkEm4HEYeeM/hqdefault.jpg",
-    "image": "https://i.ytimg.com/vi/tkEm4HEYeeM/hqdefault.jpg",
-    "video": {
-     "id": "tkEm4HEYeeM",
-     "title": "요즘 다들 여기 간다는데 - 수도권에서 가장 아름다운 바닷길 -황금해안길",
-     "channel": "곰슨의바깥세상",
-     "views": 311897
-    }
-   },
-   {
     "name": "군산과자조합",
     "city": "군산시",
     "province": "전북특별자치도",
@@ -402,6 +381,27 @@
      "channel": "주니네",
      "views": 18985
     }
+   },
+   {
+    "name": "화신연쇄점",
+    "city": "목포시",
+    "province": "전라남도",
+    "cityId": "a38-s8",
+    "spotId": "k1177581244",
+    "kakao": "1177581244",
+    "cat": "카페",
+    "kind": "kakao",
+    "n": 8,
+    "views": 65381,
+    "score": 56.74,
+    "thumb": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
+    "image": "https://i.ytimg.com/vi/AmBYq8Vna8M/hqdefault.jpg",
+    "video": {
+     "id": "AmBYq8Vna8M",
+     "title": "나혼자 2박3일 목포여행🐙 현지 맛집만 섭렵하고 다닌 뚜벅이여행・맛집,카페,숙소추천",
+     "channel": "현주zip",
+     "views": 39002
+    }
    }
   ],
   "steady": [
@@ -498,16 +498,16 @@
     "kakao": null,
     "cat": "",
     "kind": "spot",
-    "n": 45,
-    "views": 2341598,
-    "score": 1575.71,
+    "n": 46,
+    "views": 2234329,
+    "score": 1584.59,
     "thumb": "https://i.ytimg.com/vi/nxukV1yfvCA/hqdefault.jpg",
     "image": "https://tong.visitkorea.or.kr/cms/resource/65/4041365_image2_1.jpg",
     "video": {
      "id": "nxukV1yfvCA",
      "title": "🔥요즘 핫한 영월 여행🔥 관광객은 모르는 현지인 맛집 풀코스 풍자가 직접 완주했습니다. | 또간집 EP.105",
      "channel": "스튜디오 수제",
-     "views": 1247560
+     "views": 1256275
     }
    },
    {
