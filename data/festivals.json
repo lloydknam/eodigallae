@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-24",
- "count": 92,
+ "updatedAt": "2026-11-25",
+ "count": 94,
  "items": [
   {
    "id": "tour-3481597",
@@ -1068,6 +1068,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-2641128",
+   "title": "수성빛예술제",
+   "start": "20261224",
+   "end": "20270103",
+   "addr": "대구광역시 수성구 무학로 112 (두산동)",
+   "tel": "053-668-1504",
+   "lat": 35.8293753137,
+   "lng": 128.6205782501,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/58/4173758_image2_1.JPG",
+   "homepage": null,
+   "cityId": "a4-s7",
+   "city": "수성구",
+   "source": "tour"
+  },
+  {
    "id": "tour-2933428",
    "title": "울산 성남동 눈꽃축제",
    "start": "20261224",
@@ -1111,6 +1126,21 @@
    "cityId": "a37-s10",
    "city": "임실군",
    "source": "std"
+  },
+  {
+   "id": "tour-3049823",
+   "title": "제4회 겨울엔 양평",
+   "start": "20261231",
+   "end": "20261231",
+   "addr": "경기도 양평군 양평읍 양평시장길 11-1",
+   "tel": "031-770-1072",
+   "lat": 37.4898308439,
+   "lng": 127.4920824556,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/63/4173763_image2_1.jpg",
+   "homepage": null,
+   "cityId": "a31-s19",
+   "city": "양평군",
+   "source": "tour"
   },
   {
    "id": "std-5020000-호미곶한민족해맞이축전-20261231",
