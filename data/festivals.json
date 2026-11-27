@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-26",
- "count": 95,
+ "updatedAt": "2026-11-27",
+ "count": 97,
  "items": [
   {
    "id": "tour-3481597",
@@ -888,6 +888,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4178037",
+   "title": "서울한국춤페스티벌",
+   "start": "20261207",
+   "end": "20261208",
+   "addr": "서울특별시 중구 퇴계로34길 28 (필동2가)",
+   "tel": "1800-4746",
+   "lat": 37.55954227,
+   "lng": 126.9947387353,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/40/4178040_image2_1.JPG",
+   "homepage": null,
+   "cityId": "a1-s24",
+   "city": "중구",
+   "source": "tour"
+  },
+  {
    "id": "tour-3035607",
    "title": "광화문 마켓",
    "start": "20261211",
@@ -993,6 +1008,21 @@
    "source": "tour"
   },
   {
+   "id": "tour-4178087",
+   "title": "제3회 익산 크리스마스 마켓",
+   "start": "20261218",
+   "end": "20261225",
+   "addr": "전북특별자치도 익산시 중앙로 12-151 (중앙동2가)",
+   "tel": "063-853-6783",
+   "lat": 35.9381102381,
+   "lng": 126.948006124,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/91/4178091_image2_1.png",
+   "homepage": null,
+   "cityId": "a37-s9",
+   "city": "익산시",
+   "source": "tour"
+  },
+  {
    "id": "tour-3432658",
    "title": "함평 겨울빛축제",
    "start": "20261218",
@@ -1031,7 +1061,7 @@
    "tel": "02-559-3887",
    "lat": 37.5007217702,
    "lng": 127.030740311,
-   "image": "https://tong.visitkorea.or.kr/cms/resource/12/4165112_image2_1.jpg",
+   "image": "https://tong.visitkorea.or.kr/cms/resource/16/4176716_image2_1.jpg",
    "homepage": null,
    "cityId": "a1-s15",
    "city": "서초구",
