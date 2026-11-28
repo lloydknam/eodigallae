@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-11-27",
- "count": 97,
+ "updatedAt": "2026-11-28",
+ "count": 98,
  "items": [
   {
    "id": "tour-3481597",
@@ -600,6 +600,21 @@
    "homepage": null,
    "cityId": "a32-s1",
    "city": "강릉시",
+   "source": "tour"
+  },
+  {
+   "id": "tour-4179229",
+   "title": "거제 K-푸드로드 92데이",
+   "start": "20261127",
+   "end": "20261129",
+   "addr": "경상남도 거제시 옥포로6길 16 (옥포동)",
+   "tel": "0507-1312-9577",
+   "lat": 34.8907759762,
+   "lng": 128.6953285292,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/39/4179239_image2_1.png",
+   "homepage": null,
+   "cityId": "a36-s1",
+   "city": "거제시",
    "source": "tour"
   },
   {
